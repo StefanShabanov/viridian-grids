@@ -18,6 +18,14 @@ const links: { page: PageId; label: string }[] = [
 ];
 ---
 
+{/*
+  Narrow screens: brand left, BG/EN and the burger right, the five nav links and
+  the call to action inside the panel.
+
+  Built on <details> rather than a script, so it opens with JavaScript disabled,
+  is keyboard-operable for free, and needs no 'unsafe-inline' in the CSP.
+*/}
+
 <header class="header">
   <div class="wrap header__bar">
     <a class="brand" href={href(lang, 'home')}>
@@ -47,6 +55,22 @@ const links: { page: PageId; label: string }[] = [
       }
     </div>
 
-    <a class="btn btn--primary btn--sm" href={href(lang, 'check')}>{t.nav.cta}</a>
+    <a class="btn btn--primary btn--sm header__cta" href={href(lang, 'check')}>{t.nav.cta}</a>
+
+    <details class="menu">
+      <summary class="menu__btn" aria-label={t.a11y.menu} title={t.a11y.menu}>
+        <span class="burger" aria-hidden="true"></span>
+      </summary>
+      <nav class="menu__panel" aria-label={t.a11y.menu}>
+        {
+          links.map((l) => (
+            <a href={href(lang, l.page)} aria-current={page === l.page ? 'page' : undefined}>
+              {l.label}
+            </a>
+          ))
+        }
+        <a class="btn btn--primary menu__cta" href={href(lang, 'check')}>{t.nav.cta}</a>
+      </nav>
+    </details>
   </div>
 </header>

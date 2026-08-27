@@ -41,7 +41,10 @@ export type PageId =
   | 'security'
   | 'faq'
   | 'about'
-  | 'contact';
+  | 'contact'
+  | 'privacy'
+  | 'terms'
+  | 'dpa';
 
 export const PAGES: PageId[] = [
   'home',
@@ -54,6 +57,9 @@ export const PAGES: PageId[] = [
   'faq',
   'about',
   'contact',
+  'privacy',
+  'terms',
+  'dpa',
 ];
 
 /** Slug per language. Bulgarian slugs for the Bulgarian site; `/en/` prefix for English. */
@@ -69,6 +75,9 @@ const SLUGS: Record<Lang, Record<PageId, string>> = {
     faq: 'vaprosi',
     about: 'za-nas',
     contact: 'kontakt',
+    privacy: 'poveritelnost',
+    terms: 'usloviya',
+    dpa: 'obrabotvane-na-danni',
   },
   en: {
     home: '',
@@ -81,6 +90,9 @@ const SLUGS: Record<Lang, Record<PageId, string>> = {
     faq: 'faq',
     about: 'about',
     contact: 'contact',
+    privacy: 'privacy',
+    terms: 'terms',
+    dpa: 'data-processing',
   },
 };
 
@@ -107,12 +119,23 @@ export const SECTIONS: Record<PageId, string[]> = {
   pricing: ['pricing', 'sla', 'faq', 'final'],
   services: ['services', 'problems', 'final'],
   how: ['how', 'pricing', 'sla', 'final'],
-  report: ['report', 'final'],
+  report: ['initial', 'report', 'final'],
   security: ['trust', 'faq', 'final'],
   faq: ['faq', 'final'],
   about: ['about', 'final'],
   contact: ['contact'],
+  privacy: ['legal:privacy', 'final'],
+  terms: ['legal:terms', 'final'],
+  dpa: ['legal:dpa', 'final'],
 };
+
+/** The three legal pages share one component; this says which document to render. */
+export const LEGAL_DOCS = { privacy: 'privacy', terms: 'terms', dpa: 'dpa' } as const;
+export type LegalDoc = keyof typeof LEGAL_DOCS;
+
+export function legalDoc(page: PageId): LegalDoc | null {
+  return page === 'privacy' || page === 'terms' || page === 'dpa' ? page : null;
+}
 
 export function shows(page: PageId, section: string): boolean {
   return SECTIONS[page].includes(section);

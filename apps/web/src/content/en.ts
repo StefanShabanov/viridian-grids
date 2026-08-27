@@ -23,14 +23,21 @@ export const en = {
     },
     services: { title: 'Services', description: 'Monitoring, maintenance, security hygiene, troubleshooting and business-critical checks.' },
     how: { title: 'How it works', description: 'Assessment, setup, monitoring, response, reporting.' },
-    report: { title: 'Sample monthly report', description: 'One page a month, in plain language, no dashboard login required.' },
+    report: {
+      title: 'Sample reports',
+      description:
+        'Both reports in full: the free initial assessment, and the monthly report customers receive. Real formats, example data.',
+    },
     security: { title: 'Security and access', description: 'How we handle the access you give us: least privilege, vaulted credentials, EU storage, signed DPA.' },
     faq: { title: 'Frequently asked questions', description: 'Hosting, platforms, outages, backups, cancellation and what is included.' },
     about: { title: 'About', description: 'One engineer in Sofia, and a deliberately narrow service.' },
     contact: { title: 'Contact', description: 'Tell us about your website. The initial assessment costs nothing.' },
+    privacy: { title: 'Privacy notice', description: 'What this website collects, why, and what you can ask us to do about it. No cookies, no analytics, no tracking.' },
+    terms: { title: 'Terms of service', description: 'The standing terms for the monitoring and maintenance plans, in plain language.' },
+    dpa: { title: 'Data processing agreement', description: 'How we handle personal data on your website: our role, our sub-processors, and what happens when you leave.' },
   },
 
-  nav: { services: 'Services', pricing: 'Pricing', how: 'How it works', report: 'Sample report', faq: 'FAQ', cta: 'Check my website' },
+  nav: { services: 'Services', pricing: 'Pricing', how: 'How it works', report: 'Sample reports', faq: 'FAQ', cta: 'Check my website' },
 
   hero: {
     eyebrow: 'Managed monitoring for small and medium business',
@@ -89,6 +96,7 @@ export const en = {
       'By sending this you agree that we may check the public pages of this website and reply by email. We do not pass your details to anyone.',
     thanks: 'Thanks — we will review your website and send the full report within one working day.',
     error: 'Something went wrong sending the form. Email us directly at',
+    seeFull: 'See a full sample report, with sources',
   },
 
   monitor: {
@@ -191,7 +199,7 @@ export const en = {
   },
 
   report: {
-    label: 'Sample report',
+    label: 'Monthly report',
     title: 'Monitoring is invisible when it works. So we show you.',
     sub: 'One page, once a month, in language you can forward to anyone. This is the real report format, filled in with an example customer.',
     company: 'Example Company Ltd',
@@ -201,16 +209,86 @@ export const en = {
       { head: 'Availability', big: '99.98%', tone: 'ok', lines: ['target 99.9%', '9 min total downtime'] },
       { head: 'SSL & domain', big: 'Valid', tone: 'ok', lines: ['certificate: 64 days left', 'domain: 212 days left'] },
       { head: 'Performance', big: '720 ms', tone: 'ok', lines: ['previous month: 810 ms', 'improved 11%'] },
-      { head: 'Updates', big: '8 applied', tone: 'plain', lines: ['platform: 1 · dependencies: 6', 'no service interruption'] },
+      { head: 'Updates', big: '8 applied', tone: 'plain', lines: ['platform: 1 · plugins: 7', 'no service interruption'] },
       { head: 'Backups', big: '31 / 31', tone: 'ok', lines: ['all scheduled backups ok', '1 restore test completed'] },
-      { head: 'Security hygiene', big: '0 critical', tone: 'warn', lines: ['2 configuration recommendations', 'admin accounts reviewed'] },
+      {
+        head: 'Known vulnerabilities',
+        big: '0 open',
+        tone: 'ok',
+        lines: ['none reported against detected versions', '2 configuration recommendations'],
+      },
     ],
     incidents: 'Incidents',
     incDate: '12 July',
     inc1: 'Website unavailable — hosting provider restart',
     inc1d: 'Duration: 6 minutes',
     resolved: 'Resolved',
+    updatesHead: 'Updates applied',
+    updatesCols: ['Component', 'From', 'To', 'Why'],
+    updates: [
+      { what: 'WordPress core', from: '6.5.2', to: '6.5.5', why: 'closes 3 publicly reported issues' },
+      { what: 'WooCommerce', from: '8.7.0', to: '8.9.1', why: 'maintenance release' },
+      { what: 'Contact Form 7', from: '5.9.3', to: '5.9.8', why: 'closes 1 publicly reported issue' },
+      { what: 'Yoast SEO', from: '22.4', to: '22.8', why: 'maintenance release' },
+    ],
+    updatesMore: '+ 4 further plugin updates, each backed up before and checked after.',
     foot: 'Reports are sent as PDF on the 1st of each month. No dashboard login required.',
+  },
+
+  /* The other half of the story: the one-page assessment a prospect gets for free,
+     before there is any relationship. Wording follows the scanner's own rules -
+     a version match is not proof of exposure, so nothing here says "you are
+     vulnerable". See apps/scanner/src/vg_scanner/intel/__init__.py. */
+  initial: {
+    label: 'Initial assessment',
+    title: 'The first report: what the free check tells you',
+    sub: 'This is what arrives after the free check. One page, reviewed by a person before it is sent. Everything on it can be seen from outside the site — nothing is attacked and nothing is logged in to.',
+    domain: 'primerna-firma.bg',
+    reportTitle: 'Website Health Check',
+    date: 'Checked on 27.08.2026',
+    overall: 'Overall',
+    score: 68,
+    band: 'Needs some attention',
+    heads: { attention: 'Worth looking at', working: 'Working well', detected: 'Detected' },
+    attention: [
+      {
+        t: 'PHP 7.4 no longer receives security updates',
+        d: 'The PHP 7.4 line reached end of life on 28 November 2022. This site runs 7.4.33, the final release on that line.',
+        cves: [] as string[],
+      },
+      {
+        t: 'Vulnerabilities have been reported against PHP 7.4.33',
+        d: 'Reported publicly against this exact version, the most serious rated high. They affect PHP 7.4.33 unless your host has backported the fixes — distribution packages often do, which makes this a question for your hosting provider rather than a conclusion about your site.',
+        cves: ['CVE-2023-3824', 'CVE-2022-31626', 'CVE-2021-21703'],
+      },
+      {
+        t: 'Certificate expires soon',
+        d: '19 days remaining (expires 15.09.2026). The validity period suggests it is renewed by hand, so somebody has to remember.',
+        cves: [] as string[],
+      },
+      {
+        t: 'WordPress 6.4.3 is behind its own release line',
+        d: 'The 6.4 line has since reached 6.4.5, which includes the security fixes released for it in the meantime.',
+        cves: [] as string[],
+      },
+      { t: 'Server is slow to respond', d: 'First response took 1,840 ms.', cves: [] as string[] },
+      {
+        t: 'HSTS is not configured',
+        d: 'Without it, a visitor typing the address can still be sent over plain HTTP first.',
+        cves: [] as string[],
+      },
+    ],
+    working: [
+      'HTTPS is available and HTTP redirects to it',
+      'Certificate chain is complete and trusted',
+      'Session cookies carry the Secure and HttpOnly flags',
+      'robots.txt and sitemap.xml are present',
+      'No mixed content on the homepage',
+    ],
+    detected: ['WordPress 6.4.3', 'PHP 7.4.33', 'Nginx 1.18.0', 'Cloudflare'],
+    cveNote: 'Every reference links to the public record at nvd.nist.gov, so you can check each claim yourself rather than take our word for it.',
+    disclaimer: 'This is a public, non-intrusive website health assessment. Deeper security testing requires authorization.',
+    by: 'Prepared by Viridian Grids',
   },
 
   problems: {
@@ -305,6 +383,204 @@ export const en = {
     doneTitle: 'Request received',
     doneSub: 'We will look at your website before replying, so the first message you get already contains something useful. Usually within one working day.',
     error: 'Something went wrong sending the form. Email us directly at',
+  },
+
+  /*
+    TODO before launch: `entity` must become the registered company name, ЕИК and
+    registered address once the company exists, and all three documents need a
+    lawyer's eye. They are written to be accurate about what this site actually
+    does - no cookies, two forms, two processors - not to be legal advice.
+  */
+  legal: {
+    entity: 'Viridian Grids · Sofia, Bulgaria',
+    updated: 'Last updated: 27 August 2026',
+    contactLine: 'Questions about any of this go to hello@viridiangrids.com and reach a person, not a ticket queue.',
+    privacy: {
+      label: 'Privacy',
+      title: 'Privacy notice',
+      intro:
+        'What this website collects, why, and what you can ask us to do about it. It is short because we collect very little — there are two forms and nothing else.',
+      sections: [
+        {
+          h: 'Who is responsible',
+          p: [
+            'Viridian Grids, based in Sofia, Bulgaria, decides how the data described below is used and is the controller for it under the GDPR.',
+          ],
+          list: [],
+        },
+        {
+          h: 'What we collect',
+          p: ['Only what you type into one of the two forms, plus the ordinary request logs any web server keeps.'],
+          list: [
+            'Free check form — the website address, your name, your email, and optionally your company. Used to run the check and send you the report.',
+            'Contact form — company, website, name, email, optional phone, what you need, and your message. Used to answer you.',
+            'Server logs — IP address, browser and requested page, kept briefly by our hosting provider to run and protect the site.',
+          ],
+        },
+        {
+          h: 'Why we are allowed to',
+          p: [
+            'Both forms are you asking us to do something, so the processing is necessary to take steps at your request before entering a contract. Server logs rest on our legitimate interest in keeping the site working and unabused. You are never required to give us anything — not filling in a form simply means we cannot reply.',
+          ],
+          list: [],
+        },
+        {
+          h: 'No cookies, no analytics, no tracking',
+          p: [
+            'This site sets no cookies, runs no analytics, embeds no social widgets and loads no fonts or scripts from anyone else. Nothing about your visit is shared with an advertising network, because nothing about your visit is collected beyond the server log. That is why there is no cookie banner: there is nothing to consent to.',
+          ],
+          list: [],
+        },
+        {
+          h: 'Who else sees it',
+          p: ['Two service providers, both acting on our instructions and both bound by contract:'],
+          list: [
+            'Vercel — hosts this website and serves the two form endpoints.',
+            'Our email provider — delivers the form submission to our inbox and carries our reply to you.',
+            'Nobody else. Your details are never sold, rented, or passed to a marketing list.',
+          ],
+        },
+        {
+          h: 'How long we keep it',
+          p: [
+            'An enquiry that does not lead anywhere is deleted within 24 months. If you become a customer, we keep what the contract and Bulgarian accounting law require, and no longer. You can ask us to delete an enquiry sooner and we will.',
+          ],
+          list: [],
+        },
+        {
+          h: 'What you can ask for',
+          p: ['Under the GDPR you can ask us to:'],
+          list: [
+            'tell you what we hold about you, and give you a copy',
+            'correct anything wrong',
+            'delete it',
+            'restrict or object to what we do with it',
+            'hand it to you in a portable format',
+          ],
+        },
+        {
+          h: 'If you are unhappy',
+          p: [
+            'Tell us first — it is one person reading, and most things are fixed the same day. If that does not resolve it, you can complain to the Bulgarian Commission for Personal Data Protection (Комисия за защита на личните данни, cpdp.bg).',
+          ],
+          list: [],
+        },
+      ],
+    },
+    terms: {
+      label: 'Terms',
+      title: 'Terms of service',
+      intro:
+        'The standing terms for the monitoring and maintenance plans. A signed agreement governs the actual relationship; this page is what it says, in plain language, before you sign anything.',
+      sections: [
+        {
+          h: 'What you get',
+          p: [
+            'The plan you choose, as described on the pricing page: continuous monitoring, and on Care and Business the maintenance, security hygiene and troubleshooting listed there. Monitoring works with any website. Full maintenance covers the platforms we list — if yours is unusual we say so before you pay, not after.',
+          ],
+          list: [],
+        },
+        {
+          h: 'Price and billing',
+          p: [
+            'Prices are in euro and exclude VAT. Plans are billed monthly in advance. One-time onboarding is €90, waived for founding customers and on annual plans.',
+          ],
+          list: [],
+        },
+        {
+          h: 'Work beyond the plan',
+          p: [
+            'Care includes 30 minutes and Business 60 minutes of troubleshooting per month. Unused minutes do not carry over. Anything beyond the allowance is €45 per hour, or a fixed quote for a larger job — agreed with you in writing before the work starts. You will never receive an invoice for work you did not approve.',
+          ],
+          list: [],
+        },
+        {
+          h: 'Access, and what stays yours',
+          p: [
+            'You give us the access we need, we ask for the least that does the job, and we document it in writing beforehand. Your hosting, domain and accounts remain yours and in your name throughout — we never take ownership of them. Your website, its content and its data are yours.',
+          ],
+          list: [],
+        },
+        {
+          h: 'What we do not promise',
+          p: [
+            'We do not guarantee that your website cannot be compromised, and no honest provider does. Monitoring and maintenance reduce risk by closing the common ways in; they do not eliminate it. We also do not control your hosting provider, your domain registrar or your internet connection, and we cannot guarantee their uptime. What we commit to are the response times published on the pricing page.',
+          ],
+          list: [],
+        },
+        {
+          h: 'Ending it',
+          p: [
+            'Either side can end the agreement with 30 days written notice, at the end of a monthly period. On termination we remove our accounts, hand back any credentials we hold and confirm in writing within 5 working days.',
+          ],
+          list: [],
+        },
+        {
+          h: 'Liability and law',
+          p: [
+            'Our liability in any 12-month period is limited to the fees you paid us over the preceding three months, except where the law does not allow that limit. Bulgarian law applies.',
+          ],
+          list: [],
+        },
+      ],
+    },
+    dpa: {
+      label: 'Data processing',
+      title: 'Data processing agreement',
+      intro:
+        'When we monitor and maintain your website we may touch personal data belonging to your customers. This page sets out how. The signed DPA is part of the onboarding paperwork — ask and we will send it before you commit to anything.',
+      sections: [
+        {
+          h: 'Which of us is which',
+          p: [
+            'For the data on your website, you are the controller and we are the processor: we act only on your documented instructions and never use your data for our own purposes.',
+          ],
+          list: [],
+        },
+        {
+          h: 'What we may come into contact with',
+          p: [
+            'We do not go looking for your customer data, but maintaining a website means being able to reach it. In practice that can include:',
+          ],
+          list: [
+            'contact form submissions and enquiries stored in your site',
+            'customer accounts, orders and addresses on an ecommerce site',
+            'names and email addresses in your CMS user list',
+            'anything visible in a database backup',
+          ],
+        },
+        {
+          h: 'Sub-processors',
+          p: ['We use a small number, and we tell you before adding one:'],
+          list: [
+            'Our VPS provider, for the monitoring infrastructure — EU region.',
+            'Our backup storage provider — encrypted at rest, EU region, separate from your hosting.',
+            'Your own hosting provider remains yours; we do not sit between you and them.',
+          ],
+        },
+        {
+          h: 'How it is protected',
+          p: [
+            'Least-privilege accounts rather than shared logins. All credentials in an encrypted password manager with two-factor authentication — never in email, chat or a spreadsheet. Backups encrypted at rest and stored in the EU. Access over encrypted connections only. Anything beyond passive checking — active security testing — happens only with your written authorisation.',
+          ],
+          list: [],
+        },
+        {
+          h: 'When it ends',
+          p: [
+            'On termination we delete our copies and remove our accounts, and confirm both in writing within 5 working days. Backups age out on their normal retention schedule and are not kept beyond it.',
+          ],
+          list: [],
+        },
+        {
+          h: 'If something goes wrong',
+          p: [
+            'If we become aware of a personal data breach affecting your data, we tell you without undue delay and with what we know at the time — not after we have finished investigating. You are the one with the reporting obligation, so you need the facts early rather than tidily.',
+          ],
+          list: [],
+        },
+      ],
+    },
   },
 
   final: {

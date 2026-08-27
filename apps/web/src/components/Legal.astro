@@ -1,0 +1,41 @@
+---
+import { copy, type Lang, type LegalDoc } from '../content';
+
+interface Props {
+  lang: Lang;
+  doc: LegalDoc;
+}
+
+const { lang, doc } = Astro.props;
+const t = copy[lang];
+const d = t.legal[doc];
+---
+
+<section class="section section--white">
+  <div class="wrap wrap--prose legal">
+    <div class="eyebrow">{d.label}</div>
+    <h1 class="h1">{d.title}</h1>
+    <p class="lede">{d.intro}</p>
+    <p class="legal__meta">{t.legal.entity} · {t.legal.updated}</p>
+
+    {
+      d.sections.map((s) => (
+        <section class="legal__section">
+          <h2 class="legal__h">{s.h}</h2>
+          {s.p.map((para) => (
+            <p>{para}</p>
+          ))}
+          {s.list.length > 0 && (
+            <ul class="legal__list">
+              {s.list.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          )}
+        </section>
+      ))
+    }
+
+    <p class="legal__contact">{t.legal.contactLine}</p>
+  </div>
+</section>

@@ -51,8 +51,11 @@ const t = copy[lang];
   <div class="wrap">
     <div class="footer__legal">
       <span>© {site.year} {site.name} · {site.city}</span>
-      <!-- TODO: these three documents do not exist yet. Link them before launch. -->
-      <span>{t.footer.legal}</span>
+      <span class="footer__legalLinks">
+        <a href={href(lang, 'privacy')}>{t.legal.privacy.label}</a>
+        <a href={href(lang, 'terms')}>{t.legal.terms.label}</a>
+        <a href={href(lang, 'dpa')}>{t.legal.dpa.label}</a>
+      </span>
     </div>
   </div>
 </footer>

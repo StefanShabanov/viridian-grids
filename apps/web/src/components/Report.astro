@@ -46,6 +46,30 @@ const Heading = heading;
           <span>{t.report.resolved}</span>
         </div>
       </div>
+
+      <div class="rep__updates">
+        <div class="rep__blockHead">{t.report.updatesHead}</div>
+        <div class="rep__updatesScroll">
+          <table>
+            <thead>
+              <tr>{t.report.updatesCols.map((c) => <th scope="col">{c}</th>)}</tr>
+            </thead>
+            <tbody>
+              {
+                t.report.updates.map((u) => (
+                  <tr>
+                    <th scope="row" style="font-weight: 500;">{u.what}</th>
+                    <td>{u.from}</td>
+                    <td>{u.to}</td>
+                    <td>{u.why}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+        <p class="rep__updatesMore">{t.report.updatesMore}</p>
+      </div>
     </div>
 
     <p class="rep__foot">{t.report.foot}</p>

@@ -1,5 +1,5 @@
 ---
-import { copy, site, type Lang } from '../content';
+import { copy, href, site, type Lang } from '../content';
 
 interface Props {
   lang: Lang;
@@ -105,6 +105,7 @@ const t = copy[lang];
       <div class="example__foot">
         <div style="font-weight: 600; font-size: 17px;">{t.check.formTitle}</div>
         <p style="font-size: 14.5px; color: var(--muted-2); margin-top: 8px; max-width: 60ch;">{t.check.exampleNote}</p>
+        <p style="margin-top: 14px;"><a href={href(lang, 'report')}>{t.check.seeFull} &rarr;</a></p>
       </div>
     </div>
   </div>

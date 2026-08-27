@@ -7,15 +7,17 @@ import How from '../components/How.astro';
 import Pricing from '../components/Pricing.astro';
 import Sla from '../components/Sla.astro';
 import Report from '../components/Report.astro';
+import InitialReport from '../components/InitialReport.astro';
 import Problems from '../components/Problems.astro';
 import Trust from '../components/Trust.astro';
 import Services from '../components/Services.astro';
 import Faq from '../components/Faq.astro';
 import About from '../components/About.astro';
 import Final from '../components/Final.astro';
+import Legal from '../components/Legal.astro';
 import CheckSection from '../components/CheckSection.astro';
 import ContactSection from '../components/ContactSection.astro';
-import { LANGS, PAGES, param, SECTIONS, shows, type Lang, type PageId } from '../content';
+import { LANGS, PAGES, param, SECTIONS, shows, legalDoc, type Lang, type PageId } from '../content';
 
 export function getStaticPaths() {
   return LANGS.flatMap((lang) =>
@@ -37,6 +39,7 @@ const { lang, page } = Astro.props;
 // whichever shared section comes first.
 const first = SECTIONS[page][0];
 const lead = (section: string): 'h1' | 'h2' => (section === first && page !== 'home' ? 'h1' : 'h2');
+const doc = legalDoc(page);
 ---
 
 <Base lang={lang} page={page}>
@@ -48,11 +51,13 @@ const lead = (section: string): 'h1' | 'h2' => (section === first && page !== 'h
   {shows(page, 'how') && <How lang={lang} heading={lead('how')} />}
   {shows(page, 'pricing') && <Pricing lang={lang} heading={lead('pricing')} />}
   {shows(page, 'sla') && <Sla lang={lang} />}
+  {shows(page, 'initial') && <InitialReport lang={lang} heading={lead('initial')} />}
   {shows(page, 'report') && <Report lang={lang} heading={lead('report')} />}
   {shows(page, 'problems') && <Problems lang={lang} />}
   {shows(page, 'trust') && <Trust lang={lang} heading={lead('trust')} />}
   {shows(page, 'faq') && <Faq lang={lang} heading={lead('faq')} />}
   {shows(page, 'about') && <About lang={lang} />}
   {shows(page, 'contact') && <ContactSection lang={lang} />}
+  {doc && <Legal lang={lang} doc={doc} />}
   {shows(page, 'final') && <Final lang={lang} />}
 </Base>

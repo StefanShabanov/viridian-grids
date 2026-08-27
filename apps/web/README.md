@@ -62,7 +62,16 @@ The doc's numbers are in the site; changing them means changing both files.
 ## Known gaps before launch
 
 - [ ] **Bulgarian copy has not been reviewed by a native speaker.** Same gate as `catalog.py`.
-- [ ] Privacy policy, Terms and DPA do not exist. The footer names all three.
+- [ ] **The three legal pages need a lawyer.** `/poveritelnost`, `/usloviya` and `/obrabotvane-na-danni` are written and accurate about what the site does — two forms, no cookies, two processors — but they are not legal advice and nobody qualified has read them.
+- [ ] **`legal.entity` is a placeholder.** It must carry the registered company name, ЕИК and registered address before the privacy notice is lawful.
 - [ ] `hello@viridiangrids.com` and the domain are placeholders — see the naming decision.
-- [ ] `style-src` still needs `'unsafe-inline'` because components use inline `style` attributes. Moving them into `global.css` would let the CSP tighten, which is worth doing on a site that sells header hygiene.
+- [ ] `style-src` still needs `'unsafe-inline'` because components use inline `style` attributes. Moving them into `global.css` would let the CSP tighten further.
 - [ ] No OG image.
+
+## Fonts
+
+IBM Plex is self-hosted through `@fontsource`, imported at the top of `global.css`.
+Not from Google: the visitor's browser then contacts no third party, which is what
+lets the privacy notice say so plainly; the CSP drops two external origins; and the
+page stops depending on someone else's uptime. Each face carries a `unicode-range`,
+so a Bulgarian reader downloads Cyrillic and an English one does not.

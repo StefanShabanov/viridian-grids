@@ -1,0 +1,88 @@
+---
+import { copy, type Lang } from '../content';
+
+interface Props {
+  lang: Lang;
+  heading?: 'h1' | 'h2';
+}
+
+const { lang, heading = 'h2' } = Astro.props;
+const t = copy[lang];
+const r = t.initial;
+const Heading = heading;
+---
+
+{/*
+  The free-check report, rendered the way the scanner actually renders it:
+  worst-first attention items with the reasoning, then what already works, then
+  what was detected, then the disclaimer.
+
+  Wording is bound by the scanner's own rule - a version match is evidence, not
+  proof. Nothing here says "you are vulnerable", because we do not know that and
+  cannot responsibly imply it to a stranger.
+*/}
+
+<section class="section section--white">
+  <div class="wrap">
+    <div class="eyebrow">{r.label}</div>
+    <Heading class={heading === 'h1' ? 'h1' : 'h2'} style="max-width: 22ch;">{r.title}</Heading>
+    <p class="lede" style="max-width: 62ch;">{r.sub}</p>
+
+    <article class="sheet">
+      <header class="sheet__head">
+        <div>
+          <div class="sheet__domain">{r.domain}</div>
+          <div class="sheet__kicker">{r.reportTitle}</div>
+        </div>
+        <div class="sheet__date">{r.date}</div>
+      </header>
+
+      <div class="sheet__score">
+        <span class="sheet__scoreLabel">{r.overall}</span>
+        <b>{r.score}</b><span class="sheet__of">/100</span>
+        <span class="sheet__band">{r.band}</span>
+      </div>
+      <div class="sheet__bar" role="img" aria-label={`${r.score}/100`}>
+        <i style={`width: ${r.score}%`}></i>
+      </div>
+
+      <h3 class="sheet__h">{r.heads.attention}</h3>
+      <ul class="findings">
+        {
+          r.attention.map((f) => (
+            <li class="finding finding--warn">
+              <span class="finding__t">{f.t}</span>
+              <p class="finding__d">{f.d}</p>
+              {f.cves.length > 0 && (
+                <p class="cves">
+                  {f.cves.map((cve) => (
+                    <a class="cve" href={`https://nvd.nist.gov/vuln/detail/${cve}`} rel="noopener nofollow" target="_blank">
+                      {cve}
+                    </a>
+                  ))}
+                </p>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+
+      <h3 class="sheet__h">{r.heads.working}</h3>
+      <ul class="findings">
+        {r.working.map((w) => <li class="finding finding--ok"><span class="finding__t">{w}</span></li>)}
+      </ul>
+
+      <h3 class="sheet__h">{r.heads.detected}</h3>
+      <p class="detected">
+        {r.detected.map((d) => <span class="detected__item">{d}</span>)}
+      </p>
+
+      <footer class="sheet__foot">
+        <p>{r.disclaimer}</p>
+        <p class="sheet__by">{r.by}</p>
+      </footer>
+    </article>
+
+    <p class="note" style="margin-top: 18px; max-width: 76ch; line-height: 1.6;">{r.cveNote}</p>
+  </div>
+</section>
