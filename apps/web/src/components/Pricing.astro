@@ -1,11 +1,28 @@
 ---
-import { copy, href, plans, type Lang } from '../content';
+import { copy, href, plans, rates, type Lang } from '../content';
 
-interface Props { lang: Lang; heading?: 'h1' | 'h2' }
+interface Props {
+  lang: Lang;
+  heading?: 'h1' | 'h2';
+}
+
 const { lang, heading = 'h2' } = Astro.props;
 const t = copy[lang];
 const Heading = heading;
+
+// Derived, never typed in twice: an annual plan is `annualMonths` months of the
+// monthly price, and the saving is the two months you do not pay for.
+const annual = (monthly: number) => monthly * rates.annualMonths;
+const fullYear = (monthly: number) => monthly * 12;
+const saving = (monthly: number) => fullYear(monthly) - annual(monthly);
 ---
+
+{/*
+  The monthly/annual switch is two radio inputs and sibling selectors - no
+  JavaScript, so it works before hydration, with scripting disabled, and without
+  loosening the CSP. The radios sit before the cards because `:checked ~` can
+  only look forwards.
+*/}
 
 <section class="section">
   <div class="wrap">
@@ -13,39 +30,79 @@ const Heading = heading;
     <Heading class={heading === 'h1' ? 'h1' : 'h2'}>{t.pricing.title}</Heading>
     <p class="lede" style="max-width: 58ch;">{t.pricing.sub}</p>
 
-    <div class="plans">
-      {plans.map((plan) => {
-        const c = t.pricing.plans[plan.id];
-        return (
-          <div class={plan.featured ? 'plan plan--featured' : 'plan'}>
-            {plan.featured && <div class="plan__badge">{t.pricing.badge}</div>}
-            <div class="plan__name">{c.name}</div>
-            <div class="plan__price"><b>&euro;{plan.price}</b><span>{t.pricing.per}</span></div>
-            <p class="plan__blurb">{c.blurb}</p>
-            <div class="plan__rule"></div>
-            <ul class="plan__features">
-              {c.f.map((f) => (
-                <li><i aria-hidden="true">&#10003;</i><span>{f}</span></li>
-              ))}
-            </ul>
-            <a class={plan.featured ? 'btn btn--primary plan__cta' : 'btn btn--ghost plan__cta'} href={href(lang, 'contact')}>
-              {t.pricing.cta}
-            </a>
-          </div>
-        );
-      })}
+    <div class="billing">
+      <input class="visually-hidden" type="radio" name="billing" id="bill-monthly" checked />
+      <input class="visually-hidden" type="radio" name="billing" id="bill-annual" />
+
+      <div class="billing__switch">
+        <label for="bill-monthly">{t.pricing.billing.monthly}</label>
+        <label for="bill-annual">
+          {t.pricing.billing.annual}
+          <span class="billing__save">{t.pricing.billing.save}</span>
+        </label>
+      </div>
+
+      <div class="plans">
+        {
+          plans.map((plan) => {
+            const c = t.pricing.plans[plan.id];
+            return (
+              <div class={plan.featured ? 'plan plan--featured' : 'plan'}>
+                {plan.featured && <div class="plan__badge">{t.pricing.badge}</div>}
+                <div class="plan__name">{c.name}</div>
+
+                <div class="plan__price price--monthly">
+                  <b>&euro;{plan.price}</b>
+                  <span>{t.pricing.per}</span>
+                </div>
+                <div class="plan__price price--annual">
+                  <b>&euro;{annual(plan.price)}</b>
+                  <span>{t.pricing.perYear}</span>
+                </div>
+                <div class="plan__saving price--annual">
+                  {t.pricing.instead} &euro;{fullYear(plan.price)} · {t.pricing.saveWord} &euro;{saving(plan.price)}
+                </div>
+
+                <p class="plan__blurb">{c.blurb}</p>
+                <div class="plan__rule" />
+                <ul class="plan__features">
+                  {c.f.map((f) => (
+                    <li>
+                      <i aria-hidden="true">&#10003;</i>
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                  <li class="price--annual plan__perk">
+                    <i aria-hidden="true">&#10003;</i>
+                    <span>{t.pricing.annualPerk}</span>
+                  </li>
+                </ul>
+
+                <a
+                  class={plan.featured ? 'btn btn--primary plan__cta' : 'btn btn--ghost plan__cta'}
+                  href={href(lang, 'contact')}
+                >
+                  {t.pricing.cta}
+                </a>
+              </div>
+            );
+          })
+        }
+      </div>
     </div>
 
     <p class="pricing__anchor">{t.pricing.anchor}</p>
     <p class="pricing__qualify">{t.pricing.qualify}</p>
 
     <div class="notes">
-      {t.pricing.notes.map((n) => (
-        <div>
-          <span class="notes__k">{n.k}</span>
-          <p class="notes__v">{n.v}</p>
-        </div>
-      ))}
+      {
+        t.pricing.notes.map((n) => (
+          <div>
+            <span class="notes__k">{n.k}</span>
+            <p class="notes__v">{n.v}</p>
+          </div>
+        ))
+      }
     </div>
   </div>
 </section>

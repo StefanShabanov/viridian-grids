@@ -1188,3 +1188,83 @@ input, button, select, textarea { font: inherit; color: inherit; }
   color: var(--muted-2);
   max-width: 66ch;
 }
+
+/* ------------------------------------------------- monthly / annual switch */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.billing__switch {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 4px;
+  margin-top: 36px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--white);
+  flex-wrap: wrap;
+}
+.billing__switch label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 20px;
+  border-radius: 2px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--muted-3);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.billing__switch label:hover { color: var(--green); }
+.billing__save {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--green-text);
+  background: var(--green-soft);
+  border-radius: 2px;
+  padding: 3px 8px;
+}
+
+/* The radios precede .billing__switch and .plans, so `~` can reach both. */
+#bill-monthly:checked ~ .billing__switch label[for='bill-monthly'],
+#bill-annual:checked ~ .billing__switch label[for='bill-annual'] {
+  background: var(--ink);
+  color: #fff;
+}
+#bill-annual:checked ~ .billing__switch label[for='bill-annual'] .billing__save {
+  background: var(--green);
+  color: #fff;
+}
+#bill-monthly:focus-visible ~ .billing__switch label[for='bill-monthly'],
+#bill-annual:focus-visible ~ .billing__switch label[for='bill-annual'] {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+/* Only one price set is ever in the document flow. */
+.price--annual { display: none; }
+#bill-annual:checked ~ .plans .price--monthly { display: none; }
+#bill-annual:checked ~ .plans .plan__price.price--annual { display: flex; }
+#bill-annual:checked ~ .plans .plan__saving.price--annual { display: block; }
+#bill-annual:checked ~ .plans li.price--annual { display: grid; }
+
+.plan__saving {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--muted-3);
+  margin-top: 6px;
+}
+.plan__perk i { color: var(--green); }
