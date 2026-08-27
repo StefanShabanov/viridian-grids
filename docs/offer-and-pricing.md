@@ -75,9 +75,20 @@ internet, UPS. Turns a €59 customer into a €299 customer — this is where t
 [apps/web](../apps/web/) states these publicly, so they are now commitments rather than
 drafts. Changing one means changing both files in the same commit.
 
-- **Out-of-allowance work: €45/hour**, or a fixed quote agreed before the work starts.
-- **One-time onboarding: €90** — assessment, access setup, configuration. Waived for
+- **Out-of-allowance work: €20/hour.** For anything larger, we write down what it involves and
+  how long it will take, and start only after the customer approves. Set at €20 on 2026-08-27,
+  down from a drafted €45. It sits below the Bulgarian freelance market rate and it caps what
+  project work and the Infrastructure Care upsell can be quoted at later — revisit once there
+  is real data on minutes per customer per month.
+- **One-time onboarding: €49** — assessment, access setup, configuration. Waived for
   founding customers and on annual plans.
+- **Annual plans: pay 10 months, use 12** (~17% off, the standard convention). Setup waived and
+  the price locked for the term. €290 / €590 / €990.
+  **Do not lead with it.** Nobody prepays a stranger twelve months, and the founding offer is
+  the opposite motion. Sell annual as an upgrade at month 3–4, once the customer has seen two
+  reports and ideally one handled incident — that is where the discount buys a renewal decision
+  instead of trying to buy trust that has not been earned. Treat prepayments as **deferred
+  revenue**: stopping in month four means owing roughly €400 back.
 - **Response times**, per tier:
 
   | | Monitor | Care | Business |
@@ -91,9 +102,14 @@ drafts. Changing one means changing both files in the same commit.
   105 hours a week for one person. Five days is what a solo operator can actually honour.
 
 **Note on allowances.** The design mock offered 1 hour on Care and 3 hours on Business.
-That would price Business support at €33/hour against our own €45/hour rate. The site
-publishes the numbers above — 30 and 60 minutes — deliberately. Revisit once there is
-real data on minutes per customer per month.
+Against the originally drafted €45/hour that was underwater — 3 hours inside a €99 plan
+prices support at €33/hour. The site publishes 30 and 60 minutes instead.
+
+**That argument weakened when the rate dropped to €20/hour** (2026-08-27). At €20, three
+hours is €60 of labour inside a €99 plan, which is no longer obviously loss-making. So the
+tight allowances are now a *caution* rather than a necessity, and there is room to be more
+generous than competitors once there is real data on minutes used per customer per month.
+Generosity here is cheap and visible; the hourly rate is what has to stay defensible.
 
 ## Still to decide
 

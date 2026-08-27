@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import Band from '../components/Band.astro';
+import Proof from '../components/Proof.astro';
 import Monitor from '../components/Monitor.astro';
 import How from '../components/How.astro';
 import Pricing from '../components/Pricing.astro';
@@ -44,6 +45,7 @@ const doc = legalDoc(page);
 
 <Base lang={lang} page={page}>
   {shows(page, 'hero') && <Hero lang={lang} />}
+  {shows(page, 'proof') && <Proof lang={lang} />}
   {shows(page, 'band') && <Band lang={lang} />}
   {shows(page, 'check') && <CheckSection lang={lang} />}
   {shows(page, 'services') && <Services lang={lang} />}

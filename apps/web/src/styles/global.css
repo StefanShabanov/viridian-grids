@@ -1122,3 +1122,69 @@ input, button, select, textarea { font: inherit; color: inherit; }
 .footer__legalLinks { display: flex; gap: 18px; flex-wrap: wrap; }
 .footer__legalLinks a { color: var(--dark-label); }
 .footer__legalLinks a:hover { color: var(--mint); }
+
+/* ------------------------------------------------------------- proof band */
+
+.proof__title { max-width: 22ch; }
+.proof__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  margin-top: 40px;
+}
+.proof__stat { background: var(--white); padding: 26px 24px 28px; }
+.proof__big {
+  font-size: clamp(30px, 4vw, 40px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--green);
+}
+.proof__label { font-size: 14px; line-height: 1.5; color: var(--muted-2); margin-top: 12px; }
+.proof__body {
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: var(--ink-3);
+  margin-top: 28px;
+  max-width: 70ch;
+  text-wrap: pretty;
+}
+.proof__note { margin-top: 22px; max-width: 74ch; }
+.proof__note summary {
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--green);
+  list-style: none;
+  padding: 6px 0;
+}
+.proof__note summary::-webkit-details-marker { display: none; }
+.proof__note summary::after { content: ' +'; }
+.proof__note[open] summary::after { content: ' \2212'; }
+.proof__note p {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--muted-2);
+  padding: 6px 0 0;
+}
+.proof__cta { margin-top: 26px; font-size: 16px; font-weight: 500; }
+
+.pricing__anchor {
+  margin-top: 30px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 62ch;
+  border-left: 2px solid var(--green);
+  padding-left: 18px;
+  text-wrap: pretty;
+}
+.pricing__qualify {
+  margin-top: 16px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--muted-2);
+  max-width: 66ch;
+}

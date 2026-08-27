@@ -1,0 +1,46 @@
+---
+import { copy, href, type Lang } from '../content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = copy[lang];
+const p = t.proof;
+---
+
+{/*
+  The answer to the only real objection a one-person service faces: why trust him?
+  There are no logos and no testimonials to show, so the proof is that we measured
+  the market these customers are in. Every number is recomputed from the sweep in
+  apps/scanner/out/sweep - if the corpus grows, these change.
+*/}
+
+<section class="section proof">
+  <div class="wrap">
+    <div class="eyebrow">{p.label}</div>
+    <h2 class="h2 proof__title">{p.title}</h2>
+    <p class="lede">{p.sub}</p>
+
+    <div class="proof__stats">
+      {
+        p.stats.map((s) => (
+          <div class="proof__stat">
+            <div class="proof__big">{s.big}</div>
+            <div class="proof__label">{s.label}</div>
+          </div>
+        ))
+      }
+    </div>
+
+    <p class="proof__body">{p.body}</p>
+
+    <details class="proof__note">
+      <summary>{p.footnoteLabel}</summary>
+      <p>{p.footnote}</p>
+    </details>
+
+    <p class="proof__cta"><a href={href(lang, 'check')}>{p.cta} &rarr;</a></p>
+  </div>
+</section>

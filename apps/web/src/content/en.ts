@@ -40,15 +40,15 @@ export const en = {
   nav: { services: 'Services', pricing: 'Pricing', how: 'How it works', report: 'Sample reports', faq: 'FAQ', cta: 'Check my website' },
 
   hero: {
-    eyebrow: 'Managed monitoring for small and medium business',
-    h1: 'Website monitoring and maintenance for small and medium businesses',
-    sub: 'We monitor uptime, certificates, updates and backups, fix what breaks, and send you one clear report a month. No IT person required.',
+    eyebrow: 'Website monitoring and maintenance for small and medium business',
+    h1: 'When your website goes down, you hear it from us — not from a customer.',
+    sub: 'We watch your site around the clock, keep it updated and keep the backups honest. You hear about a problem once it is already fixed — in one clear report a month. No IT person required.',
     cta1: 'Check my website',
     cta2: 'View plans',
     note: 'Free check · no account · reviewed by hand',
     panelTitle: 'example.bg — live status',
     live: 'monitored',
-    panelFoot: 'Checked every 60s from 2 locations',
+    panelFoot: 'Checked every minute',
     panelNote: 'Illustration of a monitored site, not live data.',
     rows: [
       { k: 'uptime (30d)', v: '99.99%', warn: false },
@@ -61,15 +61,36 @@ export const en = {
     ],
   },
 
+  /* Measured, not claimed. Every number here comes from the 1,028-site sweep in
+     apps/scanner/out/sweep - recompute before changing any of them, and keep the
+     CVE wording within the scanner's own rule: a version match is evidence, not
+     proof. See intel/__init__.py. */
+  proof: {
+    label: 'What we measured',
+    title: 'The question is not whether your website will go down, but when.',
+    sub: 'We checked more than 1,000 Bulgarian websites — hotels, guest houses, dental clinics, law firms. This is what we found.',
+    stats: [
+      { big: '1,028', label: 'Bulgarian websites checked' },
+      { big: '73/100', label: 'median health score' },
+      { big: '1 in 6', label: 'have publicly reported vulnerabilities against the version they run*' },
+      { big: '133', label: 'of those carry at least one rated high or critical' },
+    ],
+    body: '75 sites run software that no longer receives security updates at all. The most common by far is PHP 7.4, which stopped getting fixes in November 2022 — followed by PHP 5.6, and in a few cases PHP 5.3, unpatched since 2014. Almost none of this is a decision anybody made. It is a hosting default nobody revisited.',
+    footnoteLabel: '* What is a CVE?',
+    footnote:
+      'A CVE is a public identifier for a weakness found in a specific version of a piece of software. Anyone can look up what a given number means in the NIST database at nvd.nist.gov. A version match does not prove a site is exploitable — the host may have applied the fix without changing the version number, which distribution packages often do. That is why every report we send says "reported against this version", never "you are vulnerable".',
+    cta: 'Check your website free',
+  },
+
   band: {
     label: 'Start here',
-    text: 'See what an outsider can already tell about your website.',
+    text: 'In a few minutes you will know what is wrong with your website — and which part of it is urgent.',
     cta: 'Request the free check',
   },
 
   check: {
     label: 'Free website check',
-    title: 'Find out what your website is telling the internet',
+    title: 'Free check: the results on a single page',
     sub: 'We run a non-intrusive, read-only check of what is already publicly visible: HTTPS, certificate, response time, security headers and redirects. Nothing is attacked, nothing is logged in to.',
     disclaimer: 'Public endpoints only · no login attempts · no scanning of private systems',
     exampleLabel: 'Example output',
@@ -101,7 +122,7 @@ export const en = {
 
   monitor: {
     label: 'What we monitor',
-    title: 'The things that quietly break your platform',
+    title: 'What takes a website down',
     items: [
       { code: '01', name: 'Uptime', desc: 'Checked every minute from more than one location, so a blip is not a false alarm.' },
       { code: '02', name: 'SSL & domain', desc: 'Certificate and domain expiry tracked well before anyone sees a warning page.' },
@@ -171,17 +192,23 @@ export const en = {
         ],
       },
     },
+    anchor: 'What does one day without a working website cost you? For most hotels, shops and clinics — more than a whole year of monitoring here.',
+    qualify: 'If you have your own IT person, or an agency already doing this, you do not need us. If your website is maintained whenever somebody remembers, get in touch.',
     notes: [
       {
-        k: 'ADDITIONAL WORK',
-        v: 'Work beyond the included allowance is EUR 45/hour, or quoted upfront for larger jobs. We always ask before starting.',
+        k: 'BEYOND THE PLAN',
+        v: 'Work beyond the included allowance is EUR 20/hour. For anything larger we first write down what it involves and how long it will take, and start only once you have approved it.',
       },
       {
-        k: 'SETUP',
-        v: 'One-time onboarding of EUR 90 covers assessment, access setup and configuration. Waived for founding customers and on annual plans.',
+        k: 'GETTING STARTED',
+        v: 'A one-time EUR 49 covers assessment, access setup and configuration. Waived for founding customers and on annual plans.',
       },
       {
-        k: 'ANY PLATFORM',
+        k: 'ANNUAL',
+        v: 'Pay for 10 months, use 12. Setup is waived, and your price stays locked for the term.',
+      },
+      {
+        k: 'PLATFORMS',
         v: 'Monitoring works with any website. Full maintenance covers WordPress, Node.js, PHP/Laravel and static sites — ask about yours.',
       },
     ],
@@ -293,7 +320,7 @@ export const en = {
 
   problems: {
     label: 'Problems we watch for',
-    title: 'The failures that cost SMEs money',
+    title: 'What a broken website costs',
     items: [
       { title: 'Your website goes offline', desc: 'We detect availability problems ourselves, instead of waiting for a customer to tell you the site is down.' },
       { title: 'Your SSL certificate expires', desc: 'Browsers show a full-page security warning. We track certificate and domain expiry weeks in advance.' },
@@ -358,7 +385,7 @@ export const en = {
     paras: [
       'I am a DevOps engineer who works with infrastructure, monitoring and automation. I started Viridian Grids because a lot of small businesses depend on a website every day but do not need — and do not want — an internal IT team.',
       'The usual alternatives are a freelancer who disappears, an agency that only responds to new project work, or nobody at all until something breaks. None of those are monitoring. So the website goes down on a Saturday and someone finds out on Monday from a customer.',
-      'This is intentionally a small, focused service. I do not run a 40-person company, and telling you otherwise would be the first thing I got wrong. What you get instead is one person who knows your setup, has documented the access, and has already been alerted before you notice.',
+      'This is intentionally a small, focused service. There is no call centre and no ticket queue — the person who answers your email is the person who fixes the site, and already knows how it is put together. He was alerted before you noticed.',
       'Based in Sofia, working with businesses across Bulgaria and the EU.',
     ],
     stackLabel: 'What runs behind the scenes',
@@ -483,14 +510,14 @@ export const en = {
         {
           h: 'Price and billing',
           p: [
-            'Prices are in euro and exclude VAT. Plans are billed monthly in advance. One-time onboarding is €90, waived for founding customers and on annual plans.',
+            'Prices are in euro and exclude VAT. Plans are billed monthly in advance. On an annual plan you pay for 10 months and use 12, and the price stays unchanged for the term. One-time onboarding is €49, waived for founding customers and on annual plans.',
           ],
           list: [],
         },
         {
           h: 'Work beyond the plan',
           p: [
-            'Care includes 30 minutes and Business 60 minutes of troubleshooting per month. Unused minutes do not carry over. Anything beyond the allowance is €45 per hour, or a fixed quote for a larger job — agreed with you in writing before the work starts. You will never receive an invoice for work you did not approve.',
+            'Care includes 30 minutes and Business 60 minutes of troubleshooting per month. Unused minutes do not carry over. Anything beyond the allowance is €20 per hour. For a larger job we first describe in writing what it involves and how long it will take, and agree it with you before the work starts. You will never receive an invoice for work you did not approve.',
           ],
           list: [],
         },

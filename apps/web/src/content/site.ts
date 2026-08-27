@@ -24,10 +24,12 @@ export const plans = [
   { id: 'business', price: 99, featured: false },
 ] as const;
 
-/** Published rates. Both are still marked "to decide" in docs/offer-and-pricing.md. */
+/** Published rates and terms. Mirrored in docs/offer-and-pricing.md - change both. */
 export const rates = {
-  hourly: 45,
-  setup: 90,
+  hourly: 20,
+  setup: 49,
+  /** Annual plans: pay for this many months, use twelve. */
+  annualMonths: 10,
 } as const;
 
 /** The pages, and which sections each one shows - mirrors the design's show* flags. */
@@ -114,8 +116,8 @@ export function param(lang: Lang, page: PageId): string | undefined {
  * the whole story on the home page and lets the nav deep-link into slices of it.
  */
 export const SECTIONS: Record<PageId, string[]> = {
-  home: ['hero', 'band', 'monitor', 'how', 'pricing', 'sla', 'report', 'problems', 'trust', 'faq', 'final'],
-  check: ['check', 'final'],
+  home: ['hero', 'proof', 'band', 'monitor', 'how', 'pricing', 'sla', 'report', 'problems', 'trust', 'faq', 'final'],
+  check: ['check', 'proof', 'final'],
   pricing: ['pricing', 'sla', 'faq', 'final'],
   services: ['services', 'problems', 'final'],
   how: ['how', 'pricing', 'sla', 'final'],
