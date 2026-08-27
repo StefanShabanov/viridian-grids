@@ -1,0 +1,40 @@
+---
+import { copy, href, type Lang } from '../content';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = copy[lang];
+---
+
+<section class="hero">
+  <div class="wrap hero__grid">
+    <div class="hero__copy">
+      <div class="eyebrow hero__eyebrow"><span class="dot" aria-hidden="true"></span>{t.hero.eyebrow}</div>
+      <h1>{t.hero.h1}</h1>
+      <p class="hero__sub">{t.hero.sub}</p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href={href(lang, 'check')}>{t.hero.cta1}</a>
+        <a class="btn btn--ghost" href={href(lang, 'pricing')}>{t.hero.cta2}</a>
+      </div>
+      <p class="note" style="margin-top: 22px;">{t.hero.note}</p>
+    </div>
+
+    <div>
+      <div class="panel">
+        <div class="panel__head">
+          <span>{t.hero.panelTitle}</span>
+          <span class="panel__live">&#9679; {t.hero.live}</span>
+        </div>
+        <div class="panel__body">
+          {t.hero.rows.map((row) => (
+            <div class={row.warn ? 'panel__row panel__row--warn' : 'panel__row'}>
+              <span>{row.k}</span><span>{row.v}</span>
+            </div>
+          ))}
+        </div>
+        <div class="panel__foot">{t.hero.panelFoot}</div>
+      </div>
+      <p class="note" style="margin-top: 12px;">{t.hero.panelNote}</p>
+    </div>
+  </div>
+</section>

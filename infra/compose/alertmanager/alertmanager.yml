@@ -1,0 +1,23 @@
+# Internal-first routing. Customers are notified per their stated preference,
+# never with raw Alertmanager output.
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: internal-email
+  group_by: [alertname, customer]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  routes:
+    - matchers: [plan="business"]
+      receiver: internal-email
+      group_wait: 10s
+      repeat_interval: 1h
+
+receivers:
+  - name: internal-email
+    # Configure SMTP before this does anything useful.
+    email_configs: []
+
+inhibit_rules: []

@@ -1,0 +1,113 @@
+---
+import { copy, site, type Lang } from '../content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = copy[lang];
+
+const fields: {
+  name: string;
+  label: string;
+  type: 'text' | 'url' | 'email' | 'tel';
+  ph: string;
+  required: boolean;
+  autocomplete: string;
+}[] = [
+  { name: 'company', label: t.contact.fields.company, type: 'text', ph: t.contact.ph.company, required: false, autocomplete: 'organization' },
+  { name: 'website', label: t.contact.fields.website, type: 'url', ph: t.contact.ph.website, required: false, autocomplete: 'url' },
+  { name: 'name', label: t.contact.fields.name, type: 'text', ph: '', required: true, autocomplete: 'name' },
+  { name: 'email', label: t.contact.fields.email, type: 'email', ph: t.contact.ph.email, required: true, autocomplete: 'email' },
+  { name: 'phone', label: t.contact.fields.phone, type: 'tel', ph: t.contact.ph.phone, required: false, autocomplete: 'tel' },
+];
+---
+
+<section class="section section--white">
+  <div class="wrap wrap--narrow" style="padding-bottom: 92px;">
+    <div class="eyebrow">{t.contact.label}</div>
+    <h1 class="h1">{t.contact.title}</h1>
+    <p class="lede" style="max-width: 58ch;">{t.contact.sub}</p>
+
+    <form
+      id="contact-form"
+      method="post"
+      action="/api/contact"
+      data-enhance
+      data-error={t.contact.error}
+      data-mail={site.email}
+      data-done="contact-done"
+    >
+      <input type="hidden" name="lang" value={lang} />
+      <p class="hp" aria-hidden="true">
+        <label>Leave this empty<input type="text" name="website2" tabindex="-1" autocomplete="off" /></label>
+      </p>
+
+      <div class="fields">
+        {
+          fields.map((f) => (
+            <div>
+              <label class="field__label" for={`contact-${f.name}`}>{f.label}</label>
+              <input
+                class="input"
+                id={`contact-${f.name}`}
+                name={f.name}
+                type={f.type}
+                placeholder={f.ph}
+                required={f.required}
+                autocomplete={f.autocomplete}
+              />
+            </div>
+          ))
+        }
+      </div>
+
+      <fieldset style="margin-top: 28px; border: 0; padding: 0;">
+        <legend class="field__label" style="margin-bottom: 12px;">{t.contact.needs}</legend>
+        <div class="chips">
+          {
+            t.contact.options.map((label) => (
+              <label class="chip">
+                <input type="checkbox" name="needs" value={label} />
+                <span class="chip__mark" aria-hidden="true">+</span>
+                <span>{label}</span>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
+
+      <div style="margin-top: 26px;">
+        <label class="field__label" for="contact-message">{t.contact.msg}</label>
+        <textarea class="textarea" id="contact-message" name="message" rows="4" placeholder={t.contact.msgPh}></textarea>
+      </div>
+
+      <div style="margin-top: 26px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
+        <button
+          class="btn btn--primary"
+          type="submit"
+          style="padding: 15px 30px;"
+          data-label={t.contact.cta}
+          data-sending={t.contact.sending}
+        >
+          {t.contact.cta}
+        </button>
+        <span class="note">{t.contact.note}</span>
+      </div>
+
+      <p style="margin-top: 16px; font-size: 13.5px; color: var(--muted-3);">{t.contact.consent}</p>
+
+      <p class="formMsg" data-msg hidden></p>
+    </form>
+
+    <div class="formDone" id="contact-done" hidden>
+      <div class="formDone__t">&#10003; {t.contact.doneTitle}</div>
+      <p class="formDone__s">{t.contact.doneSub}</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  import '../scripts/forms';
+</script>

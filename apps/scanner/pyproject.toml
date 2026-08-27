@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vg-scanner"
+version = "0.1.0"
+description = "Non-intrusive website health scanner for Viridian Grids"
+requires-python = ">=3.12"
+dependencies = [
+    "httpx>=0.27",
+    "brotli>=1.1",          # without it httpx cannot decode br, and bodies arrive as bytes
+    "cryptography>=43",
+    "pydantic>=2.8",
+    "jinja2>=3.1",
+    "typer>=0.12",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-asyncio>=0.24", "ruff>=0.6", "respx>=0.21"]
+
+[project.scripts]
+vg-scan = "vg_scanner.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+# Typer expresses its whole API through call-valued defaults.
+"src/vg_scanner/cli.py" = ["B008"]
+# Prose and inline CSS; wrapping them hurts more than it helps.
+"src/vg_scanner/catalog.py" = ["E501"]
+"src/vg_scanner/report.py" = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

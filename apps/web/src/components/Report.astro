@@ -1,0 +1,53 @@
+---
+import { copy, type Lang } from '../content';
+
+interface Props { lang: Lang; heading?: 'h1' | 'h2' }
+const { lang, heading = 'h2' } = Astro.props;
+const t = copy[lang];
+const Heading = heading;
+---
+
+<section class="section section--dark">
+  <div class="wrap">
+    <div class="eyebrow">{t.report.label}</div>
+    <Heading class={heading === 'h1' ? 'h1' : 'h2'} style="max-width: 20ch;">{t.report.title}</Heading>
+    <p class="lede" style="max-width: 58ch;">{t.report.sub}</p>
+
+    <div class="rep">
+      <div class="rep__head">
+        <div>
+          <div class="rep__company">{t.report.company}</div>
+          <div class="rep__period">{t.report.period}</div>
+        </div>
+        <div style="text-align: right;">
+          <div class="rep__scoreLabel">{t.report.score}</div>
+          <div class="rep__score">96<span>/100</span></div>
+        </div>
+      </div>
+
+      <div class="rep__blocks">
+        {t.report.blocks.map((b) => (
+          <div class="rep__block">
+            <div class="rep__blockHead">{b.head}</div>
+            <div class={`rep__big is-${b.tone}`}>{b.big}</div>
+            <div class="rep__lines">
+              {b.lines.map((l) => <span>{l}</span>)}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="rep__incidents">
+        <div class="rep__blockHead">{t.report.incidents}</div>
+        <div class="rep__incident">
+          <span>{t.report.incDate}</span>
+          <span>{t.report.inc1}</span>
+          <span>{t.report.inc1d}</span>
+          <span>{t.report.resolved}</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="rep__foot">{t.report.foot}</p>
+  </div>
+</section>

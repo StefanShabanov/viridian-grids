@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Band from '../components/Band.astro';
+import Monitor from '../components/Monitor.astro';
+import How from '../components/How.astro';
+import Pricing from '../components/Pricing.astro';
+import Sla from '../components/Sla.astro';
+import Report from '../components/Report.astro';
+import Problems from '../components/Problems.astro';
+import Trust from '../components/Trust.astro';
+import Services from '../components/Services.astro';
+import Faq from '../components/Faq.astro';
+import About from '../components/About.astro';
+import Final from '../components/Final.astro';
+import CheckSection from '../components/CheckSection.astro';
+import ContactSection from '../components/ContactSection.astro';
+import { LANGS, PAGES, param, SECTIONS, shows, type Lang, type PageId } from '../content';
+
+export function getStaticPaths() {
+  return LANGS.flatMap((lang) =>
+    PAGES.map((page) => ({
+      params: { path: param(lang, page) },
+      props: { lang, page },
+    })),
+  );
+}
+
+interface Props {
+  lang: Lang;
+  page: PageId;
+}
+
+const { lang, page } = Astro.props;
+
+// One h1 per page. On the home page that is the hero; elsewhere it belongs to
+// whichever shared section comes first.
+const first = SECTIONS[page][0];
+const lead = (section: string): 'h1' | 'h2' => (section === first && page !== 'home' ? 'h1' : 'h2');
+---
+
+<Base lang={lang} page={page}>
+  {shows(page, 'hero') && <Hero lang={lang} />}
+  {shows(page, 'band') && <Band lang={lang} />}
+  {shows(page, 'check') && <CheckSection lang={lang} />}
+  {shows(page, 'services') && <Services lang={lang} />}
+  {shows(page, 'monitor') && <Monitor lang={lang} />}
+  {shows(page, 'how') && <How lang={lang} heading={lead('how')} />}
+  {shows(page, 'pricing') && <Pricing lang={lang} heading={lead('pricing')} />}
+  {shows(page, 'sla') && <Sla lang={lang} />}
+  {shows(page, 'report') && <Report lang={lang} heading={lead('report')} />}
+  {shows(page, 'problems') && <Problems lang={lang} />}
+  {shows(page, 'trust') && <Trust lang={lang} heading={lead('trust')} />}
+  {shows(page, 'faq') && <Faq lang={lang} heading={lead('faq')} />}
+  {shows(page, 'about') && <About lang={lang} />}
+  {shows(page, 'contact') && <ContactSection lang={lang} />}
+  {shows(page, 'final') && <Final lang={lang} />}
+</Base>

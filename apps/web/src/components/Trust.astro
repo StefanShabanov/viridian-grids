@@ -1,0 +1,28 @@
+---
+import { copy, type Lang } from '../content';
+
+interface Props { lang: Lang; heading?: 'h1' | 'h2' }
+const { lang, heading = 'h2' } = Astro.props;
+const t = copy[lang];
+const Heading = heading;
+---
+
+<section class="section section--white">
+  <div class="wrap">
+    <div class="eyebrow">{t.trust.label}</div>
+    <Heading class={heading === 'h1' ? 'h1' : 'h2'} style="max-width: 24ch;">{t.trust.title}</Heading>
+    <p class="lede">{t.trust.sub}</p>
+    <div class="trust grid-lines">
+      {t.trust.items.map((i) => (
+        <div class="trust__item">
+          <span class="trust__mark" aria-hidden="true"></span>
+          <div>
+            <div class="trust__t">{i.t}</div>
+            <p class="trust__d">{i.d}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+    <p style="margin-top: 20px; font-size: 14px; color: var(--muted-3); max-width: 74ch; line-height: 1.6;">{t.trust.foot}</p>
+  </div>
+</section>

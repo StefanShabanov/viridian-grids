@@ -1,0 +1,38 @@
+---
+import { copy, plans, type Lang } from '../content';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = copy[lang];
+const featured = plans.findIndex((p) => p.featured);
+---
+
+<section class="section">
+  <div class="wrap" style="padding-top: 0;">
+    <div class="sla">
+      <div class="sla__head">{t.sla.title}</div>
+      <div class="sla__scroll">
+        <table>
+          <thead>
+            <tr>
+              {t.sla.head.map((h, i) => (
+                <th scope="col" class={i - 1 === featured ? 'is-featured' : undefined}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {t.sla.rows.map((row) => (
+              <tr>
+                <th scope="row">{row.label}</th>
+                {row.v.map((v, i) => (
+                  <td class={i === featured ? 'is-featured' : undefined}>{v}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="sla__foot">{t.sla.foot}</p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,16 @@
+---
+import { copy, href, type Lang } from '../content';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = copy[lang];
+---
+
+<section class="band">
+  <div class="wrap band__inner">
+    <span class="band__label">{t.band.label}</span>
+    <span class="band__text">{t.band.text}</span>
+    <span class="header__spacer"></span>
+    <a class="btn btn--outlineDark" href={href(lang, 'check')}>{t.band.cta}</a>
+  </div>
+</section>

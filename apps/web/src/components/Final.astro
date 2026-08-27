@@ -1,0 +1,20 @@
+---
+import { copy, href, type Lang } from '../content';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = copy[lang];
+---
+
+<section class="final">
+  <div class="wrap final__inner">
+    <div>
+      <h2>{t.final.title}</h2>
+      <p>{t.final.sub}</p>
+    </div>
+    <div class="final__actions">
+      <a class="btn btn--onGreen" href={href(lang, 'check')}>{t.final.cta1}</a>
+      <a class="btn btn--outlineGreen" href={href(lang, 'contact')}>{t.final.cta2}</a>
+    </div>
+  </div>
+</section>

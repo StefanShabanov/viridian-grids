@@ -1,0 +1,58 @@
+---
+import { copy, href, site, type Lang } from '../content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = copy[lang];
+---
+
+<footer class="footer">
+  <div class="wrap footer__cols">
+    <div>
+      <div class="footer__brand">
+        <span class="footer__mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span class="footer__name">{site.name}</span>
+      </div>
+      <p class="footer__blurb">{t.footer.blurb}</p>
+      <p class="footer__mail"><a href={`mailto:${site.email}`}>{site.email}</a></p>
+    </div>
+
+    <div>
+      <div class="footer__colHead">{t.footer.c1}</div>
+      <div class="footer__links">
+        <a href={href(lang, 'services')}>{t.nav.services}</a>
+        <a href={href(lang, 'pricing')}>{t.nav.pricing}</a>
+        <a href={href(lang, 'how')}>{t.nav.how}</a>
+      </div>
+    </div>
+
+    <div>
+      <div class="footer__colHead">{t.footer.c2}</div>
+      <div class="footer__links">
+        <a href={href(lang, 'check')}>{t.nav.cta}</a>
+        <a href={href(lang, 'report')}>{t.nav.report}</a>
+        <a href={href(lang, 'faq')}>{t.nav.faq}</a>
+      </div>
+    </div>
+
+    <div>
+      <div class="footer__colHead">{t.footer.c3}</div>
+      <div class="footer__links">
+        <a href={href(lang, 'about')}>{t.footer.about}</a>
+        <a href={href(lang, 'security')}>{t.footer.security}</a>
+        <a href={href(lang, 'contact')}>{t.footer.contact}</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="footer__legal">
+      <span>© {site.year} {site.name} · {site.city}</span>
+      <!-- TODO: these three documents do not exist yet. Link them before launch. -->
+      <span>{t.footer.legal}</span>
+    </div>
+  </div>
+</footer>

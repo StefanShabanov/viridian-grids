@@ -1,0 +1,6 @@
+# One domain per line. Blank lines and # comments are ignored.
+# Real prospect lists belong in prospects.txt, which is gitignored.
+example.com
+badssl.com
+mon.bg
+sofia.bg

@@ -1,0 +1,23 @@
+---
+import { copy, type Lang } from '../content';
+
+interface Props { lang: Lang; heading?: 'h1' | 'h2' }
+const { lang, heading = 'h2' } = Astro.props;
+const t = copy[lang];
+const Heading = heading;
+---
+
+<section class="section">
+  <div class="wrap wrap--narrow">
+    <div class="eyebrow">{t.faq.label}</div>
+    <Heading class={heading === 'h1' ? 'h1' : 'h2'}>{t.faq.title}</Heading>
+    <div class="faq">
+      {t.faq.items.map((f, i) => (
+        <details open={i === 0}>
+          <summary>{f.q}</summary>
+          <p class="faq__a">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

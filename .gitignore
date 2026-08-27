@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+# .venv-linux for WSL: a Windows venv cannot be used from Linux
+.venv-*/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+dist/
+build/
+
+# Env & secrets — NEVER commit customer credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+infra/compose/data/
+ops/crm/prospects.csv
+ops/crm/prospects.txt
+
+# Harvested prospect lists: names, phones and emails of identifiable people
+harvest/data/
+ops/onboarding/customers/
+
+# Node / web
+node_modules/
+.astro/
+.next/
+web/dist/
+
+# External scanning engines: installed by apps/scanner/bin/setup-engines.sh
+.engines/
+
+# Scanner output
+out/
+reports/*.pdf
+reports/*.html
+!reports/.gitkeep
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/settings.json

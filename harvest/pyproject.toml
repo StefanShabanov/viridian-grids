@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vg-harvest"
+version = "0.1.0"
+description = "Build lists of candidate Bulgarian business domains for Viridian Grids"
+requires-python = ">=3.12"
+dependencies = [
+    "httpx>=0.27",
+    "tldextract>=5.1",      # Public Suffix List, so example.com.bg collapses correctly
+    "typer>=0.12",
+]
+
+[project.optional-dependencies]
+crtsh = ["psycopg[binary]>=3.2"]   # Certificate Transparency via crt.sh's public database
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.scripts]
+vg-harvest = "vg_harvest.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/vg_harvest/cli.py" = ["B008"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://viridiangrids.com/sitemap-index.xml

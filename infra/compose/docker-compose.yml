@@ -1,0 +1,85 @@
+# Viridian Grids monitoring stack — skeleton for the VPS.
+# Docker is not installed on the dev machine; this is provisioned in Week 1.
+# See ../../docs/monitoring-stack.md
+#
+# Nothing here is exposed publicly without a reverse proxy + TLS + auth. Do that before `up -d`
+# on a machine with a public IP.
+
+name: vg-monitoring
+
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    restart: unless-stopped
+    volumes:
+      - ./data/uptime-kuma:/app/data
+    ports:
+      - "127.0.0.1:3001:3001"
+
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=90d
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/targets:/etc/prometheus/targets:ro
+      - ./data/prometheus:/prometheus
+    ports:
+      - "127.0.0.1:9090:9090"
+
+  blackbox-exporter:
+    image: prom/blackbox-exporter:latest
+    restart: unless-stopped
+    volumes:
+      - ./blackbox/blackbox.yml:/etc/blackbox_exporter/config.yml:ro
+    ports:
+      - "127.0.0.1:9115:9115"
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    restart: unless-stopped
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - ./data/alertmanager:/alertmanager
+    ports:
+      - "127.0.0.1:9093:9093"
+
+  grafana:
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?set in .env}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_SERVER_ROOT_URL: ${GRAFANA_ROOT_URL:-http://localhost:3000}
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on: [prometheus]
+
+  loki:
+    image: grafana/loki:latest
+    restart: unless-stopped
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./data/loki:/loki
+    ports:
+      - "127.0.0.1:3100:3100"
+
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-viridian}
+      POSTGRES_USER: ${POSTGRES_USER:-viridian}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set in .env}
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
+
+  # The internal app lands here at Gate 3 (~20-30 customers). Not before.
+  # vg-app:
+  #   build: ../../apps/api

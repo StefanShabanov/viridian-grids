@@ -1,0 +1,19 @@
+{
+  "name": "@viridian-grids/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/sitemap": "^3.6.0",
+    "@astrojs/vercel": "^8.2.9",
+    "astro": "^5.16.0",
+    "typescript": "^5.9.3"
+  }
+}

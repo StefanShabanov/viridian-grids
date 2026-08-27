@@ -1,0 +1,25 @@
+# A deliberately varied list for exercising the scanner during development.
+# Real prospect lists live in ops/crm/prospects.txt, which is gitignored.
+
+# purpose-built TLS test hosts
+badssl.com
+expired.badssl.com
+self-signed.badssl.com
+wrong.host.badssl.com
+
+# known CMS, for exercising fingerprinting
+wordpress.org
+
+# large, well-configured
+mozilla.org
+cloudflare.com
+wikipedia.org
+
+# Bulgarian, various
+mon.bg
+sofia.bg
+bnb.bg
+
+# reference / minimal
+example.com
+example.org

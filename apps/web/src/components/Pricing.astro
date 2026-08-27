@@ -1,0 +1,48 @@
+---
+import { copy, href, plans, type Lang } from '../content';
+
+interface Props { lang: Lang; heading?: 'h1' | 'h2' }
+const { lang, heading = 'h2' } = Astro.props;
+const t = copy[lang];
+const Heading = heading;
+---
+
+<section class="section">
+  <div class="wrap">
+    <div class="eyebrow">{t.pricing.label}</div>
+    <Heading class={heading === 'h1' ? 'h1' : 'h2'}>{t.pricing.title}</Heading>
+    <p class="lede" style="max-width: 58ch;">{t.pricing.sub}</p>
+
+    <div class="plans">
+      {plans.map((plan) => {
+        const c = t.pricing.plans[plan.id];
+        return (
+          <div class={plan.featured ? 'plan plan--featured' : 'plan'}>
+            {plan.featured && <div class="plan__badge">{t.pricing.badge}</div>}
+            <div class="plan__name">{c.name}</div>
+            <div class="plan__price"><b>&euro;{plan.price}</b><span>{t.pricing.per}</span></div>
+            <p class="plan__blurb">{c.blurb}</p>
+            <div class="plan__rule"></div>
+            <ul class="plan__features">
+              {c.f.map((f) => (
+                <li><i aria-hidden="true">&#10003;</i><span>{f}</span></li>
+              ))}
+            </ul>
+            <a class={plan.featured ? 'btn btn--primary plan__cta' : 'btn btn--ghost plan__cta'} href={href(lang, 'contact')}>
+              {t.pricing.cta}
+            </a>
+          </div>
+        );
+      })}
+    </div>
+
+    <div class="notes">
+      {t.pricing.notes.map((n) => (
+        <div>
+          <span class="notes__k">{n.k}</span>
+          <p class="notes__v">{n.v}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,7 @@
+# Copy to http-care.yml and add real customer sites. One file per tier.
+# Labels carry the customer + plan so alerts can route by priority.
+- targets:
+    - https://example.bg
+  labels:
+    customer: "Example Hotel OOD"
+    plan: "care"

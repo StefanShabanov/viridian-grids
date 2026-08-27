@@ -1,0 +1,115 @@
+---
+import { copy, site, type Lang } from '../content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = copy[lang];
+---
+
+{/*
+  The design mocked this as a live scanner: type a URL, watch a log scroll, get
+  results. It is a form instead, deliberately.
+
+  1. The scanner shells out to Docker and webanalyze and takes 5-20 seconds, so it
+     cannot run inside a Vercel function.
+  2. MVP.md requires a human to review every report before it is sent.
+  3. An unauthenticated public scan endpoint points our infrastructure at any
+     domain a stranger names. We have been IP-banned twice already by accident.
+
+  The example results below are labelled as an example. Showing invented numbers
+  under someone's own domain would be a lie, and the whole offer is built on the
+  report being true.
+*/}
+
+<section class="section section--white">
+  <div class="wrap wrap--narrow" style="padding-bottom: 88px;">
+    <div class="eyebrow">{t.check.label}</div>
+    <h1 class="h1">{t.check.title}</h1>
+    <p class="lede" style="max-width: 58ch;">{t.check.sub}</p>
+
+    <form
+      class="check__form"
+      id="check-form"
+      method="post"
+      action="/api/lead"
+      data-enhance
+      data-error={t.check.error}
+      data-mail={site.email}
+      data-thanks={t.check.thanks}
+    >
+      <input type="hidden" name="lang" value={lang} />
+      <p class="hp" aria-hidden="true">
+        <label>Leave this empty<input type="text" name="website2" tabindex="-1" autocomplete="off" /></label>
+      </p>
+
+      <div class="fields" style="margin-top: 32px;">
+        <div>
+          <label class="field__label" for="check-url">{t.check.fields.url}</label>
+          <input
+            class="input input--mono"
+            id="check-url"
+            name="url"
+            type="url"
+            required
+            inputmode="url"
+            placeholder={t.check.ph.url}
+          />
+        </div>
+        <div>
+          <label class="field__label" for="check-email">{t.check.fields.email}</label>
+          <input class="input" id="check-email" name="email" type="email" required placeholder={t.check.ph.email} />
+        </div>
+        <div>
+          <label class="field__label" for="check-name">{t.check.fields.name}</label>
+          <input class="input" id="check-name" name="name" type="text" required autocomplete="name" />
+        </div>
+        <div>
+          <label class="field__label" for="check-company">{t.check.fields.company}</label>
+          <input class="input" id="check-company" name="company" type="text" autocomplete="organization" />
+        </div>
+      </div>
+
+      <div style="margin-top: 26px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
+        <button class="btn btn--primary" type="submit" data-label={t.check.cta} data-sending={t.check.sending}>
+          {t.check.cta}
+        </button>
+        <span class="note">{t.check.disclaimer}</span>
+      </div>
+
+      <p style="margin-top: 16px; font-size: 13.5px; line-height: 1.55; color: var(--muted-3); max-width: 68ch;">
+        {t.check.consent}
+      </p>
+
+      <p class="formMsg" data-msg hidden></p>
+    </form>
+
+    <div class="example">
+      <div class="example__head">
+        <span>{t.check.exampleTitle}</span>
+        <span class="example__tag">{t.check.exampleLabel}</span>
+      </div>
+      <div class="example__body">
+        {
+          t.check.results.map((r) => (
+            <div class="example__row">
+              <span class="example__k">{r.k}</span>
+              <span class="example__note">{r.note}</span>
+              <span class={`badge is-${r.tone}`}>{r.v}</span>
+            </div>
+          ))
+        }
+      </div>
+      <div class="example__foot">
+        <div style="font-weight: 600; font-size: 17px;">{t.check.formTitle}</div>
+        <p style="font-size: 14.5px; color: var(--muted-2); margin-top: 8px; max-width: 60ch;">{t.check.exampleNote}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import '../scripts/forms';
+</script>

@@ -1,0 +1,52 @@
+---
+import { copy, href, LANGS, site, type Lang, type PageId } from '../content';
+
+interface Props {
+  lang: Lang;
+  page: PageId;
+}
+
+const { lang, page } = Astro.props;
+const t = copy[lang];
+
+const links: { page: PageId; label: string }[] = [
+  { page: 'services', label: t.nav.services },
+  { page: 'pricing', label: t.nav.pricing },
+  { page: 'how', label: t.nav.how },
+  { page: 'report', label: t.nav.report },
+  { page: 'faq', label: t.nav.faq },
+];
+---
+
+<header class="header">
+  <div class="wrap header__bar">
+    <a class="brand" href={href(lang, 'home')}>
+      <span class="brand__mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <span class="brand__name">{site.name}</span>
+    </a>
+
+    <nav class="header__nav" aria-label={t.a11y.menu}>
+      {
+        links.map((l) => (
+          <a href={href(lang, l.page)} aria-current={page === l.page ? 'page' : undefined}>
+            {l.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="header__spacer"></div>
+
+    <div class="lang" role="group" aria-label={t.a11y.language}>
+      {
+        LANGS.map((l) => (
+          <a href={href(l, page)} hreflang={l} aria-current={l === lang ? 'true' : undefined}>
+            {l.toUpperCase()}
+          </a>
+        ))
+      }
+    </div>
+
+    <a class="btn btn--primary btn--sm" href={href(lang, 'check')}>{t.nav.cta}</a>
+  </div>
+</header>

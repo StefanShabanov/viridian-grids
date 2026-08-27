@@ -1,0 +1,23 @@
+---
+import { copy, type Lang } from '../content';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = copy[lang];
+---
+
+<section class="section">
+  <div class="wrap">
+    <div class="eyebrow">{t.monitor.label}</div>
+    <h2 class="h2" style="max-width: 20ch;">{t.monitor.title}</h2>
+    <div class="cards grid-lines">
+      {t.monitor.items.map((m) => (
+        <div class="card">
+          <div class="card__code">{m.code}</div>
+          <div class="card__name">{m.name}</div>
+          <p class="card__desc">{m.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

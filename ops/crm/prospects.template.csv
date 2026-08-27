@@ -1,0 +1,2 @@
+Company,Domain,Industry,City,Email,Phone,Decision maker,Website platform,Scan score,Prospect score,Interesting finding,Contacted,Follow-up 1,Follow-up 2,Response,Meeting,Trial,Customer,MRR,Notes
+Example Hotel OOD,example.bg,Hotel,Plovdiv,office@example.bg,+359...,,WordPress,74,14,"HSTS+CSP missing; TTFB 2.6s; cert expires in 38 days",2026-09-17,,,,,,,,"Delete this row - it is an example"
