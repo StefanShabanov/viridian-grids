@@ -76,7 +76,7 @@ CATEGORY_NAMES = {
     "bg": {
         "availability": "Достъпност",
         "tls": "Сертификат и криптиране",
-        "http": "Заглавки за сигурност",
+        "http": "HTTP Headers за сигурност",
         "cookies": "Бисквитки",
         "technology": "Технологии",
         "configuration": "Конфигурация",
@@ -318,7 +318,7 @@ MESSAGES: dict[str, dict[str, tuple[str, str]]] = {
     # ----------------------------------------------------------------------- http
     "http.headers_not_checked": {
         "en": ("Security headers not checked", "The site did not respond."),
-        "bg": ("Заглавките за сигурност не са проверени", "Сайтът не отговори."),
+        "bg": ("HTTP Headers за сигурност не са проверени", "Сайтът не отговори."),
     },
     "http.hsts_present": {
         "en": ("HSTS is configured", "Browsers are told to use HTTPS for {days} days."),
@@ -371,8 +371,8 @@ MESSAGES: dict[str, dict[str, tuple[str, str]]] = {
             "A header is more reliable.",
         ),
         "bg": (
-            "Content-Security-Policy е зададена в страницата, не в заглавките",
-            "Заглавка е по-надеждна.",
+            "Content-Security-Policy е зададена в страницата, не в HTTP Headers",
+            "По-надеждно е през HTTP Header.",
         ),
     },
     "http.csp_missing": {
@@ -639,7 +639,7 @@ MESSAGES: dict[str, dict[str, tuple[str, str]]] = {
     },
     "technology.powered_by_exposed": {
         "en": ("Backend technology is exposed", "The site announces {value} in its headers."),
-        "bg": ("Технологията на бекенда е видима", "Сайтът обявява {value} в заглавките си."),
+        "bg": ("Технологията на бекенда е видима", "Сайтът обявява {value} в своите HTTP Headers."),
     },
     "technology.not_responsive": {
         "en": (
@@ -726,7 +726,7 @@ PROSPECT_SIGNALS = {
         "wordpress": "Работи на WordPress",
         "woocommerce": "Работи на WooCommerce",
         "slow_response": "Бавен отговор",
-        "missing_headers": "Липсващи заглавки за сигурност",
+        "missing_headers": "Липсващи HTTP Headers за сигурност",
         "outdated_site": "Сайтът изглежда остарял",
         "business_form": "Форма, важна за бизнеса",
         "booking_ecommerce": "Резервации или онлайн продажби",

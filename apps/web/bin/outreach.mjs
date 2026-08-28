@@ -192,7 +192,7 @@ function rankProspects(rows, top, { strong = false, onboarded = new Set() } = {}
 
 // ------------------------------------------------------------------ emails
 
-function emailBody({ domain, reportUrl, demoUrl, code }) {
+function emailBody({ domain, reportUrl, demoUrl, code, hook }) {
   const lead = demoUrl
     ? `Попаднах на ${domain} и освен кратка публична и неинвазивна техническа проверка, подготвих и примерна концепция как сайтът Ви би могъл да изглежда в по-модерен и удобен за мобилни устройства вариант.`
     : `Попаднах на ${domain} и направих кратка публична и неинвазивна техническа проверка на сайта Ви.`;
@@ -209,9 +209,11 @@ function emailBody({ domain, reportUrl, demoUrl, code }) {
       ]
     : ['Техническият отчет е тук:', reportUrl, '', `Код за достъп: ${code}`];
 
+  // The demo-first offer: propose a small modern demo, then the full build - a
+  // lower-commitment ask than "I can rebuild your whole site".
   const offer = demoUrl
-    ? 'Според мен сайтът има добра основа като съдържание, но визуално и като потребителско изживяване вече изглежда остарял. Ако посоката Ви харесва, мога да изградя новата версия, да поема хостинга, мониторинга и последващата поддръжка.'
-    : 'Според мен сайтът има добра основа като съдържание, но визуално и като потребителско изживяване вече изглежда остарял. Мога да изградя нова, модерна версия и да поема хостинга, мониторинга и последващата поддръжка.';
+    ? 'Според мен сайтът има добра основа като съдържание, но визуално и като потребителско изживяване вече изглежда остарял. Ако посоката Ви харесва, бих могъл да изградя целия сайт на съвременни технологии, да поема хостинга и последващата поддръжка.'
+    : 'Според мен сайтът има добра основа като съдържание, но визуално и като потребителско изживяване вече изглежда остарял. Ако темата Ви е интересна, бих могъл да подготвя кратко демо с по-модерна визия, изградено на съвременни технологии - и ако Ви хареса, да поема изработката на целия сайт, хостинга и последващата поддръжка.';
 
   return [
     `Тема: Кратка проверка на ${domain} + идея за обновяване`,
@@ -221,6 +223,7 @@ function emailBody({ domain, reportUrl, demoUrl, code }) {
     'казвам се Стефан Шабанов и съм основател на Viridian Grids. Занимаваме се с мониторинг, техническа поддръжка и модернизация на бизнес сайтове.',
     '',
     lead,
+    ...(hook ? ['', hook] : []),
     '',
     ...links,
     '',
@@ -230,7 +233,8 @@ function emailBody({ domain, reportUrl, demoUrl, code }) {
     '',
     'Поздрави,',
     'Стефан Шабанов',
-    'Founder, Viridian Grids',
+    '0899806250',
+    'Основател, Viridian Grids',
     '',
   ].join('\n');
 }
@@ -360,7 +364,7 @@ async function publish(domain) {
   const { slug, code } = meta;
 
   const reportJson = fs.readFileSync(path.join(folderFor(domain), 'report.json'), 'utf8');
-  JSON.parse(reportJson); // fail here, not in the browser
+  const hook = JSON.parse(reportJson).emailHook; // the calm, per-site line for the email
 
   const record = recordExists(slug)
     ? JSON.parse(fs.readFileSync(path.join(CLIENTS, slug, 'client.json'), 'utf8'))
@@ -396,7 +400,7 @@ async function publish(domain) {
   writeMeta(meta);
   fs.writeFileSync(
     path.join(folderFor(domain), 'email.txt'),
-    emailBody({ domain, reportUrl: meta.reportUrl, demoUrl, code }),
+    emailBody({ domain, reportUrl: meta.reportUrl, demoUrl, code, hook }),
     'utf8',
   );
 
@@ -406,6 +410,30 @@ async function publish(domain) {
   console.log(`  Code:   ${code}`);
   console.log(`  Email ready: apps/web/outreach/${domain}/email.txt`);
   console.log('  Commit clients/ + public/demo/ and deploy, then send.\n');
+}
+
+/** Regenerate email.txt for every published prospect from the copy templates,
+ *  WITHOUT re-sealing the report. Email wording changes (a new signature, a
+ *  reworded offer) should not churn the encrypted client.json or force a redeploy. */
+function emails() {
+  if (!fs.existsSync(OUTREACH)) return console.log('  nothing prepared yet');
+  const domains = fs.readdirSync(OUTREACH).filter((d) => fs.existsSync(metaPath(d)));
+  let n = 0;
+  for (const domain of domains) {
+    const meta = readMeta(domain);
+    if (meta.status !== 'published') continue;
+    const reportPath = path.join(folderFor(domain), 'report.json');
+    if (!fs.existsSync(reportPath)) continue;
+    const hook = JSON.parse(fs.readFileSync(reportPath, 'utf8')).emailHook;
+    const demoUrl = meta.hasDemo ? meta.demoUrl : null;
+    fs.writeFileSync(
+      path.join(folderFor(domain), 'email.txt'),
+      emailBody({ domain, reportUrl: meta.reportUrl, demoUrl, code: meta.code, hook }),
+      'utf8',
+    );
+    n++;
+  }
+  console.log(`  regenerated ${n} email.txt (reports untouched, no redeploy needed)`);
 }
 
 function list() {
@@ -422,10 +450,10 @@ function list() {
 }
 
 const [command, ...args] = process.argv.slice(2);
-const commands = { prep, publish, list };
+const commands = { prep, publish, emails, list };
 if (import.meta.url === pathToFileURL(process.argv[1] || '').href) {
   if (!commands[command]) {
-    console.error('commands: prep [--top N] [--strong] [domain...] | publish <domain> | list');
+    console.error('commands: prep [--top N] [--strong] [domain...] | publish <domain> | emails | list');
     process.exit(1);
   }
   await commands[command](...args);

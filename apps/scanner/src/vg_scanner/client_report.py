@@ -385,6 +385,52 @@ def _catcher(result: ScanResult, cve_groups: list[dict]) -> str:
     )
 
 
+def _email_hook(result: ScanResult, cve_groups: list[dict]) -> str:
+    """The line for the COLD email - calm and factual, not the catcher.
+
+    A cold, uninvited email that opens with "40 critical vulnerabilities, your
+    site can be taken over" reads like the extortion scams it resembles and trips
+    spam filters. So the email only proves we looked at THIS site (its exact
+    software and versions) and points at the report; the consequence language
+    stays behind the gate, where the reader asked for it.
+    """
+    if _has_broken_tls(result):
+        return (
+            "При проверката видях, че в момента сайтът зарежда с невалиден HTTPS сертификат - при "
+            "отваряне браузърът показва предупреждение за сигурност. Подробностите са в отчета."
+        )
+    if cve_groups:
+        names = [f"{g['product']} {g['version']}".strip() for g in cve_groups if g["product"]]
+        if len(names) > 2:
+            names = names[:2] + ["и др."]
+        software = _join_bg(names)
+        one = len([n for n in names if n != "и др."]) == 1
+        if _eol_findings(result):
+            tail = (
+                "версия, която вече не получава обновявания за сигурност"
+                if one
+                else "версии, които вече не получават обновявания за сигурност"
+            )
+        else:
+            tail = (
+                "версия с публично известни уязвимости"
+                if one
+                else "версии с публично известни уязвимости"
+            )
+        return (
+            f"При проверката видях, че сайтът работи на {software} - {tail}. "
+            "Какво означава това на практика и пълните резултати съм описал в отчета."
+        )
+    if _eol_findings(result):
+        w = _eol_findings(result)[0]
+        name = f"{w.params.get('name', '')} {w.params.get('cycle', '')}".strip()
+        return (
+            f"При проверката видях, че сайтът работи на {name}, което вече не получава обновявания за "
+            "сигурност. Подробностите са в отчета."
+        )
+    return "Кратко обобщение на състоянието - откъм сигурност, скорост и поддръжка - съм описал в отчета."
+
+
 def _attention(result: ScanResult, urgent: Finding | None, lang: str) -> list[dict]:
     out: list[dict] = []
     for f in result.by_status(Status.FAIL, Status.WARN):
@@ -439,9 +485,9 @@ def _next_steps(result: ScanResult) -> list[dict]:
     steps.append(
         {
             "step": str(n),
-            "title": "Заглавки и бисквитки за сигурност",
+            "title": "HTTP Headers и бисквитки за сигурност",
             "effort": "≈ 1 час",
-            "text": "Добавяне на липсващите заглавки (HSTS, CSP и др.) и на флаговете за бисквитките - бърза, но осезаема стъпка.",
+            "text": "Добавяне на липсващите HTTP Headers (HSTS, CSP и др.) и на флаговете за бисквитките - бърза, но осезаема стъпка.",
         }
     )
     n += 1
@@ -481,6 +527,7 @@ def build_report(
         "bandTone": BAND_TONE[band_key],
         "date": when,
         "headline": _catcher(result, cve_groups),
+        "emailHook": _email_hook(result, cve_groups),
         "summary": _summary(result),
         "cveCaveat": CVE_CAVEAT,
         "cveGroups": cve_groups,
@@ -492,7 +539,7 @@ def build_report(
             "label": "Какво включва тази проверка",
             "note": (
                 "Публична, неинвазивна проверка на здравето на сайта: достъпност, HTTPS сертификат, "
-                "заглавки за сигурност, бисквитки, разпознаване на технологии по версии и справка с "
+                "HTTP Headers за сигурност, бисквитки, разпознаване на технологии по версии и справка с "
                 "публични бази за край на поддръжката и известни уязвимости. Никакви атаки, паролни опити или "
                 "агресивно обхождане."
             ),
