@@ -3,11 +3,15 @@ import { copy, href, LANGS, site, type Lang, type PageId } from '../content';
 
 interface Props {
   lang: Lang;
-  page: PageId;
+  page: PageId | 'clientReport' | 'clientDemo';
 }
 
 const { lang, page } = Astro.props;
 const t = copy[lang];
+
+// Client pages are outside the public site, so the language switch falls back
+// to the homepage and no nav item is marked current.
+const langTarget: PageId = page === 'clientReport' || page === 'clientDemo' ? 'home' : page;
 
 const links: { page: PageId; label: string }[] = [
   { page: 'services', label: t.nav.services },
@@ -48,7 +52,7 @@ const links: { page: PageId; label: string }[] = [
     <div class="lang" role="group" aria-label={t.a11y.language}>
       {
         LANGS.map((l) => (
-          <a href={href(l, page)} hreflang={l} aria-current={l === lang ? 'true' : undefined}>
+          <a href={href(l, langTarget)} hreflang={l} aria-current={l === lang ? 'true' : undefined}>
             {l.toUpperCase()}
           </a>
         ))
@@ -69,7 +73,6 @@ const links: { page: PageId; label: string }[] = [
             </a>
           ))
         }
-        <a class="btn btn--primary menu__cta" href={href(lang, 'check')}>{t.nav.cta}</a>
       </nav>
     </details>
   </div>

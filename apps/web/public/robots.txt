@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /r/
+Disallow: /d/
+Disallow: /demo/
 
 Sitemap: https://viridiangrids.com/sitemap-index.xml

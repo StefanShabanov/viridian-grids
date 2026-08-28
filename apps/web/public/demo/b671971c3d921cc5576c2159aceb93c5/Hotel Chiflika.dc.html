@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #f6f3ec; }
+  img, iframe { display: block; border: 0; max-width: 100%; }
+  a { color: #a35a34; text-decoration: none; }
+  a:hover { color: #7d4224; }
+  input, select, textarea, button { font-family: inherit; font-weight: inherit; }
+  ::selection { background: #e6dcc8; }
+</style>
+</helmet>
+
+<div style="font-family: Jost, Helvetica, sans-serif; font-weight: 300; color: #23231f; background: #f6f3ec; min-height: 100vh; overflow-x: hidden; font-size: 16px; line-height: 1.75">
+
+  <sc-if value="{{ showTopBar }}" hint-placeholder-val="{{ true }}">
+    <div style="background: #1f2a24; color: #c9c3b4; font-size: 12.5px; letter-spacing: 0.05em; padding: 10px {{ padX }}px; display: flex; gap: 24px; align-items: center; justify-content: center; flex-wrap: wrap">
+      <span>{{ t.reception }} 0897 45 54 66</span>
+      <span style="opacity: 0.35">/</span>
+      <span>{{ t.manager }} 0877 76 46 62</span>
+      <span style="opacity: 0.35">/</span>
+      <span>hotelchiflika@abv.bg</span>
+      <span style="opacity: 0.35">/</span>
+      <a href="https://www.facebook.com/213719871979724/" target="_blank" rel="noreferrer" style="color: #c9c3b4; border-bottom: 1px solid rgba(201,195,180,0.4)">Facebook</a>
+    </div>
+  </sc-if>
+
+  <header style="position: sticky; top: 0; z-index: 50; background: rgba(246,243,236,0.93); backdrop-filter: blur(12px); border-bottom: 1px solid #e4ddcf">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 14px {{ padX }}px; display: flex; flex-direction: {{ headerDir }}; align-items: {{ headerAlign }}; gap: 10px">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px">
+      <div onClick="{{ goHome }}" style="cursor: pointer; flex: none">
+        <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 25px; letter-spacing: 0.3em; line-height: 1; color: #1f2a24">ЧИФЛИКА</div>
+        <div style="font-size: 9.5px; letter-spacing: 0.3em; color: #8a8478; margin-top: 7px; text-transform: uppercase">{{ t.tagline }}</div>
+      </div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ toggleMenu }}" style="cursor: pointer; flex: none; border: 1px solid #d8d0be; color: #3c3a33; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; padding: 12px 16px">{{ t.menu }}</div>
+      </sc-if>
+      </div>
+      <sc-if value="{{ navVisible }}" hint-placeholder-val="{{ true }}">
+      <nav style="display: flex; gap: {{ navGap }}px; flex-wrap: wrap; margin-left: {{ navPush }}; align-items: center; justify-content: {{ navJustify }}; padding-top: {{ navPadTop }}px">
+        <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="8">
+          <div onClick="{{ item.go }}" style="cursor: pointer; font-size: 12.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #3c3a33" style-hover="color: #a35a34">
+            {{ item.label }}
+            <div style="height: 1px; background: {{ item.rule }}; margin-top: 4px"></div>
+          </div>
+        </sc-for>
+        <div style="display: flex; align-items: center; gap: 8px; padding-left: 6px; border-left: 1px solid #e4ddcf">
+          <div onClick="{{ setBg }}" style="cursor: pointer; font-size: 11.5px; letter-spacing: 0.12em; color: {{ bgLangColor }}">BG</div>
+          <div onClick="{{ setEn }}" style="cursor: pointer; font-size: 11.5px; letter-spacing: 0.12em; color: {{ enLangColor }}">EN</div>
+        </div>
+        <div onClick="{{ goBooking }}" style="cursor: pointer; flex: none; background: #1f2a24; color: #f6f3ec; font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase; padding: 13px 22px" style-hover="background: #a35a34">{{ t.reserve }}</div>
+      </nav>
+      </sc-if>
+    </div>
+  </header>
+
+  <!-- ===================== HOME ===================== -->
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <div>
+    <section style="position: relative; background: repeating-linear-gradient(122deg, #dfd7c6 0 10px, #e7e0d1 10px 20px); min-height: {{ heroMinH }}px; display: flex; align-items: flex-end; padding: 0">
+      <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(27,33,29,0.72) 0%, rgba(27,33,29,0.18) 55%, rgba(27,33,29,0.3) 100%)"></div>
+      <div style="position: absolute; top: 20px; right: 24px; font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: 0.07em; color: #514c42; background: rgba(246,243,236,0.85); padding: 6px 10px">панорама на хотела / hero panorama 2400×1200</div>
+      <div style="position: relative; max-width: 1320px; margin: 0 auto; padding: 0 {{ padX }}px {{ heroPadB }}px; width: 100%">
+        <div style="color: #efe9dc; max-width: 720px">
+          <div style="font-size: 11.5px; letter-spacing: 0.32em; text-transform: uppercase; opacity: 0.85">Асеновград · Родопите</div>
+          <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: {{ heroSize }}px; line-height: 1.04; margin: 22px 0 0; letter-spacing: -0.01em; text-wrap: pretty">{{ t.heroTitle }}</h1>
+          <p style="font-size: {{ heroSubSize }}px; line-height: 1.7; margin: 20px 0 0; max-width: 560px; color: #e2dbcc">{{ t.heroSub }}</p>
+        </div>
+      </div>
+    </section>
+
+    <sc-if value="{{ showAvailability }}" hint-placeholder-val="{{ true }}">
+      <section style="max-width: 1320px; margin: {{ availMargin }}; padding: 0 {{ padX }}px; position: relative; z-index: 10">
+        <div style="background: #fdfbf6; border: 1px solid #e4ddcf; box-shadow: 0 24px 60px -30px rgba(31,42,36,0.4); padding: {{ cardPadS }}px; display: grid; grid-template-columns: {{ availCols }}; gap: {{ availGap }}px; align-items: end">
+          <label style="display: block">
+            <span style="display: block; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a8478; margin-bottom: 9px">{{ t.checkIn }}</span>
+            <input type="date" value="{{ arrive }}" onChange="{{ onArrive }}" style="width: 100%; border: 0; border-bottom: 1px solid #cfc6b2; background: transparent; padding: 7px 0; font-size: 16px; color: #23231f; outline: none" />
+          </label>
+          <label style="display: block">
+            <span style="display: block; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a8478; margin-bottom: 9px">{{ t.checkOut }}</span>
+            <input type="date" value="{{ depart }}" onChange="{{ onDepart }}" style="width: 100%; border: 0; border-bottom: 1px solid #cfc6b2; background: transparent; padding: 7px 0; font-size: 16px; color: #23231f; outline: none" />
+          </label>
+          <label style="display: block">
+            <span style="display: block; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a8478; margin-bottom: 9px">{{ t.guests }}</span>
+            <select value="{{ guests }}" onChange="{{ onGuests }}" style="width: 100%; border: 0; border-bottom: 1px solid #cfc6b2; background: transparent; padding: 8px 0; font-size: 16px; color: #23231f; outline: none">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5+</option>
+            </select>
+          </label>
+          <label style="display: block">
+            <span style="display: block; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a8478; margin-bottom: 9px">{{ t.roomType }}</span>
+            <select value="{{ unit }}" onChange="{{ onUnit }}" style="width: 100%; border: 0; border-bottom: 1px solid #cfc6b2; background: transparent; padding: 8px 0; font-size: 16px; color: #23231f; outline: none">
+              <sc-for list="{{ unitOptions }}" as="u" hint-placeholder-count="3">
+                <option value="{{ u }}">{{ u }}</option>
+              </sc-for>
+            </select>
+          </label>
+          <div onClick="{{ goBooking }}" style="cursor: pointer; background: #a35a34; color: #fdfbf6; font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase; padding: 16px 30px; text-align: center; white-space: nowrap" style-hover="background: #1f2a24">{{ t.check }}</div>
+        </div>
+        <div style="font-size: 13px; color: #8a8478; padding: 12px 2px 0">{{ nightsLine }}</div>
+      </section>
+    </sc-if>
+
+    <section style="max-width: 1320px; margin: 0 auto; padding: {{ secTop }}px {{ padX }}px 0; display: grid; grid-template-columns: {{ col2 }}; gap: {{ gapL }}px; align-items: start">
+      <div>
+        <div style="font-size: 10.5px; letter-spacing: 0.3em; text-transform: uppercase; color: #a35a34">{{ t.kickerAbout }}</div>
+        <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: {{ h2 }}px; line-height: 1.14; margin: 20px 0 0; text-wrap: pretty">{{ t.aboutTitle }}</h2>
+      </div>
+      <div style="padding-top: 8px">
+        <p style="margin: 0; font-size: 17px; color: #40403a">{{ t.aboutP1 }}</p>
+        <p style="margin: 20px 0 0; font-size: 17px; color: #40403a">{{ t.aboutP2 }}</p>
+        <div onClick="{{ goAbout }}" style="cursor: pointer; display: inline-block; margin-top: 26px; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #a35a34; border-bottom: 1px solid #d8c8b6; padding-bottom: 5px">{{ t.more }}</div>
+      </div>
+    </section>
+
+    <section style="max-width: 1320px; margin: 0 auto; padding: {{ secTopS }}px {{ padX }}px 0">
+      <div style="display: grid; grid-template-columns: {{ col6 }}; border-top: 1px solid #e4ddcf">
+        <sc-for list="{{ amenities }}" as="a" hint-placeholder-count="6">
+          <div style="padding: 24px 18px 24px 0; border-right: 1px solid #e4ddcf">
+            <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 30px; color: #c2b49c; line-height: 1">{{ a.n }}</div>
+            <div style="font-size: 14.5px; color: #3c3a33; margin-top: 12px; padding-right: 8px">{{ a.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="max-width: 1320px; margin: 0 auto; padding: {{ secTop }}px {{ padX }}px 0">
+      <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; flex-wrap: wrap">
+        <div>
+          <div style="font-size: 10.5px; letter-spacing: 0.3em; text-transform: uppercase; color: #a35a34">{{ t.kickerRooms }}</div>
+          <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: {{ h2 }}px; line-height: 1.14; margin: 18px 0 0">{{ t.roomsTitle }}</h2>
+        </div>
+        <div onClick="{{ goRooms }}" style="cursor: pointer; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #a35a34; border-bottom: 1px solid #d8c8b6; padding-bottom: 5px">{{ t.allRooms }}</div>
+      </div>
+      <div style="display: grid; grid-template-columns: {{ col3 }}; gap: {{ gapM }}px; margin-top: 40px">
+        <sc-for list="{{ rooms }}" as="r" hint-placeholder-count="3">
+          <div onClick="{{ goRooms }}" style="cursor: pointer; background: #fdfbf6; border: 1px solid #e9e2d4" style-hover="border-color: #cbbca4">
+            <div style="aspect-ratio: 4/3; background: repeating-linear-gradient(128deg, #e6dfd0 0 9px, #eee7d9 9px 18px); display: flex; align-items: flex-end; padding: 14px">
+              <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: 0.06em; color: #6f6a5e; background: rgba(253,251,246,0.9); padding: 5px 8px">{{ r.slot }}</span>
+            </div>
+            <div style="padding: 26px 26px 30px">
+              <h3 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; font-size: 27px; margin: 0; line-height: 1.2">{{ r.name }}</h3>
+              <p style="font-size: 15px; color: #575349; margin: 12px 0 0; min-height: 66px">{{ r.desc }}</p>
+              <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 18px; padding-top: 16px; border-top: 1px solid #ece5d7">
+                <span style="font-size: 12.5px; letter-spacing: 0.08em; color: #8a8478">{{ r.cap }}</span>
+                <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; color: #1f2a24">{{ r.price }}</span>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="margin-top: {{ secTop }}px; background: #1f2a24; color: #e9e3d5">
+      <div style="max-width: 1320px; margin: 0 auto; padding: {{ darkPad }}px {{ padX }}px; display: grid; grid-template-columns: {{ col2 }}; gap: {{ gapL }}px; align-items: center">
+        <div>
+          <div style="font-size: 10.5px; letter-spacing: 0.3em; text-transform: uppercase; color: #c08a63">{{ t.kickerTable }}</div>
+          <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: {{ h2 }}px; line-height: 1.12; margin: 20px 0 0; color: #f4efe3">{{ t.restTitle }}</h2>
+          <p style="font-size: 17px; color: #bdb6a6; margin: 24px 0 0; max-width: 480px">{{ t.restP }}</p>
+          <div style="display: flex; gap: {{ gapM }}px; margin-top: 36px">
+            <div>
+              <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 42px; line-height: 1; color: #f4efe3">85</div>
+              <div style="font-size: 12.5px; letter-spacing: 0.1em; color: #a9a292; margin-top: 8px">{{ t.seatsIn }}</div>
+            </div>
+            <div>
+              <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 42px; line-height: 1; color: #f4efe3">70</div>
+              <div style="font-size: 12.5px; letter-spacing: 0.1em; color: #a9a292; margin-top: 8px">{{ t.seatsGarden }}</div>
+            </div>
+          </div>
+          <div onClick="{{ goRestaurant }}" style="cursor: pointer; display: inline-block; margin-top: 40px; border: 1px solid #4b544c; color: #e9e3d5; font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase; padding: 14px 26px" style-hover="background: #a35a34; border-color: #a35a34">{{ t.restCta }}</div>
+        </div>
+        <div style="aspect-ratio: 4/5; background: repeating-linear-gradient(128deg, #2b3630 0 10px, #323e37 10px 20px); display: flex; align-items: flex-end; padding: 16px">
+          <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: 0.06em; color: #b6ae9d; background: rgba(31,42,36,0.75); padding: 6px 9px">ресторант, лятна градина / restaurant 1200×1500</span>
+        </div>
+      </div>
+    </section>
+
+    <section style="max-width: 1320px; margin: 0 auto; padding: {{ secTop }}px {{ padX }}px 0; display: grid; grid-template-columns: {{ col2 }}; gap: 34px">
+      <div onClick="{{ goPool }}" style="cursor: pointer">
+        <div style="aspect-ratio: 3/2; background: repeating-linear-gradient(128deg, #dfe4dd 0 9px, #e8ece5 9px 18px); display: flex; align-items: flex-end; padding: 14px">
+          <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: 0.06em; color: #6f6a5e; background: rgba(246,243,236,0.9); padding: 5px 8px">басейн / pool 1400×930</span>
+        </div>
+        <h3 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; font-size: 32px; margin: 22px 0 0">{{ t.poolTitle }}</h3>
+        <p style="font-size: 16px; color: #575349; margin: 10px 0 0; max-width: 520px">{{ t.poolTeaser }}</p>
+      </div>
+      <div onClick="{{ goWeddings }}" style="cursor: pointer">
+        <div style="aspect-ratio: 3/2; background: repeating-linear-gradient(128deg, #e6dcd6 0 9px, #eee5df 9px 18px); display: flex; align-items: flex-end; padding: 14px">
+          <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: 0.06em; color: #6f6a5e; background: rgba(246,243,236,0.9); padding: 5px 8px">сватба в градината / wedding 1400×930</span>
+        </div>
+        <h3 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; font-size: 32px; margin: 22px 0 0">{{ t.wedTitle }}</h3>
+        <p style="font-size: 16px; color: #575349; margin: 10px 0 0; max-width: 520px">{{ t.wedTeaser }}</p>
+      </div>
+    </section>
+
+    <section style="max-width: 1320px; margin: 0 auto; padding: {{ secTop }}px {{ padX }}px 0">
+      <div style="border-top: 1px solid #e4ddcf; padding-top: 40px; display: grid; grid-template-columns: {{ col2 }}; gap: {{ gapL }}px">
+        <div>
+          <div style="font-size: 10.5px; letter-spacing: 0.3em; text-transform: uppercase; color: #a35a34">{{ t.kickerNear }}</div>
+          <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: {{ h2s }}px; line-height: 1.14; margin: 18px 0 0">{{ t.nearTitle }}</h2>
+          <div onClick="{{ goSights }}" style="cursor: pointer; display: inline-block; margin-top: 24px; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #a35a34; border-bottom: 1px solid #d8c8b6; padding-bottom: 5px">{{ t.more }}</div>
+        </div>
+        <div>
+          <sc-for list="{{ distances }}" as="d" hint-placeholder-count="5">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 24px; padding: 17px 0; border-bottom: 1px solid #e9e2d4">
+              <span style="font-size: 17px; color: #2c2c26">{{ d.place }}</span>
+              <span style="font-size: 14px; color: #8a8478; letter-spacing: 0.04em; white-space: nowrap">{{ d.dist }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+
+  <!-- ===================== INNER PAGES ===================== -->
+  <sc-if value="{{ isInner }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <section style="background: #efe9dc; border-bottom: 1px solid #e4ddcf">
+      <div style="max-width: 1320px; margin: 0 auto; padding: {{ secTopS }}px {{ padX }}px {{ secTopS }}px">
+        <div style="font-size: 10.5px; letter-spacing: 0.3em; text-transform: uppercase; color: #a35a34">{{ t.brandLine }}</div>
+        <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: {{ pageH1 }}px; line-height: 1.08; margin: 18px 0 0; letter-spacing: -0.01em">{{ pageTitle }}</h1>
+        <p style="font-size: 17.5px; color: #55524a; margin: 16px 0 0; max-width: 640px">{{ pageLead }}</p>
+      </div>
+    </section>
+
+    <!-- About -->
+    <sc-if value="{{ isAbout }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width: 1320px; margin: 0 auto; padding: {{ secTop }}px {{ padX }}px 0">
+      <div style="display: grid; grid-template-columns: {{ col2 }}; gap: {{ gapL }}px; align-items: start">
+        <div>
+          <sc-for list="{{ aboutParas }}" as="p" hint-placeholder-count="4">
+            <p style="font-size: 17px; color: #40403a; margin: 0 0 22px">{{ p }}</p>
+          </sc-for>
+          <div style="border-top: 1px solid #e4ddcf; margin-top: 34px; padding-top: 30px; display: grid; grid-template-columns: {{ col2 }}; gap: 26px 40px">
+            <sc-for list="{{ amenities }}" as="a" hint-placeholder-count="6">
+              <div>
+                <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 21px; color: #1f2a24">{{ a.n }}</div>
+                <div style="font-size: 14.5px; color: #575349; margin-top: 4px">{{ a.label }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display: grid; gap: 20px">
+          <div style="aspect-ratio: 4/3; background: repeating-linear-gradient(128deg, #e6dfd0 0 9px, #eee7d9 9px 18px); display: flex; align-items: flex-end; padding: 14px">
+            <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; color: #6f6a5e; background: rgba(246,243,236,0.9); padding: 5px 8px">фасада на хотела / exterior</span>
+          </div>
+          <div style="aspect-ratio: 16/9; background: repeating-linear-gradient(128deg, #dfe4dd 0 9px, #e8ece5 9px 18px); display: flex; align-items: flex-end; padding: 14px">
+            <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; color: #6f6a5e; background: rgba(246,243,236,0.9); padding: 5px 8px">гледка към Родопите / view</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- Rooms -->
+    <sc-if value="{{ isRooms }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width: 1320px; margin: 0 auto; padding: {{ secTopS }}px {{ padX }}px 0; display: grid; gap: {{ gapL }}px">
+      <sc-for list="{{ rooms }}" as="r" hint-placeholder-count="3">
+        <div style="display: grid; grid-template-columns: {{ col2 }}; gap: {{ gapM }}px; align-items: center">
+          <div style="aspect-ratio: 3/2; background: repeating-linear-gradient(128deg, #e6dfd0 0 9px, #eee7d9 9px 18px); display: flex; align-items: flex-end; padding: 14px">
+            <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; color: #6f6a5e; background: rgba(246,243,236,0.9); padding: 5px 8px">{{ r.slot }}</span>
+          </div>
+          <div>
+            <div style="font-size: 10.5px; letter-spacing: 0.26em; text-transform: uppercase; color: #a35a34">{{ r.cap }}</div>
+            <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: 40px; margin: 14px 0 0; line-height: 1.1">{{ r.name }}</h2>
+            <p style="font-size: 16.5px; color: #4c4a42; margin: 16px 0 0">{{ r.desc }}</p>
+            <div style="display: grid; grid-template-columns: {{ col2 }}; gap: 8px 24px; margin-top: 24px">
+              <sc-for list="{{ roomFeatures }}" as="f" hint-placeholder-count="6">
+                <div style="font-size: 14.5px; color: #575349; border-top: 1px solid #e9e2d4; padding-top: 9px">{{ f }}</div>
+              </sc-for>
+            </div>
+            <div style="display: flex; align-items: baseline; gap: 18px; margin-top: 30px">
+              <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 30px; color: #1f2a24">{{ r.price }}</span>
+              <div onClick="{{ goBooking }}" style="cursor: pointer; background: #1f2a24; color: #f6f3ec; font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase; padding: 13px 24px" style-hover="background: #a35a34">{{ t.reserve }}</div>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    </sc-if>
+
+    <!-- Prices -->
+    <sc-if value="{{ isPrices }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width: 1100px; margin: 0 auto; padding: {{ secTopS }}px {{ padX }}px 0">
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 34px">
+        <sc-for list="{{ seasons }}" as="s" hint-placeholder-count="3">
+          <div onClick="{{ s.go }}" style="cursor: pointer; font-size: 12.5px; letter-spacing: 0.1em; padding: 11px 20px; border: 1px solid {{ s.border }}; background: {{ s.bg }}; color: {{ s.color }}">{{ s.label }}</div>
+        </sc-for>
+      </div>
+      <div style="background: #fdfbf6; border: 1px solid #e4ddcf">
+        <div style="display: grid; grid-template-columns: {{ colPrice }}; padding: 18px {{ cardPadS }}px; border-bottom: 1px solid #e4ddcf; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a8478">
+          <div>{{ t.colUnit }}</div>
+          <div>{{ t.colWeekday }}</div>
+          <div>{{ t.colWeekend }}</div>
+        </div>
+        <sc-for list="{{ priceRows }}" as="row" hint-placeholder-count="4">
+          <div style="display: grid; grid-template-columns: {{ colPrice }}; padding: 22px {{ cardPadS }}px; border-bottom: 1px solid #ece5d7; align-items: baseline">
+            <div>
+              <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; color: #1f2a24">{{ row.unit }}</div>
+              <div style="font-size: 13.5px; color: #8a8478; margin-top: 4px">{{ row.note }}</div>
+            </div>
+            <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; color: #3c3a33">{{ row.weekday }}</div>
+            <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; color: #3c3a33">{{ row.weekend }}</div>
+          </div>
+        </sc-for>
+        <div style="padding: 24px {{ cardPadS }}px; display: grid; gap: 9px">
+          <sc-for list="{{ priceNotes }}" as="n" hint-placeholder-count="4">
+            <div style="font-size: 14.5px; color: #575349">{{ n }}</div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="font-family: ui-monospace, Menlo, monospace; font-size: 11.5px; color: #8a8478; margin-top: 16px; line-height: 1.6">{{ t.priceDisclaimer }}</div>
+    </div>
+    </sc-if>
+
+    <!-- Booking -->
+    <sc-if value="{{ isBooking }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width: 1320px; margin: 0 auto; padding: {{ secTopS }}px {{ padX }}px 0; display: grid; grid-template-columns: {{ col2 }}; gap: {{ gapL }}px; align-items: start">
+      <div style="background: #fdfbf6; border: 1px solid #e4ddcf; padding: {{ cardPadL }}px">
+        <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+          <div style="padding: 40px 0">
+            <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 38px; color: #1f2a24; line-height: 1.15">{{ t.sentTitle }}</div>
+            <p style="font-size: 17px; color: #4c4a42; margin: 14px 0 0; max-width: 460px">{{ t.sentBody }}</p>
+            <div onClick="{{ resetForm }}" style="cursor: pointer; display: inline-block; margin-top: 26px; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #a35a34; border-bottom: 1px solid #d8c8b6; padding-bottom: 5px">{{ t.sendAnother }}</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+        <div>
+          <div style="display: grid; grid-template-columns: {{ col2 }}; gap: 28px">
+            <label style="display: block">
+              <span style="display: block; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a8478; margin-bottom: 9px">{{ t.checkIn }}</span>
+              <input type="date" value="{{ arrive }}" onChange="{{ onArrive }}" style="width: 100%; border: 0; border-bottom: 1px solid #cfc6b2; background: transparent; padding: 8px 0; font-size: 16px; outline: none; color: #23231f" />
+            </label>
+            <label style="display: block">
+              <span style="display: block; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a8478; margin-bottom: 9px">{{ t.checkOut }}</span>
+              <input type="date" value="{{ depart }}" onChange="{{ onDepart }}" style="width: 100%; border: 0; border-bottom: 1px solid #cfc6b2; background: transparent; padding: 8px 0; font-size: 16px; outline: none; color: #23231f" />
+            </label>
+            <label style="display: block">
+              <span style="display: block; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a8478; margin-bottom: 9px">{{ t.roomType }}</span>
+              <select value="{{ unit }}" onChange="{{ onUnit }}" style="width: 100%; border: 0; border-bottom: 1px solid #cfc6b2; background: transparent; padding: 9px 0; font-size: 16px; outline: none; color: #23231f">
+                <sc-for list="{{ unitOptions }}" as="u" hint-placeholder-count="3">
+                  <option value="{{ u }}">{{ u }}</option>
+                </sc-for>
+              </select>
+            </label>
+            <label style="display: block">
+              <span style="display: block; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a8478; margin-bottom: 9px">{{ t.guests }}</span>
+              <select value="{{ guests }}" onChange="{{ onGuests }}" style="width: 100%; border: 0; border-bottom: 1px solid #cfc6b2; background: transparent; padding: 9px 0; font-size: 16px; outline: none; color: #23231f">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5+</option>
+              </select>
+            </label>
+            <label style="display: block">
+              <span style="display: block; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a8478; margin-bottom: 9px">{{ t.name }}</span>
+              <input value="{{ guestName }}" onChange="{{ onName }}" style="width: 100%; border: 0; border-bottom: 1px solid #cfc6b2; background: transparent; padding: 8px 0; font-size: 16px; outline: none; color: #23231f" />
+            </label>
+            <label style="display: block">
+              <span style="display: block; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a8478; margin-bottom: 9px">{{ t.phone }}</span>
+              <input value="{{ phone }}" onChange="{{ onPhone }}" style="width: 100%; border: 0; border-bottom: 1px solid #cfc6b2; background: transparent; padding: 8px 0; font-size: 16px; outline: none; color: #23231f" />
+            </label>
+          </div>
+          <label style="display: block; margin-top: 28px">
+            <span style="display: block; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a8478; margin-bottom: 9px">{{ t.email }}</span>
+            <input value="{{ email }}" onChange="{{ onEmail }}" style="width: 100%; border: 0; border-bottom: 1px solid #cfc6b2; background: transparent; padding: 8px 0; font-size: 16px; outline: none; color: #23231f" />
+          </label>
+          <label style="display: block; margin-top: 28px">
+            <span style="display: block; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a8478; margin-bottom: 9px">{{ t.message }}</span>
+            <textarea rows="4" value="{{ message }}" onChange="{{ onMessage }}" style="width: 100%; border: 1px solid #e0d8c6; background: #f9f6ef; padding: 14px; font-size: 16px; outline: none; resize: vertical; color: #23231f"></textarea>
+          </label>
+          <div style="display: flex; align-items: center; gap: 22px; margin-top: 30px; flex-wrap: wrap">
+            <div onClick="{{ submit }}" style="cursor: pointer; background: #a35a34; color: #fdfbf6; font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase; padding: 16px 34px" style-hover="background: #1f2a24">{{ t.sendRequest }}</div>
+            <div style="font-size: 14px; color: #8a8478">{{ nightsLine }}</div>
+          </div>
+        </div>
+        </sc-if>
+      </div>
+      <aside style="background: #1f2a24; color: #ded7c8; padding: {{ cardPadM }}px">
+        <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px; color: #f4efe3; line-height: 1.2">{{ t.callTitle }}</div>
+        <p style="font-size: 15.5px; color: #b0a999; margin: 12px 0 26px">{{ t.callBody }}</p>
+        <div style="border-top: 1px solid #3a453d; padding: 16px 0; display: flex; justify-content: space-between; gap: 16px"><span style="font-size: 13px; color: #a9a292">{{ t.reception }}</span><span style="font-size: 16px; color: #f4efe3">0897 45 54 66</span></div>
+        <div style="border-top: 1px solid #3a453d; padding: 16px 0; display: flex; justify-content: space-between; gap: 16px"><span style="font-size: 13px; color: #a9a292">{{ t.manager }}</span><span style="font-size: 16px; color: #f4efe3">0877 76 46 62</span></div>
+        <div style="border-top: 1px solid #3a453d; border-bottom: 1px solid #3a453d; padding: 16px 0; display: flex; justify-content: space-between; gap: 16px"><span style="font-size: 13px; color: #a9a292">Email</span><span style="font-size: 15px; color: #f4efe3">hotelchiflika@abv.bg</span></div>
+        <div style="font-size: 14.5px; color: #b0a999; margin-top: 26px; line-height: 1.7">{{ t.checkTimes }}</div>
+      </aside>
+    </div>
+    </sc-if>
+
+    <!-- Gallery -->
+    <sc-if value="{{ isGallery }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width: 1320px; margin: 0 auto; padding: {{ secTopS }}px {{ padX }}px 0">
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px">
+        <sc-for list="{{ galleryTabs }}" as="g" hint-placeholder-count="5">
+          <div onClick="{{ g.go }}" style="cursor: pointer; font-size: 12.5px; letter-spacing: 0.1em; padding: 11px 20px; border: 1px solid {{ g.border }}; background: {{ g.bg }}; color: {{ g.color }}">{{ g.label }}</div>
+        </sc-for>
+      </div>
+      <div style="display: grid; grid-template-columns: {{ col3 }}; gap: 18px">
+        <sc-for list="{{ gallerySlots }}" as="s" hint-placeholder-count="9">
+          <div style="aspect-ratio: {{ s.ratio }}; background: repeating-linear-gradient(128deg, #e4ddce 0 9px, #ece5d7 9px 18px); display: flex; align-items: flex-end; padding: 13px; grid-row: {{ s.span }}">
+            <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; color: #6f6a5e; background: rgba(246,243,236,0.9); padding: 5px 8px">{{ s.label }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="margin-top: 30px; padding: 24px {{ cardPadS }}px; background: #efe9dc; display: flex; justify-content: space-between; gap: 24px; align-items: center; flex-wrap: wrap">
+        <div style="font-size: 16px; color: #40403a">{{ t.tour360 }}</div>
+        <a href="http://www.hotelchiflika.com/360.htm" target="_blank" rel="noreferrer" style="font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase; border-bottom: 1px solid #d8c8b6; padding-bottom: 5px">{{ t.tour360Cta }}</a>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- Restaurant -->
+    <sc-if value="{{ isRestaurant }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width: 1320px; margin: 0 auto; padding: {{ secTopS }}px {{ padX }}px 0">
+      <div style="display: grid; grid-template-columns: {{ col2 }}; gap: {{ gapL }}px; align-items: start">
+        <div>
+          <sc-for list="{{ restParas }}" as="p" hint-placeholder-count="3">
+            <p style="font-size: 17px; color: #40403a; margin: 0 0 22px">{{ p }}</p>
+          </sc-for>
+          <div style="display: grid; grid-template-columns: {{ col2 }}; gap: 30px; border-top: 1px solid #e4ddcf; margin-top: 14px; padding-top: 28px">
+            <div>
+              <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 40px; line-height: 1; color: #1f2a24">85</div>
+              <div style="font-size: 14px; color: #8a8478; margin-top: 8px">{{ t.seatsIn }}</div>
+            </div>
+            <div>
+              <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 40px; line-height: 1; color: #1f2a24">70</div>
+              <div style="font-size: 14px; color: #8a8478; margin-top: 8px">{{ t.seatsGarden }}</div>
+            </div>
+          </div>
+          <div style="margin-top: 34px">
+            <div style="font-size: 10.5px; letter-spacing: 0.26em; text-transform: uppercase; color: #a35a34; margin-bottom: 14px">{{ t.occasions }}</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 9px">
+              <sc-for list="{{ occasions }}" as="o" hint-placeholder-count="7">
+                <span style="font-size: 14px; color: #3c3a33; border: 1px solid #e0d8c6; padding: 8px 14px; background: #fdfbf6">{{ o }}</span>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <div style="display: grid; gap: 18px">
+          <div style="aspect-ratio: 4/3; background: repeating-linear-gradient(128deg, #e6dcd2 0 9px, #eee6dc 9px 18px); display: flex; align-items: flex-end; padding: 14px">
+            <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; color: #6f6a5e; background: rgba(246,243,236,0.9); padding: 5px 8px">основно ястие / main course</span>
+          </div>
+          <div style="display: grid; grid-template-columns: {{ col2 }}; gap: 18px">
+            <div style="aspect-ratio: 1; background: repeating-linear-gradient(128deg, #e2dbcd 0 9px, #eae3d5 9px 18px); display: flex; align-items: flex-end; padding: 12px">
+              <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10px; color: #6f6a5e; background: rgba(246,243,236,0.9); padding: 4px 7px">вино / wine</span>
+            </div>
+            <div style="aspect-ratio: 1; background: repeating-linear-gradient(128deg, #dfe4dd 0 9px, #e8ece5 9px 18px); display: flex; align-items: flex-end; padding: 12px">
+              <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10px; color: #6f6a5e; background: rgba(246,243,236,0.9); padding: 4px 7px">салата / salad</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- Pool -->
+    <sc-if value="{{ isPool }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width: 1320px; margin: 0 auto; padding: {{ secTopS }}px {{ padX }}px 0">
+      <div style="aspect-ratio: 21/9; background: repeating-linear-gradient(128deg, #dfe4dd 0 10px, #e8ece5 10px 20px); display: flex; align-items: flex-end; padding: 16px">
+        <span style="font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: #6f6a5e; background: rgba(246,243,236,0.9); padding: 6px 9px">басейн, панорама / pool wide 2400×1030</span>
+      </div>
+      <div style="display: grid; grid-template-columns: {{ col2 }}; gap: {{ gapL }}px; margin-top: 60px; align-items: start">
+        <div>
+          <sc-for list="{{ poolParas }}" as="p" hint-placeholder-count="4">
+            <p style="font-size: 17px; color: #40403a; margin: 0 0 22px">{{ p }}</p>
+          </sc-for>
+        </div>
+        <div style="background: #1f2a24; color: #ded7c8; padding: {{ cardPadM }}px">
+          <div style="font-size: 10.5px; letter-spacing: 0.26em; text-transform: uppercase; color: #c08a63">{{ t.hours }}</div>
+          <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 44px; color: #f4efe3; margin-top: 12px; line-height: 1.1">10:00 – 18:00</div>
+          <div style="font-size: 15px; color: #b0a999; margin-top: 14px">{{ t.poolHoursNote }}</div>
+          <div style="border-top: 1px solid #3a453d; margin-top: 26px; padding-top: 20px; font-size: 15px; color: #ded7c8">{{ t.poolFree }}</div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- Weddings -->
+    <sc-if value="{{ isWeddings }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width: 1320px; margin: 0 auto; padding: {{ secTopS }}px {{ padX }}px 0">
+      <div style="display: grid; grid-template-columns: {{ col2 }}; gap: {{ gapL }}px; align-items: start">
+        <div>
+          <sc-for list="{{ wedParas }}" as="p" hint-placeholder-count="3">
+            <p style="font-size: 17px; color: #40403a; margin: 0 0 22px">{{ p }}</p>
+          </sc-for>
+          <div onClick="{{ goContact }}" style="cursor: pointer; display: inline-block; margin-top: 12px; background: #1f2a24; color: #f6f3ec; font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase; padding: 15px 28px" style-hover="background: #a35a34">{{ t.askOffer }}</div>
+        </div>
+        <div style="display: grid; grid-template-columns: {{ col2 }}; gap: 18px">
+          <div style="aspect-ratio: 3/4; background: repeating-linear-gradient(128deg, #e6dcd6 0 9px, #eee5df 9px 18px); display: flex; align-items: flex-end; padding: 13px">
+            <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10px; color: #6f6a5e; background: rgba(246,243,236,0.9); padding: 4px 7px">ритуал в градината</span>
+          </div>
+          <div style="aspect-ratio: 3/4; background: repeating-linear-gradient(128deg, #e2dbcd 0 9px, #eae3d5 9px 18px); display: flex; align-items: flex-end; padding: 13px; margin-top: 34px">
+            <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10px; color: #6f6a5e; background: rgba(246,243,236,0.9); padding: 4px 7px">банкетна зала</span>
+          </div>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: {{ col4 }}; gap: 1px; background: #e4ddcf; margin-top: 70px">
+        <sc-for list="{{ wedFacts }}" as="f" hint-placeholder-count="4">
+          <div style="background: #f6f3ec; padding: 30px 26px">
+            <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 34px; color: #1f2a24; line-height: 1">{{ f.v }}</div>
+            <div style="font-size: 14px; color: #8a8478; margin-top: 10px">{{ f.k }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- Contact -->
+    <sc-if value="{{ isContact }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width: 1320px; margin: 0 auto; padding: {{ secTopS }}px {{ padX }}px 0">
+      <div style="display: grid; grid-template-columns: {{ col2 }}; gap: {{ gapL }}px; align-items: start">
+        <div>
+          <div style="font-size: 10.5px; letter-spacing: 0.26em; text-transform: uppercase; color: #a35a34">{{ t.address }}</div>
+          <p style="font-size: 19px; color: #23231f; margin: 12px 0 0; line-height: 1.6; text-wrap: balance">{{ t.contactAddress }}</p>
+          <p style="font-size: 15.5px; color: #6d685c; margin: 8px 0 0">{{ t.addressNote }}</p>
+          <div style="margin-top: 30px; border-top: 1px solid #e4ddcf">
+            <div style="padding: 15px 0; border-bottom: 1px solid #e9e2d4; display: flex; justify-content: space-between; gap: 16px"><span style="font-size: 14px; color: #8a8478">{{ t.reception }}</span><span style="font-size: 16.5px">0897 45 54 66</span></div>
+            <div style="padding: 15px 0; border-bottom: 1px solid #e9e2d4; display: flex; justify-content: space-between; gap: 16px"><span style="font-size: 14px; color: #8a8478">{{ t.manager }}</span><span style="font-size: 16.5px">0877 76 46 62</span></div>
+            <div style="padding: 15px 0; border-bottom: 1px solid #e9e2d4; display: flex; justify-content: space-between; gap: 16px"><span style="font-size: 14px; color: #8a8478">Email</span><span style="font-size: 16.5px">hotelchiflika@abv.bg</span></div>
+            <div style="padding: 15px 0; display: flex; justify-content: space-between; gap: 16px"><span style="font-size: 14px; color: #8a8478">Facebook</span><a href="https://www.facebook.com/213719871979724/" target="_blank" rel="noreferrer" style="font-size: 16.5px">{{ t.fbLabel }}</a></div>
+          </div>
+        </div>
+        <div style="background: #fdfbf6; border: 1px solid #e4ddcf; padding: {{ cardPadM }}px">
+          <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 30px; line-height: 1.2">{{ t.writeUs }}</div>
+          <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+            <p style="font-size: 16.5px; color: #4c4a42; margin: 18px 0 0">{{ t.sentBody }}</p>
+          </sc-if>
+          <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+          <div>
+            <div style="display: grid; grid-template-columns: {{ col2 }}; gap: 26px; margin-top: 26px">
+              <label style="display: block">
+                <span style="display: block; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a8478; margin-bottom: 9px">{{ t.name }}</span>
+                <input value="{{ guestName }}" onChange="{{ onName }}" style="width: 100%; border: 0; border-bottom: 1px solid #cfc6b2; background: transparent; padding: 8px 0; font-size: 16px; outline: none; color: #23231f" />
+              </label>
+              <label style="display: block">
+                <span style="display: block; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a8478; margin-bottom: 9px">{{ t.phone }}</span>
+                <input value="{{ phone }}" onChange="{{ onPhone }}" style="width: 100%; border: 0; border-bottom: 1px solid #cfc6b2; background: transparent; padding: 8px 0; font-size: 16px; outline: none; color: #23231f" />
+              </label>
+            </div>
+            <label style="display: block; margin-top: 26px">
+              <span style="display: block; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a8478; margin-bottom: 9px">{{ t.email }}</span>
+              <input value="{{ email }}" onChange="{{ onEmail }}" style="width: 100%; border: 0; border-bottom: 1px solid #cfc6b2; background: transparent; padding: 8px 0; font-size: 16px; outline: none; color: #23231f" />
+            </label>
+            <label style="display: block; margin-top: 26px">
+              <span style="display: block; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a8478; margin-bottom: 9px">{{ t.message }}</span>
+              <textarea rows="4" value="{{ message }}" onChange="{{ onMessage }}" style="width: 100%; border: 1px solid #e0d8c6; background: #f9f6ef; padding: 14px; font-size: 16px; outline: none; resize: vertical; color: #23231f"></textarea>
+            </label>
+            <div onClick="{{ submit }}" style="cursor: pointer; display: inline-block; margin-top: 28px; background: #a35a34; color: #fdfbf6; font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase; padding: 16px {{ padX }}px" style-hover="background: #1f2a24">{{ t.send }}</div>
+          </div>
+          </sc-if>
+        </div>
+      </div>
+      <div style="margin-top: 64px; border: 1px solid #e4ddcf">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2964.308170736346!2d24.84836495091395!3d42.01512097910957!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14acd9221f6ed31f%3A0xd275295a1074a6f9!2sHitel-Restorant+Chiflika!5e0!3m2!1sen!2sbg!4v1448055003563" width="100%" height="420" loading="lazy" title="Карта"></iframe>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- Rules -->
+    <sc-if value="{{ isRules }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width: 980px; margin: 0 auto; padding: {{ secTopS }}px {{ padX }}px 0">
+      <sc-for list="{{ ruleGroups }}" as="g" hint-placeholder-count="4">
+        <div style="display: grid; grid-template-columns: {{ col2 }}; gap: 40px; border-top: 1px solid #e4ddcf; padding: 34px 0">
+          <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; color: #1f2a24; line-height: 1.2">{{ g.title }}</div>
+          <div style="display: grid; gap: 12px">
+            <sc-for list="{{ g.items }}" as="i" hint-placeholder-count="3">
+              <div style="font-size: 16.5px; color: #45443c">{{ i }}</div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+      <div style="font-family: ui-monospace, Menlo, monospace; font-size: 11.5px; color: #8a8478; margin-top: 22px; line-height: 1.6">{{ t.rulesDisclaimer }}</div>
+    </div>
+    </sc-if>
+
+    <!-- Sights -->
+    <sc-if value="{{ isSights }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width: 1320px; margin: 0 auto; padding: {{ secTopS }}px {{ padX }}px 0">
+      <div style="display: grid; grid-template-columns: {{ col3 }}; gap: 34px">
+        <sc-for list="{{ sights }}" as="s" hint-placeholder-count="6">
+          <div>
+            <div style="aspect-ratio: 4/3; background: repeating-linear-gradient(128deg, #e4ddce 0 9px, #ece5d7 9px 18px); display: flex; align-items: flex-end; padding: 13px">
+              <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; color: #6f6a5e; background: rgba(246,243,236,0.9); padding: 5px 8px">{{ s.slot }}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 14px; margin-top: 20px">
+              <h3 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; font-size: 25px; margin: 0">{{ s.name }}</h3>
+              <span style="font-size: 13px; color: #8a8478; white-space: nowrap">{{ s.dist }}</span>
+            </div>
+            <p style="font-size: 15.5px; color: #575349; margin: 8px 0 0">{{ s.desc }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+  </div>
+  </sc-if>
+
+  <!-- ===================== CTA + FOOTER ===================== -->
+  <section style="max-width: 1320px; margin: {{ secTop }}px auto 0; padding: 0 {{ padX }}px">
+    <div style="background: #efe9dc; padding: {{ cardPadL }}px {{ cardPadL }}px; display: flex; justify-content: space-between; align-items: center; gap: 40px; flex-wrap: wrap">
+      <div>
+        <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: {{ h2s }}px; margin: 0; line-height: 1.14">{{ t.ctaTitle }}</h2>
+        <p style="font-size: 16.5px; color: #55524a; margin: 12px 0 0">{{ t.ctaBody }}</p>
+      </div>
+      <div style="display: flex; gap: 14px; flex-wrap: wrap">
+        <div onClick="{{ goBooking }}" style="cursor: pointer; background: #1f2a24; color: #f6f3ec; font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase; padding: 17px {{ padX }}px" style-hover="background: #a35a34">{{ t.reserve }}</div>
+        <a href="tel:0897455466" style="border: 1px solid #cfc6b2; color: #3c3a33; font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase; padding: 17px {{ padX }}px" style-hover="border-color: #a35a34; color: #a35a34">0897 45 54 66</a>
+      </div>
+    </div>
+  </section>
+
+  <footer style="margin-top: {{ secTop }}px; background: #1f2a24; color: #a9a292">
+    <div style="max-width: 1320px; margin: 0 auto; padding: {{ secTopS }}px {{ padX }}px 34px; display: grid; grid-template-columns: {{ colFooter }}; gap: {{ gapM }}px">
+      <div>
+        <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; letter-spacing: 0.3em; color: #f4efe3">ЧИФЛИКА</div>
+        <p style="font-size: 15px; margin: 16px 0 0; max-width: 300px; line-height: 1.7">{{ t.footerBlurb }}</p>
+      </div>
+      <div>
+        <div style="font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #6f7a70; margin-bottom: 16px">{{ t.footerNav }}</div>
+        <div style="display: grid; gap: 10px">
+          <sc-for list="{{ footerColA }}" as="l" hint-placeholder-count="5">
+            <div onClick="{{ l.go }}" style="cursor: pointer; font-size: 15px; color: #cec7b8" style-hover="color: #f4efe3">{{ l.label }}</div>
+          </sc-for>
+        </div>
+      </div>
+      <div>
+        <div style="font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #6f7a70; margin-bottom: 16px">{{ t.footerInfo }}</div>
+        <div style="display: grid; gap: 10px">
+          <sc-for list="{{ footerColB }}" as="l" hint-placeholder-count="5">
+            <div onClick="{{ l.go }}" style="cursor: pointer; font-size: 15px; color: #cec7b8" style-hover="color: #f4efe3">{{ l.label }}</div>
+          </sc-for>
+        </div>
+      </div>
+      <div>
+        <div style="font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #6f7a70; margin-bottom: 16px">{{ t.footerContact }}</div>
+        <div style="display: grid; gap: 10px; font-size: 15px; color: #cec7b8">
+          <div>{{ t.footerAddress }}</div>
+          <div>0897 45 54 66</div>
+          <div>hotelchiflika@abv.bg</div>
+        </div>
+      </div>
+    </div>
+    <div style="max-width: 1320px; margin: 0 auto; padding: 22px {{ padX }}px 40px; border-top: 1px solid #2e3a33; display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; font-size: 13px; color: #77816f">
+      <div>{{ t.copyright }}</div>
+      <div>{{ t.rightsReserved }}</div>
+    </div>
+  </footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showTopBar&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;showAvailability&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;defaultLang&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;bg&quot;,&quot;en&quot;],&quot;default&quot;:&quot;bg&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const BG = {
+  reserve: "Резервация", check: "Провери", checkIn: "Настаняване", checkOut: "Напускане",
+  guests: "Гости", roomType: "Помещение", more: "Научете повече", allRooms: "Всички помещения",
+  heroTitle: "Тихият край на Родопите, на пет минути от Асеновград",
+  heroSub: "Елегантен семеен хотел с ресторант, открит басейн и сауна — с тераси, гледащи към планината и града.",
+  kickerAbout: "За нас", aboutTitle: "Малък хотел с мярка за спокойствие",
+  aboutP1: "Елегантният семеен Хотел Чифлика се намира на 5 минути с кола от центъра на Асеновград и на 18 км от Пловдив. На гостите се предоставя безплатно ползване на сауна, сезонно открит басейн и паркинг.",
+  aboutP2: "Всички помещения предлагат модерен дизайн, самостоятелна баня с душ, климатик и плоскоекранен телевизор. Стаите разполагат с тераси с прекрасна гледка към Родопите и града.",
+  kickerRooms: "Настаняване", roomsTitle: "Стаи и апартаменти",
+  kickerTable: "Ресторант", restTitle: "Българска, турска и интернационална кухня",
+  restP: "Стилен и уютен ресторант с отбрани вина, подходящ както за обикновен обяд, така и за най-вълнуващото тържество в живота ви.",
+  seatsIn: "места на закрито", seatsGarden: "места в градината", restCta: "Виж ресторанта",
+  poolTitle: "Басейн Чифлика", poolTeaser: "Кристално чист басейн с постоянна температура в подножието на планината. Работи от 10:00 до 18:00 ч.",
+  wedTitle: "Сватби и тържества", wedTeaser: "Ритуал в лятната градина с гледка към Пловдив и Асеновград, банкет до 155 гости.",
+  kickerNear: "Наоколо", nearTitle: "Всичко важно е на 15 минути",
+  ctaTitle: "Проверете свободните дати", ctaBody: "Отговаряме на запитвания до няколко часа, всеки ден.",
+  brandLine: "Хотелски комплекс Чифлика", colUnit: "Помещение", colWeekday: "Делник", colWeekend: "Уикенд",
+  priceDisclaimer: "цените са примерни — заменете ги с актуалната тарифа преди публикуване",
+  name: "Име", phone: "Телефон", email: "Email", message: "Съобщение",
+  sendRequest: "Изпрати запитване", send: "Изпрати",
+  sentTitle: "Благодарим ви!", sentBody: "Получихме запитването ви и ще се свържем с вас до няколко часа на посочения телефон.",
+  sendAnother: "Ново запитване", callTitle: "Предпочитате по телефона?",
+  callBody: "Обадете се на рецепцията — веднага ще проверим наличността за вашите дати.",
+  reception: "Рецепция", manager: "Управител",
+  checkTimes: "Настаняване от 14:00 ч., напускане до 12:00 ч. Безплатно бебешко легло за дете до 3 години.",
+  tour360: "Виртуална разходка на 360° в хотела и комплекса", tour360Cta: "Отвори 360°",
+  occasions: "Подходящ за", hours: "Работно време",
+  poolHoursNote: "Всеки ден през летния сезон.", poolFree: "Ползването на басейна и сауната е безплатно за гостите на хотела.",
+  askOffer: "Поискай оферта", address: "Адрес",
+  addressNote: "На 18 км от Пловдив и на 10 км от летище Пловдив.", writeUs: "Пишете ни",
+  rulesDisclaimer: "правилникът е примерен — сверете го с вътрешния правилник на хотела",
+  footerBlurb: "Семеен хотел, ресторант и басейн в подножието на Родопите, Асеновград.",
+  footerNav: "Хотел", footerInfo: "Информация", footerContact: "Контакти", rightsReserved: "Всички права запазени",
+  tagline: "Хотел · Ресторант · Басейн", footerAddress: "Асеновград, ул. Горноводенско шосе №13",
+  copyright: "© 2010–2026 Хотелски комплекс Чифлика, Асеновград",
+  contactAddress: "Асеновград, ул. Горноводенско шосе\u00a0№13", fbLabel: "Хотел Чифлика",
+  menu: "Меню",
+  nav: { home: "Начало", about: "За нас", rooms: "Настаняване", prices: "Цени", gallery: "Галерия", restaurant: "Ресторант", pool: "Басейн", weddings: "Сватби", contact: "Контакти", booking: "Резервация", rules: "Вътрешен правилник", sights: "Забележителности" },
+  titles: {
+    about: ["За нас", "Елегантен семеен хотел на пет минути от центъра на Асеновград и на 18 км от Пловдив."],
+    rooms: ["Настаняване", "Апартаменти и двойни стаи с тераси, гледащи към Родопите."],
+    prices: ["Цени", "Тарифа за нощувка. За престой над три нощувки и групи изготвяме индивидуална оферта."],
+    booking: ["Резервация", "Изпратете запитване за дати и ще потвърдим наличността до няколко часа."],
+    gallery: ["Галерия", "Хотелът, стаите, басейнът, ресторантът и градината."],
+    restaurant: ["Ресторант", "Стилен и уютен, с отбрани вина и гледка към Пловдив и Асеновград."],
+    pool: ["Басейн Чифлика", "Открит басейн в подножието на планината — оазис на минути от града."],
+    weddings: ["Сватби", "Ритуал в лятната градина, банкет в елегантната зала."],
+    contact: ["Контакти", "Асеновград, ул. Горноводенско шосе №13."],
+    rules: ["Вътрешен правилник", "Правила за настаняване, престой и ползване на съоръженията."],
+    sights: ["Забележителности", "Асенова крепост, Бачковски манастир и Пловдив — всичко наблизо."]
+  },
+  amenities: [["Wi-Fi", "Безплатен интернет"], ["Басейн", "Сезонно открит"], ["Сауна", "Безплатно за гости"], ["Паркинг", "Безплатен, на място"], ["Масаж", "По заявка"], ["Трансфер", "Летище Пловдив, 10 км"]],
+  rooms: [
+    { name: "Апартамент Тип I", desc: "Модерен дизайн, самостоятелна баня с душ, климатик и тераса с изглед към планината.", cap: "до 4 гости", price: "от 140 лв.", slot: "апартамент тип I / apartment I" },
+    { name: "Апартамент Тип II", desc: "Просторен апартамент с отделна спалня и тераса с изглед към Родопите.", cap: "до 3 гости", price: "от 120 лв.", slot: "апартамент тип II / apartment II" },
+    { name: "Двойна стая", desc: "Двойна стая с модерен дизайн, климатик, телевизор и тераса с изглед към града.", cap: "2 гости", price: "от 85 лв.", slot: "двойна стая / double room" }
+  ],
+  roomFeatures: ["Самостоятелна баня с душ", "Климатик", "Плоскоекранен телевизор", "Тераса с изглед", "Безплатен Wi-Fi", "Бебешко легло по заявка"],
+  distances: [["Асенова крепост", "10 мин с кола"], ["Бачковски манастир", "15 мин с кола"], ["Център на Асеновград", "5 мин с кола"], ["Пловдив", "18 км"], ["Летище Пловдив", "10 км"]],
+  aboutParas: [
+    "Елегантният семеен Хотел Чифлика се намира на 5 минути с кола от центъра на Асеновград и на 18 км от град Пловдив. На гостите се предоставя безплатно ползване на сауна, сезонно открит басейн и паркинг.",
+    "Всички помещения за настаняване предлагат модерен дизайн, самостоятелна баня с душ, климатик и плоскоекранен телевизор. Стаите разполагат с тераси, от които има прекрасна гледка към Родопите и града.",
+    "Можете да използвате безплатната Wi-Fi връзка, докато релаксирате в лятната градина, или да се поглезите с масаж. Летище Пловдив е на 10 километра, а срещу допълнително заплащане се предлагат трансферни услуги.",
+    "За дете до 3 години се доставя безплатно бебешко легло. Максимален капацитет от бебешки легла в една стая е едно. Всеки вид допълнително легло или бебешко креватче се поставят при заявка, която трябва да бъде потвърдена от хотела."
+  ],
+  restParas: [
+    "Ресторант Чифлика Асеновград е стилен и уютен, с отбрани вина и напитки, и предлага българска, турска и интернационална кухня — както за един обикновен обяд, така и за най-вълнуващото тържество в живота ви.",
+    "Ресторантът разполага с 85 места на закрито и 70 места в просторна градина, от която се открива гледка към Пловдив и Асеновград.",
+    "Потънал в зеленината на Родопите, той е тихо кътче далеч от шума на забързания град и ще ви дари с незабравими гледки, тишина и спокойствие за вашето парти или бизнес ангажименти. Комплексът предлага и безплатен паркинг."
+  ],
+  occasions: ["Банкети", "Сватби", "Абитуриентски балове", "Семейни тържества", "Романтични вечери", "Делови обеди", "Фирмени събития"],
+  poolParas: [
+    "Плувният басейн на Хотелски комплекс Чифлика – Асеновград и чудесното му разположение в подножието на планината правят престоя тук истинска почивка.",
+    "Непосредствената близост до града го прави привлекателен както за гостите, така и за жителите на Асеновград и Пловдив — оазис в динамичното ни ежедневие.",
+    "Басейнът е с размери, приятни за плуване и релаксация, кристално чист, с постоянна температура и модерна филтрираща система на водата.",
+    "Тихо и спокойно място за релакс, за ценителите на лукса и красотата, изключително подходящо за отмора и забавление на цялото семейство."
+  ],
+  wedParas: [
+    "Ресторант Чифлика е подходящ за банкети, сватби, абитуриентски балове и семейни тържества. Елегантната зала и прекрасната лятна градина ви откъсват от динамиката на забързания град.",
+    "Ритуалът може да се проведе в градината с гледка към Пловдив и Асеновград, а банкетът — на закрито или на открито, според сезона и броя гости.",
+    "Гостите на тържеството могат да останат в хотела, а комплексът предлага безплатен паркинг, басейн и сауна."
+  ],
+  wedFacts: [["155", "гости общо"], ["85", "места на закрито"], ["70", "места в градината"], ["18 км", "от Пловдив"]],
+  seasons: ["01.06 – 30.09 · летен сезон", "01.10 – 31.05 · извън сезон", "Празници"],
+  priceRows: [
+    { unit: "Двойна стая", note: "нощувка за двама", weekday: "85 лв.", weekend: "95 лв." },
+    { unit: "Апартамент Тип II", note: "нощувка за двама", weekday: "120 лв.", weekend: "135 лв." },
+    { unit: "Апартамент Тип I", note: "нощувка за двама", weekday: "140 лв.", weekend: "155 лв." },
+    { unit: "Допълнително легло", note: "на нощувка", weekday: "25 лв.", weekend: "25 лв." }
+  ],
+  priceNotes: ["Цените са с включен туристически данък и застраховка.", "Ползването на басейна и сауната е безплатно за гостите на хотела.", "Безплатно бебешко легло за дете до 3 години, по предварителна заявка.", "За престой над три нощувки и за групи изготвяме индивидуална оферта."],
+  galleryTabs: ["Всички", "Хотел", "Стаи", "Басейн", "Ресторант"],
+  gallerySlots: [
+    "фасада / exterior", "лоби / lobby", "двойна стая / double", "апартамент / apartment",
+    "баня / bathroom", "тераса и гледка / terrace view", "басейн / pool", "лятна градина / garden",
+    "ресторант / restaurant"
+  ],
+  ruleGroups: [
+    { title: "Настаняване и напускане", items: ["Настаняване след 14:00 ч. срещу представяне на документ за самоличност.", "Напускане до 12:00 ч. в деня на отпътуване.", "По-ранно настаняване и по-късно напускане — при възможност и предварителна заявка."] },
+    { title: "Престой", items: ["Тишина в стаите и на терасите между 22:00 и 08:00 ч.", "Пушенето в стаите и общите закрити части е забранено.", "Домашни любимци се допускат само след предварително съгласуване."] },
+    { title: "Деца и допълнителни легла", items: ["Безплатно бебешко легло за дете до 3 години, по заявка, максимум едно в стая.", "Допълнителните легла се поставят само след потвърждение от хотела."] },
+    { title: "Басейн и сауна", items: ["Басейнът работи от 10:00 до 18:00 ч. през летния сезон.", "Деца под 12 години влизат в басейна само с придружител.", "Ползването на басейна и сауната е безплатно за настанените гости."] }
+  ],
+  sights: [
+    { name: "Асенова крепост", dist: "10 мин с кола", desc: "Средновековна крепост над Асеновград с църквата „Св. Богородица Петричка“.", slot: "Асенова крепост" },
+    { name: "Бачковски манастир", dist: "15 мин с кола", desc: "Вторият по големина манастир в България, основан през 1083 г.", slot: "Бачковски манастир" },
+    { name: "Стар Пловдив", dist: "18 км", desc: "Античният театър, Капана и калдъръмените улици на Стария град.", slot: "Стар Пловдив" },
+    { name: "Червената стена", dist: "40 мин с кола", desc: "Биосферен резерват с редки видове и маршрути за преходи.", slot: "Червената стена" },
+    { name: "Кръстова гора", dist: "1 ч с кола", desc: "Поклоннически комплекс високо в Родопите.", slot: "Кръстова гора" },
+    { name: "Белинташ", dist: "1 ч с кола", desc: "Тракийско скално светилище с панорама към планината.", slot: "Белинташ" }
+  ]
+};
+
+const EN = {
+  reserve: "Book", check: "Check", checkIn: "Arrival", checkOut: "Departure",
+  guests: "Guests", roomType: "Room", more: "Read more", allRooms: "All rooms",
+  heroTitle: "A quiet corner of the Rhodopes, five minutes from Asenovgrad",
+  heroSub: "An elegant family hotel with a restaurant, outdoor pool and sauna — every room with a terrace facing the mountain and the town.",
+  kickerAbout: "About", aboutTitle: "A small hotel built around calm",
+  aboutP1: "The elegant family-run Hotel Chiflika is a 5-minute drive from the centre of Asenovgrad and 18 km from Plovdiv. Guests enjoy free use of the sauna, the seasonal outdoor pool and parking.",
+  aboutP2: "All rooms offer modern design, a private bathroom with shower, air conditioning and a flat-screen TV, plus a terrace with a fine view of the Rhodopes and the town.",
+  kickerRooms: "Rooms", roomsTitle: "Rooms and apartments",
+  kickerTable: "Restaurant", restTitle: "Bulgarian, Turkish and international cuisine",
+  restP: "A stylish, welcoming restaurant with a selected wine list — right for an ordinary lunch and for the most important celebration of your life alike.",
+  seatsIn: "seats indoors", seatsGarden: "seats in the garden", restCta: "See the restaurant",
+  poolTitle: "Chiflika Pool", poolTeaser: "A crystal-clear pool with a steady temperature at the foot of the mountain. Open 10:00–18:00.",
+  wedTitle: "Weddings & events", wedTeaser: "Ceremony in the summer garden overlooking Plovdiv and Asenovgrad, banquet for up to 155 guests.",
+  kickerNear: "Nearby", nearTitle: "Everything worth seeing is 15 minutes away",
+  ctaTitle: "Check available dates", ctaBody: "We answer enquiries within a few hours, every day.",
+  brandLine: "Chiflika Hotel Complex", colUnit: "Room", colWeekday: "Weekday", colWeekend: "Weekend",
+  priceDisclaimer: "sample rates — replace with the current tariff before publishing",
+  name: "Name", phone: "Phone", email: "Email", message: "Message",
+  sendRequest: "Send enquiry", send: "Send",
+  sentTitle: "Thank you!", sentBody: "We have your enquiry and will call you back on the number you gave within a few hours.",
+  sendAnother: "New enquiry", callTitle: "Rather call us?",
+  callBody: "Ring reception and we will check availability for your dates right away.",
+  reception: "Reception", manager: "Manager",
+  checkTimes: "Check-in from 14:00, check-out by 12:00. Free cot for children under 3.",
+  tour360: "360° virtual tour of the hotel and the complex", tour360Cta: "Open 360°",
+  occasions: "Suitable for", hours: "Opening hours",
+  poolHoursNote: "Daily throughout the summer season.", poolFree: "Pool and sauna are free of charge for hotel guests.",
+  askOffer: "Request an offer", address: "Address",
+  addressNote: "18 km from Plovdiv and 10 km from Plovdiv Airport.", writeUs: "Write to us",
+  rulesDisclaimer: "sample house rules — check against the hotel's official internal rules",
+  footerBlurb: "Family hotel, restaurant and pool at the foot of the Rhodopes, Asenovgrad.",
+  footerNav: "Hotel", footerInfo: "Information", footerContact: "Contact", rightsReserved: "All rights reserved",
+  tagline: "Hotel · Restaurant · Pool", footerAddress: "13 Gornovodensko Shose St., Asenovgrad",
+  copyright: "© 2010–2026 Chiflika Hotel Complex, Asenovgrad",
+  contactAddress: "Asenovgrad, 13\u00a0Gornovodensko Shose St.", fbLabel: "Hotel Chiflika",
+  menu: "Menu",
+  nav: { home: "Home", about: "About", rooms: "Rooms", prices: "Rates", gallery: "Gallery", restaurant: "Restaurant", pool: "Pool", weddings: "Weddings", contact: "Contact", booking: "Book", rules: "House rules", sights: "Nearby" },
+  titles: {
+    about: ["About us", "An elegant family hotel five minutes from the centre of Asenovgrad and 18 km from Plovdiv."],
+    rooms: ["Rooms", "Apartments and double rooms with terraces facing the Rhodopes."],
+    prices: ["Rates", "Per-night rates. For stays over three nights and for groups we prepare an individual offer."],
+    booking: ["Booking", "Send an enquiry with your dates and we will confirm availability within a few hours."],
+    gallery: ["Gallery", "The hotel, the rooms, the pool, the restaurant and the garden."],
+    restaurant: ["Restaurant", "Stylish and welcoming, with selected wines and a view of Plovdiv and Asenovgrad."],
+    pool: ["Chiflika Pool", "An outdoor pool at the foot of the mountain — an oasis minutes from town."],
+    weddings: ["Weddings", "Ceremony in the summer garden, banquet in the elegant hall."],
+    contact: ["Contact", "Asenovgrad, 13 Gornovodensko Shose St."],
+    rules: ["House rules", "Rules for check-in, stay and use of the facilities."],
+    sights: ["Nearby sights", "Asen's Fortress, Bachkovo Monastery and Plovdiv — all close by."]
+  },
+  amenities: [["Wi-Fi", "Free internet"], ["Pool", "Seasonal, outdoor"], ["Sauna", "Free for guests"], ["Parking", "Free, on site"], ["Massage", "On request"], ["Transfer", "Plovdiv Airport, 10 km"]],
+  rooms: [
+    { name: "Apartment Type I", desc: "Modern design, private bathroom with shower, air conditioning and a terrace facing the mountain.", cap: "up to 4 guests", price: "from 140 BGN", slot: "апартамент тип I / apartment I" },
+    { name: "Apartment Type II", desc: "Spacious apartment with a separate bedroom and a terrace overlooking the Rhodopes.", cap: "up to 3 guests", price: "from 120 BGN", slot: "апартамент тип II / apartment II" },
+    { name: "Double room", desc: "Double room with modern design, air conditioning, TV and a terrace facing the town.", cap: "2 guests", price: "from 85 BGN", slot: "двойна стая / double room" }
+  ],
+  roomFeatures: ["Private bathroom with shower", "Air conditioning", "Flat-screen TV", "Terrace with a view", "Free Wi-Fi", "Cot on request"],
+  distances: [["Asen's Fortress", "10 min by car"], ["Bachkovo Monastery", "15 min by car"], ["Asenovgrad centre", "5 min by car"], ["Plovdiv", "18 km"], ["Plovdiv Airport", "10 km"]],
+  aboutParas: [
+    "The elegant family-run Hotel Chiflika is a 5-minute drive from the centre of Asenovgrad and 18 km from Plovdiv. Guests enjoy free use of the sauna, the seasonal outdoor pool and parking.",
+    "All rooms offer modern design, a private bathroom with shower, air conditioning and a flat-screen TV. Each has a terrace with a fine view of the Rhodopes and the town.",
+    "Use the free Wi-Fi while relaxing in the summer garden, or treat yourself to a massage. Plovdiv Airport is 10 km away and transfers are available at extra charge.",
+    "A cot is provided free of charge for children under 3, one per room maximum. Any extra bed or cot is placed on request and must be confirmed by the hotel."
+  ],
+  restParas: [
+    "Chiflika Restaurant in Asenovgrad is stylish and welcoming, with selected wines and drinks, serving Bulgarian, Turkish and international cuisine — for an ordinary lunch as much as for the most exciting celebration of your life.",
+    "The restaurant seats 85 indoors and 70 in a spacious garden with a view over Plovdiv and Asenovgrad.",
+    "Buried in the greenery of the Rhodopes, it is a quiet spot far from the noise of the city, offering unforgettable views, silence and calm for your party or business engagements. The complex also offers free parking."
+  ],
+  occasions: ["Banquets", "Weddings", "Proms", "Family celebrations", "Romantic dinners", "Business lunches", "Company events"],
+  poolParas: [
+    "The swimming pool of the Chiflika Hotel Complex in Asenovgrad, set beautifully at the foot of the mountain, makes a stay here a real rest.",
+    "Its closeness to town makes it attractive to guests and to residents of Asenovgrad and Plovdiv alike — an oasis in a busy everyday life.",
+    "The pool is a pleasant size for swimming and relaxing, crystal clear, kept at a steady temperature and served by a modern water filtration system.",
+    "A quiet, calm place to relax for those who value comfort and beauty, ideal for rest and fun for the whole family."
+  ],
+  wedParas: [
+    "Chiflika Restaurant suits banquets, weddings, proms and family celebrations. The elegant hall and the beautiful summer garden take you away from the pace of the city.",
+    "The ceremony can be held in the garden overlooking Plovdiv and Asenovgrad, with the banquet indoors or outside depending on the season and the number of guests.",
+    "Your guests can stay at the hotel, and the complex offers free parking, a pool and a sauna."
+  ],
+  wedFacts: [["155", "guests in total"], ["85", "seats indoors"], ["70", "seats in the garden"], ["18 km", "from Plovdiv"]],
+  seasons: ["01.06 – 30.09 · summer", "01.10 – 31.05 · off season", "Holidays"],
+  priceRows: [
+    { unit: "Double room", note: "per night, two guests", weekday: "85 BGN", weekend: "95 BGN" },
+    { unit: "Apartment Type II", note: "per night, two guests", weekday: "120 BGN", weekend: "135 BGN" },
+    { unit: "Apartment Type I", note: "per night, two guests", weekday: "140 BGN", weekend: "155 BGN" },
+    { unit: "Extra bed", note: "per night", weekday: "25 BGN", weekend: "25 BGN" }
+  ],
+  priceNotes: ["Rates include tourist tax and insurance.", "Pool and sauna are free for hotel guests.", "Free cot for children under 3, on prior request.", "Individual offers for stays over three nights and for groups."],
+  galleryTabs: ["All", "Hotel", "Rooms", "Pool", "Restaurant"],
+  gallerySlots: [
+    "фасада / exterior", "лоби / lobby", "двойна стая / double", "апартамент / apartment",
+    "баня / bathroom", "тераса и гледка / terrace view", "басейн / pool", "лятна градина / garden",
+    "ресторант / restaurant"
+  ],
+  ruleGroups: [
+    { title: "Check-in and check-out", items: ["Check-in after 14:00 on presentation of an ID document.", "Check-out by 12:00 on the day of departure.", "Earlier check-in and later check-out subject to availability and prior request."] },
+    { title: "During your stay", items: ["Quiet hours in the rooms and on the terraces between 22:00 and 08:00.", "Smoking is not permitted in the rooms or indoor common areas.", "Pets are accepted only by prior arrangement."] },
+    { title: "Children and extra beds", items: ["Free cot for children under 3, on request, one per room maximum.", "Extra beds are placed only after confirmation by the hotel."] },
+    { title: "Pool and sauna", items: ["The pool is open 10:00–18:00 during the summer season.", "Children under 12 may use the pool only when accompanied by an adult.", "Pool and sauna are free of charge for resident guests."] }
+  ],
+  sights: [
+    { name: "Asen's Fortress", dist: "10 min by car", desc: "A medieval fortress above Asenovgrad with the church of St. Mary of Petrich.", slot: "Асенова крепост" },
+    { name: "Bachkovo Monastery", dist: "15 min by car", desc: "Bulgaria's second largest monastery, founded in 1083.", slot: "Бачковски манастир" },
+    { name: "Old Plovdiv", dist: "18 km", desc: "The Roman theatre, Kapana and the cobbled streets of the old town.", slot: "Стар Пловдив" },
+    { name: "Red Wall reserve", dist: "40 min by car", desc: "A biosphere reserve with rare species and walking routes.", slot: "Червената стена" },
+    { name: "Krastova Gora", dist: "1 h by car", desc: "A pilgrimage site high in the Rhodope mountains.", slot: "Кръстова гора" },
+    { name: "Belintash", dist: "1 h by car", desc: "A Thracian rock sanctuary with a panorama of the mountains.", slot: "Белинташ" }
+  ]
+};
+
+// [weekday, weekend] per room row, per season: summer / off-season / holidays
+const RATES = [
+  [[85, 95], [120, 135], [140, 155], [25, 25]],
+  [[70, 80], [100, 110], [120, 130], [25, 25]],
+  [[95, 110], [135, 150], [160, 175], [30, 30]]
+];
+// 1 hotel, 2 rooms, 3 pool, 4 restaurant — index matches gallerySlots order
+const GALLERY_CATS = [1, 1, 2, 2, 2, 2, 3, 4, 4];
+
+const PAGES = ["home", "about", "rooms", "prices", "booking", "gallery", "restaurant", "pool", "weddings", "contact", "rules", "sights"];
+const NAV_ORDER = ["about", "rooms", "prices", "gallery", "restaurant", "pool", "weddings", "contact"];
+
+class Component extends DCLogic {
+  state = {
+    page: "home",
+    lang: this.props.defaultLang === "en" ? "en" : "bg",
+    arrive: "", depart: "", guests: "2", unit: 0,
+    guestName: "", phone: "", email: "", message: "",
+    sent: false, season: 0, galleryTab: 0,
+    w: typeof window === "undefined" ? 1440 : window.innerWidth, menuOpen: false
+  };
+
+  onResize = () => this.setState({ w: window.innerWidth });
+  componentDidMount() { window.addEventListener("resize", this.onResize); }
+  componentWillUnmount() { window.removeEventListener("resize", this.onResize); }
+
+  go = (page) => () => { this.setState({ page, sent: false, menuOpen: false }); window.scrollTo(0, 0); };
+
+  nights() {
+    const { arrive, depart } = this.state;
+    if (!arrive || !depart) return 0;
+    const d = (new Date(depart) - new Date(arrive)) / 86400000;
+    return d > 0 ? Math.round(d) : 0;
+  }
+
+  renderVals() {
+    const lang = this.state.lang;
+    const t = lang === "en" ? EN : BG;
+    const page = this.state.page;
+    const flags = {};
+    PAGES.forEach(p => { flags["is" + p[0].toUpperCase() + p.slice(1)] = page === p; });
+    const n = this.nights();
+    const unitNames = t.rooms.map(r => r.name);
+    const title = t.titles[page] || ["", ""];
+
+    const cur = lang === "en" ? " BGN" : " лв.";
+    const w = this.state.w;
+    const mob = w < 760, isTab = w < 1120, compact = w < 1060;
+    const rs = {
+      isMobile: compact,
+      navVisible: !compact || this.state.menuOpen,
+      toggleMenu: () => this.setState({ menuOpen: !this.state.menuOpen }),
+      padX: mob ? 20 : 32,
+      secTop: mob ? 60 : 104,
+      secTopS: mob ? 44 : 76,
+      darkPad: mob ? 58 : 96,
+      headerDir: compact ? "column" : "row",
+      headerAlign: compact ? "stretch" : "center",
+      navGap: compact ? 18 : 22,
+      navPush: compact ? "0" : "auto",
+      navJustify: compact ? "flex-start" : "flex-end",
+      navPadTop: compact ? 16 : 0,
+      heroMinH: mob ? 480 : 660,
+      heroSize: mob ? 40 : isTab ? 58 : 76,
+      heroSubSize: mob ? 16 : 18,
+      heroPadB: mob ? 44 : 76,
+      availMargin: mob ? "26px auto 0" : "-46px auto 0",
+      availCols: mob ? "1fr 1fr" : isTab ? "1fr 1fr 1fr" : "1.1fr 1.1fr 0.9fr 0.9fr auto",
+      availGap: mob ? 18 : 26,
+      col2: mob ? "1fr" : "1fr 1fr",
+      col3: mob ? "1fr" : isTab ? "1fr 1fr" : "repeat(3, 1fr)",
+      col4: mob ? "1fr 1fr" : "repeat(4, 1fr)",
+      col6: mob ? "1fr 1fr" : isTab ? "repeat(3, 1fr)" : "repeat(6, 1fr)",
+      colFooter: mob ? "1fr" : isTab ? "1fr 1fr" : "1.4fr 1fr 1fr 1fr",
+      colPrice: mob ? "1.3fr 1fr 1fr" : "1.6fr 1fr 1fr",
+      gapL: mob ? 34 : 76,
+      gapM: mob ? 26 : 48,
+      pageH1: mob ? 36 : 58,
+      h2: mob ? 31 : 46,
+      h2s: mob ? 29 : 42,
+      cardPadL: mob ? 24 : 44,
+      cardPadM: mob ? 24 : 40,
+      cardPadS: mob ? 18 : 30
+    };
+    const tab = this.state.galleryTab;
+    const pill = (active) => active
+      ? { border: "#1f2a24", bg: "#1f2a24", color: "#f6f3ec" }
+      : { border: "#e0d8c6", bg: "#fdfbf6", color: "#5b584f" };
+
+    return {
+      t, ...flags, ...rs,
+      isInner: page !== "home",
+      showTopBar: this.props.showTopBar ?? true,
+      showAvailability: this.props.showAvailability ?? true,
+      pageTitle: title[0], pageLead: title[1],
+      navItems: NAV_ORDER.map(p => ({ label: t.nav[p], go: this.go(p), rule: page === p ? "#a35a34" : "transparent" })),
+      footerColA: ["about", "rooms", "prices", "booking"].map(p => ({ label: t.nav[p], go: this.go(p) })),
+      footerColB: ["gallery", "restaurant", "pool", "weddings", "rules", "sights"].map(p => ({ label: t.nav[p], go: this.go(p) })),
+      setBg: () => this.setState({ lang: "bg" }),
+      setEn: () => this.setState({ lang: "en" }),
+      bgLangColor: lang === "bg" ? "#a35a34" : "#a8a29a",
+      enLangColor: lang === "en" ? "#a35a34" : "#a8a29a",
+      goHome: this.go("home"), goAbout: this.go("about"), goRooms: this.go("rooms"),
+      goBooking: this.go("booking"), goRestaurant: this.go("restaurant"), goPool: this.go("pool"),
+      goWeddings: this.go("weddings"), goContact: this.go("contact"), goSights: this.go("sights"),
+
+      amenities: t.amenities.map(([n2, label]) => ({ n: n2, label })),
+      rooms: t.rooms,
+      roomFeatures: t.roomFeatures,
+      distances: t.distances.map(([place, dist]) => ({ place, dist })),
+      aboutParas: t.aboutParas, restParas: t.restParas, poolParas: t.poolParas,
+      wedParas: t.wedParas, occasions: t.occasions,
+      wedFacts: t.wedFacts.map(([v, k]) => ({ v, k })),
+      priceRows: t.priceRows.map((r, i) => ({
+        unit: r.unit, note: r.note,
+        weekday: RATES[this.state.season][i][0] + cur,
+        weekend: RATES[this.state.season][i][1] + cur
+      })),
+      priceNotes: t.priceNotes,
+      ruleGroups: t.ruleGroups, sights: t.sights,
+      seasons: t.seasons.map((label, i) => ({ label, go: () => this.setState({ season: i }), ...pill(this.state.season === i) })),
+      galleryTabs: t.galleryTabs.map((label, i) => ({ label, go: () => this.setState({ galleryTab: i }), ...pill(this.state.galleryTab === i) })),
+      gallerySlots: t.gallerySlots
+        .map((label, i) => ({ label, cat: GALLERY_CATS[i] }))
+        .filter(s => tab === 0 || s.cat === tab)
+        .map((s, i) => ({ label: s.label, ratio: i % 5 === 0 ? "3/4" : "4/3", span: "auto" })),
+
+      arrive: this.state.arrive, depart: this.state.depart, guests: this.state.guests,
+      unit: unitNames[this.state.unit] || unitNames[0], unitOptions: unitNames,
+      onArrive: (e) => this.setState({ arrive: e.target.value }),
+      onDepart: (e) => this.setState({ depart: e.target.value }),
+      onGuests: (e) => this.setState({ guests: e.target.value }),
+      onUnit: (e) => this.setState({ unit: Math.max(0, unitNames.indexOf(e.target.value)) }),
+      guestName: this.state.guestName, phone: this.state.phone, email: this.state.email, message: this.state.message,
+      onName: (e) => this.setState({ guestName: e.target.value }),
+      onPhone: (e) => this.setState({ phone: e.target.value }),
+      onEmail: (e) => this.setState({ email: e.target.value }),
+      onMessage: (e) => this.setState({ message: e.target.value }),
+      submit: () => { this.setState({ sent: true }); window.scrollTo(0, 0); },
+      resetForm: () => this.setState({ sent: false, message: "" }),
+      sent: this.state.sent, notSent: !this.state.sent,
+      nightsLine: n > 0
+        ? (lang === "en" ? n + (n === 1 ? " night" : " nights") + " · " + this.state.guests + " guests" : n + (n === 1 ? " нощувка" : " нощувки") + " · " + this.state.guests + " гости")
+        : (lang === "en" ? "Pick your dates and we will confirm availability." : "Изберете дати и ще потвърдим наличността.")
+    };
+  }
+}
+
+</script>
+</body>
+</html>

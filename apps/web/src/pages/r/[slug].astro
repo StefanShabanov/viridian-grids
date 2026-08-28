@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+import Gate from '../../components/Gate.astro';
+import { allClients } from '../../lib/clients';
+import { DEFAULT_LANG } from '../../content';
+
+export function getStaticPaths() {
+  return allClients()
+    .filter((c) => c.report)
+    .map((c) => ({ params: { slug: c.slug }, props: { client: c } }));
+}
+
+const { client } = Astro.props;
+---
+
+<Base lang={DEFAULT_LANG} page="clientReport" noindex>
+  <Gate
+    slug={client.slug}
+    name={client.name}
+    domain={client.domain}
+    sealed={client.report!}
+    mode="report"
+    title="Вашият отчет е готов"
+    intro="Въведете шестцифрения код от имейла, за да видите пълната проверка на сайта си. Кодът важи само за тази страница."
+    label="Код за достъп"
+    cta="Отвори отчета"
+    working="Отключваме…"
+    wrong="Кодът не е верен. Проверете имейла и опитайте пак."
+  />
+</Base>

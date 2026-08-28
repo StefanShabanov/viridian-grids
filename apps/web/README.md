@@ -68,6 +68,48 @@ The doc's numbers are in the site; changing them means changing both files.
 - [ ] `style-src` still needs `'unsafe-inline'` because components use inline `style` attributes. Moving them into `global.css` would let the CSP tighten further.
 - [ ] No OG image.
 
+## Per-client pages
+
+A prospect gets a link and a six-digit code in the same email:
+
+```
+https://viridiangrids.com/r/<slug>     their initial report
+https://viridiangrids.com/d/<slug>     a browsable demo of a rebuilt site
+```
+
+```sh
+node bin/client.mjs add "Hotel Chiflika" hotelchiflika.com   # prints URL + code, once
+node bin/client.mjs demo <slug> "../../Web-demos/hotel chiflika.zip" <code>
+node bin/client.mjs report <slug> ../scanner/out/thatsite.json <code>
+node bin/client.mjs list
+```
+
+`add` prints the code once and never stores it — only key material derived from it.
+Put it straight into the email; losing it means re-adding the client.
+
+**How the gate works.** The page ships only ciphertext. The code plus the page salt
+derives an AES-GCM key (PBKDF2, 600k iterations) and the browser decrypts on entry;
+a wrong code simply fails to decrypt. Nothing readable sits in the HTML. For demos
+what is encrypted is the *folder path*, so the demo cannot be found without the code
+either. All of it is static — no server, no session, no database.
+
+**What it is not.** Six digits is a million combinations, which would not survive a
+determined offline attack on its own. That is why the slug carries 128 bits of
+randomness: an attacker needs the link *and* the code, and the link only comes from
+your client. Proportionate for a report about someone's own public website — not a
+vault, and it should not be described as one.
+
+| Path | Holds |
+| --- | --- |
+| `Web-demos/*.zip` | Where you drop exports. Gitignored — source material, not output. |
+| `clients/<slug>/client.json` | Name, domain, sealed report and demo. Committed. |
+| `public/demo/<token>/` | The extracted demo, under an unguessable folder name. |
+
+`/r/`, `/d/` and `/demo/` are excluded from the sitemap, disallowed in `robots.txt`
+and carry `noindex`. `/demo/` also gets a looser CSP in `vercel.json`, because a
+Claude Design export needs inline scripts to run — the strict policy still applies
+to every other path.
+
 ## Promises this site makes that need a procedure behind them
 
 The site is deliberately specific, which is what makes it credible — and which means

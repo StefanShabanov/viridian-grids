@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+import Gate from '../../components/Gate.astro';
+import { allClients } from '../../lib/clients';
+import { DEFAULT_LANG } from '../../content';
+
+export function getStaticPaths() {
+  return allClients()
+    .filter((c) => c.demo)
+    .map((c) => ({ params: { slug: c.slug }, props: { client: c } }));
+}
+
+const { client } = Astro.props;
+---
+
+<Base lang={DEFAULT_LANG} page="clientDemo" noindex>
+  <Gate
+    slug={client.slug}
+    name={client.name}
+    domain={client.domain}
+    sealed={client.demo!}
+    mode="demo"
+    title="Демо на новия ви сайт"
+    intro="Въведете шестцифрения код от имейла, за да разгледате как би изглеждал сайтът ви. Това е чернова - нищо не е публикувано и нищо не се променя при вас."
+    label="Код за достъп"
+    cta="Отвори демото"
+    working="Отключваме…"
+    wrong="Кодът не е верен. Проверете имейла и опитайте пак."
+  />
+</Base>

@@ -9,7 +9,7 @@ export default defineConfig({
   site: process.env.SITE_URL || 'https://viridiangrids.com',
   output: 'static',
   adapter: vercel(),
-  integrations: [sitemap()],
+  integrations: [sitemap({ filter: (page) => !/\/(r|d)\//.test(page) })],
   build: { format: 'directory' },
   trailingSlash: 'ignore',
 });

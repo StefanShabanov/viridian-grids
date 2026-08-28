@@ -4,16 +4,22 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { copy, href, LANGS, site, type Lang, type PageId } from '../content';
 
+/** Per-client pages are not part of the public site map. */
+type ClientPage = 'clientReport' | 'clientDemo';
+
 interface Props {
   lang: Lang;
-  page: PageId;
+  page: PageId | ClientPage;
+  /** Keep the page out of search results and out of the sitemap. */
+  noindex?: boolean;
 }
 
-const { lang, page } = Astro.props;
+const { lang, page, noindex = false } = Astro.props;
 const t = copy[lang];
-const meta = t.meta[page];
+const isPublic = !noindex && page in t.meta;
+const meta = isPublic ? t.meta[page as PageId] : { title: site.name, description: '' };
 const title = page === 'home' ? `${site.name} - ${meta.title}` : `${meta.title} - ${site.name}`;
-const canonical = new URL(href(lang, page), Astro.site ?? Astro.url.origin);
+const canonical = isPublic ? new URL(href(lang, page as PageId), Astro.site ?? Astro.url.origin) : null;
 ---
 
 <!doctype html>
@@ -23,17 +29,19 @@ const canonical = new URL(href(lang, page), Astro.site ?? Astro.url.origin);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={meta.description} />
-    <link rel="canonical" href={canonical.href} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {canonical && <link rel="canonical" href={canonical.href} />}
     {
-      LANGS.map((l) => (
-        <link rel="alternate" hreflang={l} href={new URL(href(l, page), Astro.site ?? Astro.url.origin).href} />
-      ))
+      isPublic &&
+        LANGS.map((l) => (
+          <link rel="alternate" hreflang={l} href={new URL(href(l, page as PageId), Astro.site ?? Astro.url.origin).href} />
+        ))
     }
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={meta.description} />
-    <meta property="og:url" content={canonical.href} />
+    {canonical && <meta property="og:url" content={canonical.href} />}
     <meta property="og:locale" content={lang === 'bg' ? 'bg_BG' : 'en_GB'} />
     <meta name="twitter:card" content="summary" />
     <meta name="theme-color" content="#1B5E4B" />

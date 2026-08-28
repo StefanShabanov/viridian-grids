@@ -48,3 +48,6 @@ Thumbs.db
 .idea/
 .vscode/*
 !.vscode/settings.json
+
+# demo archives; extracted copies live in apps/web/public/demo/
+Web-demos/

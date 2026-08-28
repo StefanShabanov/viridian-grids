@@ -1,0 +1,64 @@
+---
+import type { Sealed } from '../lib/gate';
+
+interface Props {
+  slug: string;
+  name: string;
+  domain: string;
+  sealed: Sealed;
+  /** 'report' renders the payload inline; 'demo' redirects to the decrypted path. */
+  mode: 'report' | 'demo';
+  title: string;
+  intro: string;
+  label: string;
+  cta: string;
+  wrong: string;
+  working: string;
+}
+
+const { slug, name, domain, sealed, mode, title, intro, label, cta, wrong, working } = Astro.props;
+---
+
+<section class="section section--white">
+  <div class="wrap wrap--narrow gate">
+    <div class="eyebrow">{name}</div>
+    <h1 class="h1">{title}</h1>
+    <p class="lede">{intro}</p>
+    {domain && <p class="gate__domain mono">{domain}</p>}
+
+    <form
+      class="gate__form"
+      id="gate"
+      data-slug={slug}
+      data-mode={mode}
+      data-sealed={JSON.stringify(sealed)}
+      data-wrong={wrong}
+      data-working={working}
+      data-cta={cta}
+    >
+      <label class="field__label" for="gate-code">{label}</label>
+      <div class="gate__row">
+        <input
+          class="input input--mono gate__code"
+          id="gate-code"
+          name="code"
+          type="text"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          pattern="[0-9]*"
+          maxlength="6"
+          required
+          placeholder="000000"
+        />
+        <button class="btn btn--primary" type="submit">{cta}</button>
+      </div>
+      <p class="formMsg formMsg--err" data-msg hidden></p>
+    </form>
+
+    <div class="gate__out wrap--report" id="gate-out" hidden></div>
+  </div>
+</section>
+
+<script>
+  import '../scripts/gate';
+</script>

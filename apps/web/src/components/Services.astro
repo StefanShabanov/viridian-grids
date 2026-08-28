@@ -23,6 +23,12 @@ const t = copy[lang];
         </div>
       ))}
     </div>
-    <p class="note" style="margin-top: 20px;">{t.services.soon}</p>
+    <div class="soon">
+      <div class="soon__title">{t.services.soonTitle}</div>
+      <p class="soon__note">{t.services.soonNote}</p>
+      <ol class="soon__list">
+        {t.services.soon.map((item) => <li>{item}</li>)}
+      </ol>
+    </div>
   </div>
 </section>
