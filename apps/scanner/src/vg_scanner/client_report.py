@@ -26,6 +26,22 @@ from .scoring import band
 BAND_TONE = {"good": "good", "fair": "fair", "poor": "bad"}
 _SEV_RANK = {"CRITICAL": 0, "HIGH": 1, "MEDIUM": 2, "LOW": 3}
 
+
+def _clean_business(name: str | None) -> str | None:
+    """Calm the harvest's ALL-CAPS company names without touching real casing.
+
+    OSM data yells ("ЛИВАДИТЕ") or leaves brands mixed ("DENTestetica", "Paloma").
+    Only words that are entirely upper-case are title-cased; anything with a
+    lower-case letter is left exactly as the owner writes it. This cannot fix a
+    truncated or wrong name - those are flagged for a human, not guessed here.
+    """
+    if not name or not name.strip():
+        return None
+    words = name.strip().split()
+    fixed = [w if any(c.islower() for c in w) else w.capitalize() for w in words]
+    return " ".join(fixed)
+
+
 # The one CVE caveat that keeps the report honest: a version-matched CVE is not
 # proof of a breach, because hosts backport fixes without bumping the version.
 CVE_CAVEAT = (
@@ -108,7 +124,7 @@ def _server_hint(result: ScanResult) -> str:
         )
     if "nginx" in tech or "apache" in tech:
         return (
-            "Струва си да попитате хостинг доставчика дали може да ви качи на поддържана версия - "
+            "Струва си да попитате хостинг доставчика дали може да Ви качи на поддържана версия - "
             "често е смяна на панел или на PHP от контролния панел, не пренаписване на сайта."
         )
     return ""
@@ -191,8 +207,8 @@ def _urgent(result: ScanResult) -> dict | None:
             "label": "Най-важното",
             "title": "HTTPS сертификатът на сайта не е валиден",
             "detail": (
-                "Посетител, който отвори сайта по https, вижда предупреждение за сигурност вместо "
-                "страницата ви. Това е първото нещо, което бихме поправили - и обикновено е смяна на "
+                "Посетител, който отвори сайта през HTTPS, вижда предупреждение за сигурност вместо "
+                "страницата Ви. Това е първото нещо, което бихме поправили - и обикновено е смяна на "
                 "сертификата от хостинга, не преработка на сайта."
             ),
             "note": _server_hint(result),
@@ -213,7 +229,21 @@ def _urgent(result: ScanResult) -> dict | None:
             ),
             "note": _server_hint(result),
         }
+    if _has_cve(result):
+        return {
+            "label": "Най-важното",
+            "title": "Публично известни уязвимости в използвания софтуер",
+            "detail": (
+                "Срещу версиите, които сайтът използва, има публично докладвани уязвимости. Не е знак, "
+                "че сайтът е пробит, но е причина да се обнови - подробностите и препоръката са по-долу."
+            ),
+            "note": _server_hint(result),
+        }
     return None
+
+
+def _has_cve(result: ScanResult) -> bool:
+    return any(f.id.startswith("intel.cve") for f in result.findings)
 
 
 def _summary(result: ScanResult) -> list[dict]:
@@ -236,7 +266,7 @@ def _summary(result: ScanResult) -> list[dict]:
         cards.append(
             {
                 "title": "Софтуерът отдолу е остарял",
-                "text": "Част от софтуера ({}) е в край на живот и вече не получава поправки за сигурност.".format(
+                "text": "Част от софтуера ({}) вече не се поддържа с обновявания за сигурност от разработчиците му.".format(
                     ", ".join(eol_names)
                 ),
             }
@@ -253,12 +283,72 @@ def _summary(result: ScanResult) -> list[dict]:
     return cards[:3]
 
 
-def _headline(result: ScanResult) -> str:
+def _tech_words(result: ScanResult) -> str:
+    return " ".join(
+        f"{f.params.get('name', '')}".lower()
+        for f in result.findings
+        if f.id.startswith(("webanalyze", "technology."))
+    )
+
+
+def _catcher(result: ScanResult, cve_groups: list[dict]) -> str:
+    """The hook: one honest, concrete sentence about what could actually break on
+    THIS site, given its stack. Not alarmism - a version-matched CVE is not proof
+    of a breach (the caveat below the CVE list says so) - but the plain-language
+    consequence that makes a non-technical owner keep reading instead of a bland
+    'a few things to tidy'.
+    """
+    tech = _tech_words(result)
+    is_wp = "wordpress" in tech
+    is_shop = "woocommerce" in tech
+    items = [i for g in cve_groups for i in g["items"]]
+    has_rce = any(
+        i["what"].startswith("При определени условия може да позволи изпълнение") for i in items
+    )
+    has_sqli = any("SQL" in i["what"] for i in items)
+    has_crit = any(g["critical"] for g in cve_groups)
+
     if _has_broken_tls(result):
-        return "Сайтът ви се зарежда, но HTTPS сертификатът не е валиден - посетителите виждат предупреждение за сигурност."
+        return (
+            "Точно сега всеки, който отвори сайта Ви, среща предупреждение „Връзката не е сигурна“ на "
+            "цял екран вместо началната страница. Повечето хора си тръгват още там - преди да видят "
+            "каквото и да било от Вас."
+        )
+    if has_rce and is_wp:
+        return (
+            "Версиите, които сайтът използва, имат публично известни дупки, през които може да се изпълни "
+            "чужд код. Точно така сайтове на WordPress най-често биват пренасочени към спам или заменени с "
+            "чужда страница - без някой да е пипал паролите Ви."
+        )
+    if has_rce:
+        return (
+            "Софтуерът зад сайта има публично известни дупки, през които при определени условия може да се "
+            "изпълни чужд код на сървъра - най-сериозният вид пропуск, който тази проверка отчита."
+        )
+    if has_sqli or is_shop:
+        return (
+            "Сред известните пропуски има такива, свързани с базата от данни и формите на сайта. За сайт, "
+            "който приема запитвания или поръчки, това е рискът, който си струва да се затвори пръв."
+        )
+    if has_crit:
+        return (
+            "Срещу версиите, които сайтът използва, вече има докладвани критични пропуски. Не значи, че сте "
+            "пробити - значи, че кръпката вече съществува, а сайтът още не я е сложил."
+        )
     if _eol_findings(result):
-        return "Сайтът ви работи и се зарежда. Проблемът е под него: софтуерът, на който върви, вече не получава обновявания за сигурност."
-    return "Сайтът ви работи. Има няколко настройки за сигурност и поддръжка, които си струва да се подредят."
+        return (
+            "Софтуерът, на който върви сайтът, вече не получава кръпки. Въпросът не е дали ще излезе нова "
+            "дупка, а кога - и тя ще остане отворена, защото няма кой да я запуши."
+        )
+    if _has_cve(result):
+        return (
+            "Софтуерът зад сайта има публично известни уязвимости. Не е спешен пробив, но е причина да се "
+            "обнови, преди някоя от тях да намери сайта."
+        )
+    return (
+        "Няма спешен проблем. Има няколко неща по сигурността и поддръжката, които се трупат тихо и се "
+        "оправят по-лесно сега, отколкото по-късно."
+    )
 
 
 def _attention(result: ScanResult, urgent: Finding | None, lang: str) -> list[dict]:
@@ -347,6 +437,7 @@ def build_report(
         _eol_findings(result)[0] if _eol_findings(result) else None
     )
     when = date or result.scanned_at.strftime("%d.%m.%Y")
+    cve_groups = _cve_groups(result, store)
 
     report = {
         "domain": result.domain,
@@ -355,10 +446,10 @@ def build_report(
         "band": BANDS.get(lang, BANDS["bg"])[band_key],
         "bandTone": BAND_TONE[band_key],
         "date": when,
-        "headline": _headline(result),
+        "headline": _catcher(result, cve_groups),
         "summary": _summary(result),
         "cveCaveat": CVE_CAVEAT,
-        "cveGroups": _cve_groups(result, store),
+        "cveGroups": cve_groups,
         "attention": _attention(result, urgent_finding, lang),
         "working": _working(result, lang),
         "detected": _detected(result),
@@ -368,7 +459,7 @@ def build_report(
             "note": (
                 "Публична, неинвазивна проверка на здравето на сайта: достъпност, HTTPS сертификат, "
                 "заглавки за сигурност, бисквитки, разпознаване на технологии по версии и справка с "
-                "публични бази за край на живот и известни уязвимости. Никакви атаки, паролни опити или "
+                "публични бази за край на поддръжката и известни уязвимости. Никакви атаки, паролни опити или "
                 "агресивно обхождане."
             ),
             "engines": "Ползвани източници: webanalyze, Mozilla Observatory, endoflife.date и NVD/NIST.",
@@ -376,8 +467,9 @@ def build_report(
         "disclaimer": DISCLAIMER.get(lang, DISCLAIMER["bg"]),
         "prepared": f"Изготвено от Viridian Grids · {when}",
     }
-    if business:
-        report["business"] = business
+    cleaned = _clean_business(business)
+    if cleaned:
+        report["business"] = cleaned
     urgent = _urgent(result)
     if urgent:
         report["urgent"] = urgent
