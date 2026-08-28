@@ -120,7 +120,7 @@ def _server_hint(result: ScanResult) -> str:
         return (
             "Сървърът изглежда LiteSpeed, което обикновено значи cPanel или CloudLinux. "
             "Тези платформи често предлагат PHP с върнати назад поправки - тоест номерът на "
-            "версията си остава същият, но дупките са запушени. Първо това си струва да се провери с хостинга."
+            "версията си остава същият, но уязвимостите са отстранени. Първо това си струва да се провери с хостинга."
         )
     if "nginx" in tech or "apache" in tech:
         return (
@@ -291,59 +291,93 @@ def _tech_words(result: ScanResult) -> str:
     )
 
 
-def _catcher(result: ScanResult, cve_groups: list[dict]) -> str:
-    """The hook: one honest, concrete sentence about what could actually break on
-    THIS site, given its stack. Not alarmism - a version-matched CVE is not proof
-    of a breach (the caveat below the CVE list says so) - but the plain-language
-    consequence that makes a non-technical owner keep reading instead of a bland
-    'a few things to tidy'.
-    """
-    tech = _tech_words(result)
-    is_wp = "wordpress" in tech
-    is_shop = "woocommerce" in tech
-    items = [i for g in cve_groups for i in g["items"]]
-    has_rce = any(
-        i["what"].startswith("При определени условия може да позволи изпълнение") for i in items
-    )
-    has_sqli = any("SQL" in i["what"] for i in items)
-    has_crit = any(g["critical"] for g in cve_groups)
+def _join_bg(items: list[str]) -> str:
+    items = [i for i in items if i]
+    if not items:
+        return ""
+    if len(items) == 1:
+        return items[0]
+    if len(items) == 2:
+        return f"{items[0]} и {items[1]}"
+    return ", ".join(items[:-1]) + " и " + items[-1]
 
+
+# What the worst vulnerability on this site actually lets happen, in plain words.
+# Keyed off the classified `what` line so it follows the real CVE, not a guess.
+def _consequence(what: str, is_wp: bool) -> str:
+    w = what.lower()
+    if "изпълнение на чужд код" in w:
+        if is_wp:
+            return (
+                "При такава уязвимост сайтове на WordPress най-често биват подменени с чужда страница или "
+                "пренасочени към спам - без да е нужна паролата Ви."
+            )
+        return "Тя позволява при определени условия чужд код да се изпълни на сървъра - най-тежкото за един сайт."
+    if "sql" in w:
+        return "Тя засяга базата от данни зад формите на сайта - там, където се пазят запитванията и контактите."
+    if "скрипт" in w:
+        return "Тя позволява вкарване на чужд скрипт в страниците, които виждат посетителите Ви."
+    if "паметта" in w or "отказ на услуга" in w or "срине" in w:
+        return "Тя може да срине сайта или да го направи нестабилен в неподходящ момент."
+    if "разкрие данни" in w:
+        return "Тя може да разкрие данни, които не би трябвало да са публични."
+    if "файлове" in w:
+        return "Тя може да отвори достъп до файлове на сървъра извън предвидените."
+    if "заобикаляне" in w or "права" in w:
+        return "Тя може да позволи заобикаляне на защитата или повишаване на права в системата."
+    return "Поправка за нея вече съществува - сайтът просто още не я е приложил."
+
+
+def _catcher(result: ScanResult, cve_groups: list[dict]) -> str:
+    """The hook: one honest, concrete opening built from THIS site's own findings -
+    the exact software and versions, the count of known vulnerabilities, the single
+    worst CVE by id, and what it actually lets happen. Because those vary per site,
+    so does the catcher. Not alarmism: a version-matched CVE is not proof of a
+    breach (the caveat under the CVE list says so), but it is a real, specific risk.
+    """
     if _has_broken_tls(result):
         return (
             "Точно сега всеки, който отвори сайта Ви, среща предупреждение „Връзката не е сигурна“ на "
             "цял екран вместо началната страница. Повечето хора си тръгват още там - преди да видят "
             "каквото и да било от Вас."
         )
-    if has_rce and is_wp:
+
+    is_wp = "wordpress" in _tech_words(result)
+
+    if cve_groups:
+        names = [f"{g['product']} {g['version']}".strip() for g in cve_groups if g["product"]]
+        if len(names) > 3:
+            names = names[:2] + ["и др."]
+        software = _join_bg(names)
+        verb = "има" if len([n for n in names if n != "и др."]) == 1 else "имат"
+        total = sum(g["reported"] for g in cve_groups)
+        crit = sum(g["critical"] for g in cve_groups)
+        high = sum(g["high"] for g in cve_groups)
+        worst = cve_groups[0]["items"][0] if cve_groups[0]["items"] else None
+        if crit:
+            count_clause = f" ({crit} критична)" if crit == 1 else f" ({crit} критични)"
+        elif high:
+            count_clause = f" ({high} висока)" if high == 1 else f" ({high} високи)"
+        else:
+            count_clause = ""
+        noun = "известна уязвимост" if total == 1 else "известни уязвимости"
+        if worst and worst.get("id"):
+            lead = (
+                f"{software} {verb} {total} {noun}{count_clause}, "
+                f"най-тежката от които е {worst['id']}. "
+            )
+            return lead + _consequence(worst.get("what", ""), is_wp)
         return (
-            "Версиите, които сайтът използва, имат публично известни дупки, през които може да се изпълни "
-            "чужд код. Точно така сайтове на WordPress най-често биват пренасочени към спам или заменени с "
-            "чужда страница - без някой да е пипал паролите Ви."
+            f"{software} {verb} {total} {noun}{count_clause}, срещу които вече има издадени поправки - "
+            "сайтът просто още не ги е приложил."
         )
-    if has_rce:
-        return (
-            "Софтуерът зад сайта има публично известни дупки, през които при определени условия може да се "
-            "изпълни чужд код на сървъра - най-сериозният вид пропуск, който тази проверка отчита."
-        )
-    if has_sqli or is_shop:
-        return (
-            "Сред известните пропуски има такива, свързани с базата от данни и формите на сайта. За сайт, "
-            "който приема запитвания или поръчки, това е рискът, който си струва да се затвори пръв."
-        )
-    if has_crit:
-        return (
-            "Срещу версиите, които сайтът използва, вече има докладвани критични пропуски. Не значи, че сте "
-            "пробити - значи, че кръпката вече съществува, а сайтът още не я е сложил."
-        )
+
     if _eol_findings(result):
+        worst = _eol_findings(result)[0]
+        name = f"{worst.params.get('name', '')} {worst.params.get('cycle', '')}".strip()
         return (
-            "Софтуерът, на който върви сайтът, вече не получава кръпки. Въпросът не е дали ще излезе нова "
-            "дупка, а кога - и тя ще остане отворена, защото няма кой да я запуши."
-        )
-    if _has_cve(result):
-        return (
-            "Софтуерът зад сайта има публично известни уязвимости. Не е спешен пробив, но е причина да се "
-            "обнови, преди някоя от тях да намери сайта."
+            f"{name} вече не получава обновявания за сигурност. Въпросът не е дали ще се появи нова "
+            "уязвимост, а кога - и тя ще остане отворена, защото няма кой да я поправи."
         )
     return (
         "Няма спешен проблем. Има няколко неща по сигурността и поддръжката, които се трупат тихо и се "
