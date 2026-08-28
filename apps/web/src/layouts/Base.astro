@@ -19,7 +19,43 @@ const t = copy[lang];
 const isPublic = !noindex && page in t.meta;
 const meta = isPublic ? t.meta[page as PageId] : { title: site.name, description: '' };
 const title = page === 'home' ? `${site.name} - ${meta.title}` : `${meta.title} - ${site.name}`;
-const canonical = isPublic ? new URL(href(lang, page as PageId), Astro.site ?? Astro.url.origin) : null;
+const origin = (Astro.site ?? new URL(Astro.url.origin)).origin;
+const canonical = isPublic ? new URL(href(lang, page as PageId), origin) : null;
+const ogImage = `${origin}/og.png`;
+
+// Structured data. The Organization block goes on every public page; the FAQ
+// page also carries FAQPage, which is the one most likely to earn a rich result.
+// A ld+json script is data, not code, so the CSP does not touch it.
+const org = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  '@id': `${origin}/#business`,
+  name: site.name,
+  url: origin,
+  email: site.email,
+  description: meta.description,
+  image: ogImage,
+  logo: ogImage,
+  areaServed: { '@type': 'Country', name: 'Bulgaria' },
+  address: { '@type': 'PostalAddress', addressLocality: 'Sofia', addressCountry: 'BG' },
+  priceRange: '€29–€99',
+  knowsLanguage: ['bg', 'en'],
+};
+
+const faqSchema =
+  page === 'faq'
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: t.faq.items.map((item) => ({
+          '@type': 'Question',
+          name: item.q,
+          acceptedAnswer: { '@type': 'Answer', text: item.a },
+        })),
+      }
+    : null;
+
+const schemas = [org, faqSchema].filter(Boolean);
 ---
 
 <!doctype html>
@@ -32,10 +68,14 @@ const canonical = isPublic ? new URL(href(lang, page as PageId), Astro.site ?? A
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     {canonical && <link rel="canonical" href={canonical.href} />}
     {
-      isPublic &&
-        LANGS.map((l) => (
-          <link rel="alternate" hreflang={l} href={new URL(href(l, page as PageId), Astro.site ?? Astro.url.origin).href} />
-        ))
+      isPublic && (
+        <>
+          {LANGS.map((l) => (
+            <link rel="alternate" hreflang={l} href={new URL(href(l, page as PageId), origin).href} />
+          ))}
+          <link rel="alternate" hreflang="x-default" href={new URL(href('bg', page as PageId), origin).href} />
+        </>
+      )
     }
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
@@ -43,9 +83,23 @@ const canonical = isPublic ? new URL(href(lang, page as PageId), Astro.site ?? A
     <meta property="og:description" content={meta.description} />
     {canonical && <meta property="og:url" content={canonical.href} />}
     <meta property="og:locale" content={lang === 'bg' ? 'bg_BG' : 'en_GB'} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:locale:alternate" content={lang === 'bg' ? 'en_GB' : 'bg_BG'} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={site.name} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={meta.description} />
+    <meta name="twitter:image" content={ogImage} />
     <meta name="theme-color" content="#1B5E4B" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    {
+      schemas.map((schema) => (
+        <script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
+      ))
+    }
   </head>
   <body id="top">
     <a class="skip" href="#main">{t.a11y.skip}</a>

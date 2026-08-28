@@ -64,10 +64,16 @@ export function normalizeUrl(value: string): string | null {
  * so the caller can decide - we treat that as a failure rather than silently
  * dropping somebody's enquiry.
  */
-export async function deliver(subject: string, body: string, replyTo?: string): Promise<boolean> {
+export async function deliver(
+  subject: string,
+  body: string,
+  opts: { replyTo?: string; to?: string } = {},
+): Promise<boolean> {
   const key = import.meta.env.RESEND_API_KEY;
-  const to = import.meta.env.LEAD_TO_EMAIL;
+  // Per-form override (CHECK_TO_EMAIL / CONTACT_TO_EMAIL), else the shared inbox.
+  const to = opts.to || import.meta.env.LEAD_TO_EMAIL;
   const from = import.meta.env.LEAD_FROM_EMAIL;
+  const replyTo = opts.replyTo;
 
   if (!key || !to || !from) {
     console.error('[submit] mail not configured; submission was NOT delivered:\n' + body);

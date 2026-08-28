@@ -177,6 +177,15 @@ export const en = {
     badge: 'Most popular',
     from: 'From ',
     cta: 'Start with an assessment',
+    swipe: 'Swipe to see all plans',
+    rebuild: {
+      label: 'Website modernization',
+      title: 'Website looking dated, or awkward on a phone?',
+      text: 'We build a fast new site and take the hosting off your hands. On an annual Care or Business plan - just €290 instead of €690, with EU hosting included in the plan.',
+      price: '€290',
+      priceNote: 'on an annual plan · instead of €690',
+      cta: 'See what is included',
+    },
     plans: {
       monitor: {
         name: 'Monitor',
@@ -237,10 +246,6 @@ export const en = {
       {
         k: 'PLATFORMS',
         v: 'Monitoring works with any website. Full maintenance covers WordPress, Node.js, PHP/Laravel and static sites - ask about yours.',
-      },
-      {
-        k: 'NEW WEBSITE',
-        v: 'Need a new site? On an annual Care or Business plan we build it for €290 (instead of €690), with EU hosting included in the plan. Details under Services.',
       },
     ],
   },

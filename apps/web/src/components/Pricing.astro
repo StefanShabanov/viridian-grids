@@ -42,7 +42,13 @@ const saving = (monthly: number) => fullYear(monthly) - annual(monthly);
         </label>
       </div>
 
-      <div class="plans">
+      {/*
+        On a phone .plans becomes a scroll-snap carousel (see global.css). The
+        featured card is centred on load by a tiny bundled script; the neighbours
+        peek at the edges to signal there is more to swipe. On desktop it is the
+        grid, untouched.
+      */}
+      <div class="plans" data-carousel>
         {
           plans.map((plan) => {
             const c = t.pricing.plans[plan.id];
@@ -92,7 +98,26 @@ const saving = (monthly: number) => fullYear(monthly) - annual(monthly);
           })
         }
       </div>
+
+      <div class="carousel-dots" aria-hidden="true">
+        {plans.map((plan) => <span class={plan.featured ? 'is-active' : undefined} />)}
+      </div>
+      <p class="carousel-hint">{t.pricing.swipe}</p>
     </div>
+
+    {/* The rebuild offer, given the prominence it never had as a footnote. */}
+    <aside class="rebuild">
+      <div class="rebuild__body">
+        <div class="rebuild__label">{t.pricing.rebuild.label}</div>
+        <h3 class="rebuild__title">{t.pricing.rebuild.title}</h3>
+        <p class="rebuild__text">{t.pricing.rebuild.text}</p>
+      </div>
+      <div class="rebuild__aside">
+        <div class="rebuild__price">{t.pricing.rebuild.price}</div>
+        <div class="rebuild__priceNote">{t.pricing.rebuild.priceNote}</div>
+        <a class="btn btn--onGreen rebuild__cta" href={href(lang, 'services')}>{t.pricing.rebuild.cta}</a>
+      </div>
+    </aside>
 
     <p class="pricing__anchor">{t.pricing.anchor}</p>
     <p class="pricing__qualify">{t.pricing.qualify}</p>
@@ -109,3 +134,7 @@ const saving = (monthly: number) => fullYear(monthly) - annual(monthly);
     </div>
   </div>
 </section>
+
+<script>
+  import '../scripts/carousel';
+</script>

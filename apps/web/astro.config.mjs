@@ -11,5 +11,8 @@ export default defineConfig({
   adapter: vercel(),
   integrations: [sitemap({ filter: (page) => !/\/(r|d)\//.test(page) })],
   build: { format: 'directory' },
+  // Force hoisted scripts to external files: Astro inlines tiny self-contained
+  // ones as <script type="module">...</script>, which the strict CSP blocks.
+  vite: { build: { assetsInlineLimit: 0 } },
   trailingSlash: 'ignore',
 });

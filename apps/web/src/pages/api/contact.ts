@@ -56,7 +56,10 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     text(data, 'message') || '-',
   ].join('\n');
 
-  const sent = await deliver(`[contact] ${company || name}`, body, email);
+  const sent = await deliver(`[contact] ${company || name}`, body, {
+    replyTo: email,
+    to: import.meta.env.CONTACT_TO_EMAIL || import.meta.env.LEAD_TO_EMAIL,
+  });
   if (!sent) {
     return wantsJson(request) ? json(502, { ok: false, error: 'delivery' }) : new Response('Delivery failed', { status: 502 });
   }

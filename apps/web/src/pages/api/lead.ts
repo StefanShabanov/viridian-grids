@@ -58,7 +58,10 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     `  ./bin/vg-scan scan ${new URL(url).hostname} --deep --lang ${lang} --html out/${new URL(url).hostname}.html`,
   ].join('\n');
 
-  const sent = await deliver(`[check] ${new URL(url).hostname}`, body, email);
+  const sent = await deliver(`[check] ${new URL(url).hostname}`, body, {
+    replyTo: email,
+    to: import.meta.env.CHECK_TO_EMAIL || import.meta.env.LEAD_TO_EMAIL,
+  });
   if (!sent) {
     return wantsJson(request) ? json(502, { ok: false, error: 'delivery' }) : new Response('Delivery failed', { status: 502 });
   }

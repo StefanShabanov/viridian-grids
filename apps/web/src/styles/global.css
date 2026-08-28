@@ -1789,3 +1789,130 @@ input, button, select, textarea { font: inherit; color: inherit; }
   align-self: flex-end;
   padding-bottom: 7px;
 }
+
+/* ==================================================== rebuild offer banner
+   The modernization offer, given the prominence it never had as a footnote.
+   Two columns on desktop - the pitch, then a big price and a button. */
+
+.rebuild {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: clamp(24px, 4vw, 48px);
+  align-items: center;
+  background: var(--green);
+  color: #fff;
+  border-radius: 4px;
+  padding: clamp(26px, 4vw, 40px) clamp(24px, 4vw, 44px);
+  box-shadow: 0 18px 44px -28px rgba(17, 22, 20, 0.55);
+}
+.rebuild__label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mint);
+}
+.rebuild__title {
+  font-size: clamp(22px, 3vw, 30px);
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  margin-top: 12px;
+  max-width: 26ch;
+  text-wrap: pretty;
+}
+.rebuild__text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #d4e7dd;
+  margin-top: 14px;
+  max-width: 58ch;
+  text-wrap: pretty;
+}
+.rebuild__aside {
+  text-align: center;
+  padding-left: clamp(0px, 3vw, 40px);
+  border-left: 1px solid var(--green-line);
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  min-width: 190px;
+}
+.rebuild__price { font-size: clamp(38px, 5vw, 52px); font-weight: 600; letter-spacing: -0.03em; line-height: 1; }
+.rebuild__priceNote { font-size: 13px; color: var(--mint); margin-bottom: 16px; }
+.rebuild__cta { width: 100%; }
+
+@media (max-width: 720px) {
+  .rebuild { grid-template-columns: 1fr; }
+  .rebuild__aside {
+    border-left: none;
+    border-top: 1px solid var(--green-line);
+    padding-left: 0;
+    padding-top: 22px;
+    text-align: left;
+    align-items: flex-start;
+  }
+  .rebuild__cta { width: auto; align-self: stretch; text-align: center; }
+}
+
+/* ==================================================== pricing carousel (mobile)
+   The three cards become a scroll-snap strip centred on Care, with the
+   neighbours peeking to signal a swipe. Desktop keeps the grid. */
+
+.carousel-dots,
+.carousel-hint {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .plans[data-carousel] {
+    display: flex;
+    grid-template-columns: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 14px;
+    /* bleed to the screen edges so neighbours peek */
+    margin: 28px calc(-1 * var(--pad)) 0;
+    padding: 16px var(--pad) 6px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .plans[data-carousel]::-webkit-scrollbar {
+    display: none;
+  }
+  .plans[data-carousel] > .plan {
+    flex: 0 0 82%;
+    scroll-snap-align: center;
+  }
+
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .carousel-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--field);
+    cursor: pointer;
+    transition: width 0.2s ease, background 0.2s ease;
+  }
+  .carousel-dots span.is-active {
+    width: 22px;
+    border-radius: 4px;
+    background: var(--green);
+  }
+  .carousel-hint {
+    display: block;
+    text-align: center;
+    margin-top: 12px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted-3);
+  }
+}
