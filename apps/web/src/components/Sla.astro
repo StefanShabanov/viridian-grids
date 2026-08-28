@@ -25,7 +25,9 @@ const featured = plans.findIndex((p) => p.featured);
               <tr>
                 <th scope="row">{row.label}</th>
                 {row.v.map((v, i) => (
-                  <td class={i === featured ? 'is-featured' : undefined}>{v}</td>
+                  <td class={i === featured ? 'is-featured' : undefined} data-plan={t.sla.head[i + 1]}>
+                    {v}
+                  </td>
                 ))}
               </tr>
             ))}

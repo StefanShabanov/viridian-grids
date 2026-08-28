@@ -525,7 +525,7 @@ input, button, select, textarea { font: inherit; color: inherit; }
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
   margin-top: 44px;
-  align-items: start;
+  align-items: stretch;
 }
 .plan {
   background: var(--white);
@@ -533,6 +533,8 @@ input, button, select, textarea { font: inherit; color: inherit; }
   border-radius: 3px;
   padding: 30px 26px 32px;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 .plan--featured {
   border: 1.5px solid var(--green);
@@ -574,7 +576,8 @@ input, button, select, textarea { font: inherit; color: inherit; }
   line-height: 1.45;
 }
 .plan__features i { color: var(--green); font-style: normal; }
-.plan__cta { margin-top: 28px; display: block; width: 100%; padding: 13px; font-size: 14.5px; }
+.plan__cta { margin-top: auto; padding-top: 13px; display: block; width: 100%; padding: 13px; font-size: 14.5px; }
+.plan__features { margin-bottom: 28px; }
 
 .notes {
   margin-top: 28px;
@@ -1204,19 +1207,20 @@ input, button, select, textarea { font: inherit; color: inherit; }
 }
 
 .billing__switch {
-  display: inline-flex;
+  display: flex;
   align-items: stretch;
   gap: 4px;
-  margin-top: 36px;
+  width: fit-content;
+  margin: 36px auto 0;
   padding: 4px;
   border: 1px solid var(--line);
   border-radius: 3px;
   background: var(--white);
-  flex-wrap: wrap;
 }
 .billing__switch label {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   padding: 11px 20px;
   border-radius: 2px;
@@ -1263,9 +1267,14 @@ input, button, select, textarea { font: inherit; color: inherit; }
 
 .plan__saving {
   font-family: var(--mono);
-  font-size: 12.5px;
-  color: var(--muted-3);
-  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--green-text);
+  background: var(--green-soft);
+  border-radius: 2px;
+  padding: 5px 9px;
+  margin-top: 10px;
+  width: fit-content;
 }
 .plan__perk i { color: var(--green); }
 
@@ -1379,3 +1388,112 @@ input, button, select, textarea { font: inherit; color: inherit; }
   margin-top: 16px;
 }
 .plan__blurb { min-height: 0; margin-top: 8px; font-size: 14.5px; }
+
+/* =========================================================== mobile layout
+   Everything below is phone-first correction: full-width actions, a segmented
+   billing switch that fits, and the response-time table turned into stacked
+   rows instead of something you have to scroll sideways. */
+
+@media (max-width: 620px) {
+  /* Hero and closing actions run edge to edge with a little breathing room. */
+  .hero__actions,
+  .final__actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    width: 100%;
+  }
+  .hero__actions .btn,
+  .final__actions .btn {
+    width: 100%;
+    padding: 16px 20px;
+  }
+
+  .check__row { flex-direction: column; }
+  .check__row .btn { width: 100%; }
+
+  /* Billing switch: two equal halves, stacked label + badge so nothing clips. */
+  .billing__switch {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    margin-top: 28px;
+  }
+  .billing__switch label {
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px 10px;
+    font-size: 14.5px;
+    text-align: center;
+    white-space: normal;
+  }
+  .billing__save { font-size: 10px; padding: 2px 6px; }
+
+  .plans { margin-top: 28px; }
+  .plan__cta { padding: 15px 13px; }
+
+  .band__inner { gap: 14px; }
+  .band__inner .btn { width: 100%; }
+
+  .modernize .btn { width: 100%; }
+}
+
+/* Response times: a table on desktop, stacked blocks on a phone. */
+@media (max-width: 720px) {
+  .sla__scroll { overflow-x: visible; }
+  .sla table { min-width: 0; display: block; }
+  .sla thead { display: none; }
+  .sla tbody,
+  .sla tbody tr { display: block; }
+  .sla tbody tr { padding: 6px 0 10px; border-bottom: 1px solid var(--line); }
+  .sla tbody tr:last-child { border-bottom: none; }
+  .sla tbody th {
+    display: block;
+    border: 0;
+    padding: 14px clamp(14px, 4vw, 20px) 8px;
+    font-weight: 600;
+    font-size: 15.5px;
+  }
+  .sla tbody td {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: baseline;
+    border: 0;
+    padding: 7px clamp(14px, 4vw, 20px);
+    text-align: right;
+  }
+  .sla tbody td::before {
+    content: attr(data-plan);
+    font-family: var(--sans);
+    color: var(--muted-3);
+    text-align: left;
+    font-size: 14px;
+  }
+  .sla tbody td.is-featured { background: var(--green-soft); }
+}
+
+/* ------------------------------------------------------------ back to top */
+
+.totop {
+  position: fixed;
+  right: clamp(14px, 3vw, 26px);
+  bottom: clamp(14px, 3vw, 26px);
+  z-index: 45;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: var(--white);
+  color: var(--green);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  box-shadow: 0 10px 26px -16px rgba(17, 22, 20, 0.55);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+}
+.totop.is-visible { opacity: 1; visibility: visible; transform: none; }
+.totop:hover { background: var(--green); color: #fff; border-color: var(--green); }
+.totop svg { width: 17px; height: 17px; display: block; }

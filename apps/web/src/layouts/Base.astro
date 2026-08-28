@@ -12,7 +12,7 @@ interface Props {
 const { lang, page } = Astro.props;
 const t = copy[lang];
 const meta = t.meta[page];
-const title = page === 'home' ? `${site.name} — ${meta.title}` : `${meta.title} — ${site.name}`;
+const title = page === 'home' ? `${site.name} - ${meta.title}` : `${meta.title} - ${site.name}`;
 const canonical = new URL(href(lang, page), Astro.site ?? Astro.url.origin);
 ---
 
@@ -39,12 +39,22 @@ const canonical = new URL(href(lang, page), Astro.site ?? Astro.url.origin);
     <meta name="theme-color" content="#1B5E4B" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
-  <body>
+  <body id="top">
     <a class="skip" href="#main">{t.a11y.skip}</a>
     <Header lang={lang} page={page} />
     <main id="main">
       <slot />
     </main>
     <Footer lang={lang} />
+
+    <a class="totop" href="#top" aria-label={t.a11y.toTop} title={t.a11y.toTop}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+        <path d="M12 19V5M5 12l7-7 7 7" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </a>
+
+    <script>
+      import '../scripts/ui';
+    </script>
   </body>
 </html>
