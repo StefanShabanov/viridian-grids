@@ -21,6 +21,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { vendorDemo } from './vendor.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const WEB = path.resolve(HERE, '..');
@@ -168,6 +169,21 @@ async function demo(slug, zip, code) {
   unzip(zip, dir);
   const entry = normalizeDemo(dir);
   if (!entry) throw new Error('no .html file found in the archive');
+
+  // Pull React, the photographs and the fonts local, so the demo is a closed
+  // system and the site's CSP does not have to be opened up to accommodate it.
+  await vendorDemo(dir);
+
+  // Re-importing mints a fresh folder. Drop the previous one rather than leaving
+  // orphaned copies of somebody's photographs in the repository.
+  if (record.demoDir && record.demoDir !== token) {
+    const old = path.join(DEMOS, record.demoDir);
+    if (fs.existsSync(old)) fs.rmSync(old, { recursive: true, force: true });
+  }
+
+  // The record never reaches the browser, so the folder name can sit here in the
+  // clear for housekeeping. What the page carries is only the sealed copy.
+  record.demoDir = token;
   record.demo = await seal(`/demo/${token}/index.html`, code, slug);
   writeRecord(record);
   console.log(`  Demo imported for ${record.name}`);

@@ -105,6 +105,28 @@ vault, and it should not be described as one.
 | `clients/<slug>/client.json` | Name, domain, sealed report and demo. Committed. |
 | `public/demo/<token>/` | The extracted demo, under an unguessable folder name. |
 
+**Demos are vendored on import.** A Claude Design export points at React on unpkg,
+Google Fonts, and the prospect's own photographs still hosted on their WordPress.
+`bin/vendor.mjs` downloads all of it into `assets/<host>/<path>` and rewrites the
+references. Three reasons, and the second is the one that matters most:
+
+1. The strict CSP would otherwise block React and the demo renders as a black screen.
+2. Hotlinking sends traffic to the prospect's server every time anyone opens the
+   demo. We are selling them monitoring; quietly consuming their bandwidth to show
+   them a mockup is not a good look.
+3. A demo that depends on their server breaks the moment they move a file, and it
+   will be sitting in an inbox for weeks.
+
+Paths are *mirrored* rather than hashed, because these exports build image URLs by
+concatenation (`const IMG = "https://.../uploads/"` then `IMG + "2021/07/x.jpg"`).
+Rewriting the origin prefix fixes both the literal URLs and everything built from
+them. Downloads are sequential with a pause - a burst of parallel requests at a
+stranger's WordPress is the behaviour this business exists to warn people about.
+
+What stays external is reported at import time so the CSP is a decision, not an
+accident. For Chiflika that is one Facebook link and the embedded Google map;
+`/demo/` therefore allows `frame-src https://www.google.com` and nothing else.
+
 `/r/`, `/d/` and `/demo/` are excluded from the sitemap, disallowed in `robots.txt`
 and carry `noindex`. `/demo/` also gets a looser CSP in `vercel.json`, because a
 Claude Design export needs inline scripts to run — the strict policy still applies
