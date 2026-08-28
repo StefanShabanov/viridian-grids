@@ -35,6 +35,7 @@ export const en = {
     privacy: { title: 'Privacy notice', description: 'What this website collects, why, and what you can ask us to do about it. No cookies, no analytics, no tracking.' },
     terms: { title: 'Terms of service', description: 'The standing terms for the monitoring and maintenance plans, in plain language.' },
     dpa: { title: 'Data processing agreement', description: 'How we handle personal data on your website: our role, our sub-processors, and what happens when you leave.' },
+    methodology: { title: 'Methodology', description: 'How we scanned 1,028 Bulgarian websites, how versions and CVEs are matched, and what the numbers exclude.' },
   },
 
   nav: { services: 'Services', pricing: 'Pricing', how: 'How it works', report: 'Sample reports', faq: 'FAQ', cta: 'Check my website' },
@@ -42,7 +43,7 @@ export const en = {
   hero: {
     eyebrow: 'Website monitoring and maintenance for small and medium business',
     h1: 'When your website goes down, you hear it from us — not from a customer.',
-    sub: 'We watch your site around the clock, keep it updated and keep the backups honest. You hear about a problem once it is already fixed — in one clear report a month. No IT person required.',
+    sub: 'We watch your site around the clock, keep it updated and keep the backups honest. We find the problem first and start on it — before your customers become your monitoring system. One clear report a month, no IT person required.',
     cta1: 'Check my website',
     cta2: 'View plans',
     note: 'Free check · no account · reviewed by hand',
@@ -118,6 +119,23 @@ export const en = {
     thanks: 'Thanks — we will review your website and send the full report within one working day.',
     error: 'Something went wrong sending the form. Email us directly at',
     seeFull: 'See a full sample report, with sources',
+    bridge: 'The check is a single snapshot. These are the same things we watch continuously, from €29 a month.',
+    bridgeCta: 'See the plans',
+  },
+
+  /* The differentiator: HTTP 200 is not the same as a working business. */
+  flows: {
+    label: 'Business-critical checks',
+    title: 'A website can be up while the business running on it is down.',
+    sub: 'Uptime monitoring answers one question: did the homepage load? It does not notice when the thing your customers actually use has quietly stopped working — and that is the failure nobody reports, because the people who hit it simply leave.',
+    items: [
+      { who: 'Hotel', ok: 'Website loads', broken: 'Booking form sends nothing' },
+      { who: 'Dental clinic', ok: 'Website loads', broken: 'Appointment request never arrives' },
+      { who: 'Online shop', ok: 'Website loads · cart works', broken: 'Checkout fails at payment' },
+    ],
+    okLabel: 'Monitoring says',
+    brokenLabel: 'Reality',
+    foot: 'On the Business plan we test these paths end to end, on a schedule, the way a customer would. A broken form gets found in minutes instead of the six weeks it usually takes somebody to mention it.',
   },
 
   monitor: {
@@ -162,6 +180,7 @@ export const en = {
     plans: {
       monitor: {
         name: 'Monitor',
+        promise: 'We tell you when something is wrong.',
         blurb: 'For businesses that want to know when something goes wrong.',
         f: [
           'Uptime checks every 5 minutes',
@@ -174,6 +193,7 @@ export const en = {
       },
       care: {
         name: 'Care',
+        promise: 'We watch the site and keep it maintained.',
         blurb: 'Monitoring plus the maintenance that prevents most incidents.',
         f: [
           'Everything in Monitor',
@@ -186,6 +206,7 @@ export const en = {
       },
       business: {
         name: 'Business',
+        promise: 'We watch the things that bring the money in.',
         blurb: 'For websites that are part of daily operations or revenue.',
         f: [
           'Everything in Care',
@@ -202,7 +223,7 @@ export const en = {
     notes: [
       {
         k: 'BEYOND THE PLAN',
-        v: 'Work beyond the included allowance is EUR 20/hour. For anything larger we first write down what it involves and how long it will take, and start only once you have approved it.',
+        v: 'Work beyond the included allowance is EUR 30/hour. For anything larger we first write down what it involves and how long it will take, and start only once you have approved it.',
       },
       {
         k: 'GETTING STARTED',
@@ -265,6 +286,7 @@ export const en = {
     ],
     updatesMore: '+ 4 further plugin updates, each backed up before and checked after.',
     foot: 'Reports are sent as PDF on the 1st of each month. No dashboard login required.',
+    more: 'See both reports in full',
   },
 
   /* The other half of the story: the one-page assessment a prospect gets for free,
@@ -350,6 +372,7 @@ export const en = {
       { t: 'Testing only with authorisation', d: 'Anything beyond passive checks — active security testing — happens only with written permission.' },
       { t: 'GDPR handling', d: 'We act as a processor, with a signed DPA, EU-based storage and a documented retention period.' },
     ],
+    more: 'Read how we handle access',
     foot: 'We deliberately avoid words like "protected" or "secured". Monitoring and maintenance reduce risk. They do not eliminate it, and any provider who tells you otherwise is selling something.',
   },
 
@@ -365,6 +388,22 @@ export const en = {
       { n: '04', name: 'Troubleshooting', plans: 'CARE · BUSINESS', desc: 'Application errors, hosting issues, performance problems and configuration faults — WordPress, Node.js or custom code alike. A monthly allowance is included; anything beyond is quoted before we start.' },
       { n: '05', name: 'Business-critical monitoring', plans: 'BUSINESS', desc: 'Contact forms, booking pages, ecommerce checkout and other important endpoints are tested end to end, so a broken form is found in minutes rather than weeks.' },
     ],
+  },
+
+  modernize: {
+    label: 'Additional service',
+    title: 'Website modernization',
+    sub: 'Sometimes a site is old enough that maintaining it costs more than replacing it. A 2017 CMS on a PHP release that lost support in 2018 cannot be updated in place without breaking the theme and half the plugins — rebuilding is the cheaper honest answer, and we will say so when it is true.',
+    price: 'New website: €690. With an annual Care or Business plan: €290.',
+    includes: [
+      'Up to 5 pages, built as a static site — fast, and with almost nothing that can break',
+      'Works properly on a phone, which the old one usually does not',
+      'A contact form that reaches you reliably',
+      'Hosting for the new site included in your plan, on EU infrastructure',
+      'Your domain and your email stay exactly where they are',
+    ],
+    limits: 'Not for online shops, booking engines or anything with customer logins — those are quoted separately. You supply the text and photos; two rounds of revisions are included, and beyond that it is the hourly rate.',
+    cta: 'Ask about a rebuild',
   },
 
   faq: {
@@ -407,7 +446,7 @@ export const en = {
     needs: 'What do you need?',
     msg: 'Anything else',
     msgPh: 'Existing problems, hosting provider, who currently maintains the site…',
-    options: ['Monitoring', 'Maintenance & updates', 'Backups', 'Security check', 'Troubleshooting', 'I am not sure yet'],
+    options: ['Monitoring', 'Maintenance & updates', 'Backups', 'Security check', 'Troubleshooting', 'New website / modernization', 'I am not sure yet'],
     cta: 'Send request',
     sending: 'Sending…',
     note: 'We reply within one working day.',
@@ -499,6 +538,89 @@ export const en = {
         },
       ],
     },
+
+    /* Every figure here is reproducible from apps/scanner/out/sweep. If the corpus
+       is rescanned, recompute and update both this page and the proof band. */
+    methodology: {
+      label: 'Methodology',
+      title: 'How we produced those numbers',
+      intro:
+        'We publish statistics about Bulgarian websites, so we owe you the method behind them. Everything below is checkable, and everything we could not establish is marked as such.',
+      sections: [
+        {
+          h: 'Where the list came from',
+          p: [
+            'We took 1,028 Bulgarian business domains from OpenStreetMap - hotels, guest houses, dental clinics and law firms. It is not a random sample of the Bulgarian web: it is small and medium businesses with a physical address, which is exactly who this service is for. Anything concluded here applies to that group and not necessarily to anyone else.',
+          ],
+          list: [],
+        },
+        {
+          h: 'What we actually did to each site',
+          p: [
+            'A passive, read-only check, on 27 August 2026, of what any visitor can already see. Fewer than ten requests per site - comparable to opening a couple of pages in a browser.',
+          ],
+          list: [
+            'the HTTP response, the redirect chain, and whether HTTPS works',
+            'the TLS certificate, its issuer, its validity period and its expiry date',
+            'response headers, including security headers and any software versions announced there',
+            'cookie flags on the homepage',
+            'whether robots.txt, a sitemap and a favicon exist',
+            'first-response time and page size',
+          ],
+        },
+        {
+          h: 'What we never did',
+          p: [
+            'No login attempts, no password guessing, no injection or fuzzing of any kind, no exploitation of vulnerabilities, no port scanning, no aggressive crawling. Active security testing happens only against systems whose owner has authorised it in writing. That rule is not a courtesy - it is the difference between a health check and an attack.',
+          ],
+          list: [],
+        },
+        {
+          h: 'How versions are detected',
+          p: [
+            'From what the site publishes about itself: response headers such as Server and X-Powered-By, and public page source - meta generator tags, asset paths and script fingerprints, using the open Wappalyzer fingerprint set. We never look inside anything that is not publicly served.',
+            'This has limits. A site can hide or misreport its version, and fingerprinting can be wrong. A detected version is evidence, not a certainty.',
+          ],
+          list: [],
+        },
+        {
+          h: 'How end of life is decided',
+          p: [
+            'From endoflife.date, the public record of when each release line stopped receiving support. "PHP 7.4 stopped receiving security updates on 28 November 2022" is a published date anyone can verify, not our opinion.',
+            'One exception we handle deliberately: WordPress, Drupal and Joomla backport security fixes to old release lines, so end of life there means the end of feature support, not the end of security patches. We do not call those unsupported.',
+          ],
+          list: [],
+        },
+        {
+          h: 'How CVEs are matched, and what critical means',
+          p: [
+            'Detected product and version are matched against the US National Vulnerability Database. Severity is whatever NVD publishes as the CVSS base severity - we do not assign our own ratings, and we do not reweight them to sound more alarming.',
+            'The important caveat: a version match does not prove a site can be attacked. Distributions routinely backport security fixes without changing the version string, and Bulgarian shared hosting very often runs distribution packages. So the correct statement is that vulnerabilities have been reported against this version, and that is the only claim we make. Confirming whether a specific site is affected would require testing it, and testing requires permission from the owner.',
+          ],
+          list: [],
+        },
+        {
+          h: 'The numbers, and what was excluded',
+          p: ['Of the 1,028 domains:'],
+          list: [
+            '900 responded and were assessed',
+            '122 did not resolve at all - OpenStreetMap contains businesses that have since closed',
+            '6 were registered but the server did not answer',
+            '24 blocked our automated request and were excluded from the scoring, because a blocked scan is not a measurement',
+            'median health score across the 876 scored sites: 73 out of 100',
+            '146 sites, 16% of those reachable, had at least one reported vulnerability against a detected version; 133 of those included at least one rated high or critical',
+            '75 sites ran at least one component past end of life, most commonly PHP 7.4',
+          ],
+        },
+        {
+          h: 'What would change these figures',
+          p: [
+            'This is one point in time, on one list, using detection that can be fooled. Sites that block automated requests are absent, which biases the sample towards sites that behave normally. We re-measure as the list grows, and if a number here moves we change it, rather than keeping the more impressive version.',
+          ],
+          list: [],
+        },
+      ],
+    },
     terms: {
       label: 'Terms',
       title: 'Terms of service',
@@ -522,7 +644,7 @@ export const en = {
         {
           h: 'Work beyond the plan',
           p: [
-            'Care includes 30 minutes and Business 60 minutes of troubleshooting per month. Unused minutes do not carry over. Anything beyond the allowance is €20 per hour. For a larger job we first describe in writing what it involves and how long it will take, and agree it with you before the work starts. You will never receive an invoice for work you did not approve.',
+            'Care includes 30 minutes and Business 60 minutes of troubleshooting per month. Unused minutes do not carry over. Anything beyond the allowance is €30 per hour. For a larger job we first describe in writing what it involves and how long it will take, and agree it with you before the work starts. You will never receive an invoice for work you did not approve.',
           ],
           list: [],
         },
@@ -588,6 +710,7 @@ export const en = {
             'Our VPS provider, for the monitoring infrastructure — EU region.',
             'Our backup storage provider — encrypted at rest, EU region, separate from your hosting.',
             'Your own hosting provider remains yours; we do not sit between you and them.',
+            'If we built your site and host it, the provider of that hosting - also in the EU.',
           ],
         },
         {
@@ -617,7 +740,7 @@ export const en = {
 
   final: {
     title: 'Get a free website health check',
-    sub: 'No account, no sales call. We look at your site and tell you what we would fix first.',
+    sub: 'No account, no obligatory call. We look at your site and email you the result — with what we would fix first.',
     cta1: 'Check my website',
     cta2: 'Talk to us',
   },

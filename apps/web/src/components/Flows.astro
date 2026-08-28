@@ -1,0 +1,39 @@
+---
+import { copy, type Lang } from '../content';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = copy[lang];
+const f = t.flows;
+---
+
+{/*
+  The clearest differentiator we have: uptime monitoring answers "did the homepage
+  load", which is not the same question as "can a customer still book a room".
+*/}
+
+<section class="section section--white">
+  <div class="wrap">
+    <div class="eyebrow">{f.label}</div>
+    <h2 class="h2" style="max-width: 24ch;">{f.title}</h2>
+    <p class="lede">{f.sub}</p>
+
+    <div class="flows">
+      {f.items.map((i) => (
+        <div class="flow">
+          <div class="flow__who">{i.who}</div>
+          <div class="flow__line flow__line--ok">
+            <span class="flow__tag">{f.okLabel}</span>
+            <span class="flow__val">{i.ok}</span>
+          </div>
+          <div class="flow__line flow__line--broken">
+            <span class="flow__tag">{f.brokenLabel}</span>
+            <span class="flow__val">{i.broken}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <p class="flows__foot">{f.foot}</p>
+  </div>
+</section>

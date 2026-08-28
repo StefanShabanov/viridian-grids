@@ -1,0 +1,33 @@
+---
+import { copy, href, type Lang } from '../content';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = copy[lang];
+const m = t.modernize;
+---
+
+{/*
+  Deliberately not a fourth plan and not a sixth service. It is the offer that
+  unlocks the annual commitment, for the sites the sweep keeps turning up where
+  updating in place costs more than rebuilding.
+*/}
+
+<section class="section">
+  <div class="wrap">
+    <div class="eyebrow">{m.label}</div>
+    <h2 class="h2">{m.title}</h2>
+    <p class="lede" style="max-width: 66ch;">{m.sub}</p>
+
+    <div class="modernize">
+      <div class="modernize__price">{m.price}</div>
+      <ul class="modernize__list">
+        {m.includes.map((i) => (
+          <li><i aria-hidden="true">&#10003;</i><span>{i}</span></li>
+        ))}
+      </ul>
+      <p class="modernize__limits">{m.limits}</p>
+      <a class="btn btn--primary" href={href(lang, 'contact')}>{m.cta}</a>
+    </div>
+  </div>
+</section>

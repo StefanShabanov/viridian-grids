@@ -63,6 +63,7 @@ const saving = (monthly: number) => fullYear(monthly) - annual(monthly);
                   {t.pricing.instead} &euro;{fullYear(plan.price)} · {t.pricing.saveWord} &euro;{saving(plan.price)}
                 </div>
 
+                <p class="plan__promise">{c.promise}</p>
                 <p class="plan__blurb">{c.blurb}</p>
                 <div class="plan__rule" />
                 <ul class="plan__features">

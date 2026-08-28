@@ -41,6 +41,9 @@ const p = t.proof;
       <p>{p.footnote}</p>
     </details>
 
-    <p class="proof__cta"><a href={href(lang, 'check')}>{p.cta} &rarr;</a></p>
+    <p class="proof__cta">
+      <a href={href(lang, 'check')}>{p.cta} &rarr;</a>
+      <a class="proof__method" href={href(lang, 'methodology')}>{copy[lang].legal.methodology.label}</a>
+    </p>
   </div>
 </section>

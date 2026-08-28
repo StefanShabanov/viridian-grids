@@ -68,6 +68,31 @@ The doc's numbers are in the site; changing them means changing both files.
 - [ ] `style-src` still needs `'unsafe-inline'` because components use inline `style` attributes. Moving them into `global.css` would let the CSP tighten further.
 - [ ] No OG image.
 
+## Promises this site makes that need a procedure behind them
+
+The site is deliberately specific, which is what makes it credible — and which means
+every line below is a commitment from customer #1, not from customer #20. Walk this
+list before the first onboarding, not after.
+
+| Promised on the site | Needs to exist |
+| --- | --- |
+| Signed DPA at onboarding | The actual document, not just the page describing it |
+| Encrypted vault, 2FA | The password manager, set up, with the account structure decided |
+| Backups encrypted at rest, EU, separate from hosting | The object storage and the Restic policy |
+| Documented retention period | A number, written down, that matches the privacy notice |
+| Access removed, confirmed in writing within 5 working days | A checklist so it happens under pressure |
+| Written list of required access before onboarding | The template |
+| Breach notification without undue delay | Knowing who you tell and how fast |
+| Alerts by email **and SMS** (Monitor tier) | An SMS provider — currently nothing sends SMS |
+| Checks every 5 min / 1 min / 30 sec | The VPS and Uptime Kuma |
+| Investigation starts in 60 / 30 / 15 min | Alerting that actually wakes you, and the coverage discipline |
+| Monthly PDF report on the 1st | A generator; the scanner renders HTML today |
+| One restore test per month (shown in the sample report) | The procedure, and somewhere to restore to |
+| Forms & checkout tested end to end (Business) | Synthetic checks configured per customer |
+
+Two of these are load-bearing and currently missing entirely: **SMS alerting** and the
+**monthly PDF**. Both are promised on the pricing page.
+
 ## Fonts
 
 IBM Plex is self-hosted through `@fontsource`, imported at the top of `global.css`.

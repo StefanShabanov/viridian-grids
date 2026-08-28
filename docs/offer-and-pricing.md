@@ -75,9 +75,9 @@ internet, UPS. Turns a €59 customer into a €299 customer — this is where t
 [apps/web](../apps/web/) states these publicly, so they are now commitments rather than
 drafts. Changing one means changing both files in the same commit.
 
-- **Out-of-allowance work: €20/hour.** For anything larger, we write down what it involves and
-  how long it will take, and start only after the customer approves. Set at €20 on 2026-08-27,
-  down from a drafted €45. It sits below the Bulgarian freelance market rate and it caps what
+- **Out-of-allowance work: €30/hour.** For anything larger, we write down what it involves and
+  how long it will take, and start only after the customer approves. Set at €20 on 2026-08-27, then raised to €30 on 2026-08-28 after an outside
+  review independently flagged €20 as under-priced. Originally drafted at €45. It sits below the Bulgarian freelance market rate and it caps what
   project work and the Infrastructure Care upsell can be quoted at later — revisit once there
   is real data on minutes per customer per month.
 - **One-time onboarding: €49** — assessment, access setup, configuration. Waived for
@@ -105,8 +105,8 @@ drafts. Changing one means changing both files in the same commit.
 Against the originally drafted €45/hour that was underwater — 3 hours inside a €99 plan
 prices support at €33/hour. The site publishes 30 and 60 minutes instead.
 
-**That argument weakened when the rate dropped to €20/hour** (2026-08-27). At €20, three
-hours is €60 of labour inside a €99 plan, which is no longer obviously loss-making. So the
+**That argument weakened when the rate dropped** (€45 → €20 → €30). At €30, three hours is
+€90 of labour inside a €99 plan, which is close to break-even rather than clearly underwater. So the
 tight allowances are now a *caution* rather than a necessity, and there is room to be more
 generous than competitors once there is real data on minutes used per customer per month.
 Generosity here is cheap and visible; the hourly rate is what has to stay defensible.

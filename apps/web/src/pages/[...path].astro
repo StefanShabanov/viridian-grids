@@ -16,9 +16,11 @@ import Faq from '../components/Faq.astro';
 import About from '../components/About.astro';
 import Final from '../components/Final.astro';
 import Legal from '../components/Legal.astro';
+import Flows from '../components/Flows.astro';
+import Modernize from '../components/Modernize.astro';
 import CheckSection from '../components/CheckSection.astro';
 import ContactSection from '../components/ContactSection.astro';
-import { LANGS, PAGES, param, SECTIONS, shows, legalDoc, type Lang, type PageId } from '../content';
+import { copy, LANGS, PAGES, param, SECTIONS, shows, docId, type Lang, type PageId } from '../content';
 
 export function getStaticPaths() {
   return LANGS.flatMap((lang) =>
@@ -40,7 +42,7 @@ const { lang, page } = Astro.props;
 // whichever shared section comes first.
 const first = SECTIONS[page][0];
 const lead = (section: string): 'h1' | 'h2' => (section === first && page !== 'home' ? 'h1' : 'h2');
-const doc = legalDoc(page);
+const doc = docId(page);
 ---
 
 <Base lang={lang} page={page}>
@@ -49,17 +51,19 @@ const doc = legalDoc(page);
   {shows(page, 'band') && <Band lang={lang} />}
   {shows(page, 'check') && <CheckSection lang={lang} />}
   {shows(page, 'services') && <Services lang={lang} />}
+  {shows(page, 'modernize') && <Modernize lang={lang} />}
+  {shows(page, 'flows') && <Flows lang={lang} />}
   {shows(page, 'monitor') && <Monitor lang={lang} />}
   {shows(page, 'how') && <How lang={lang} heading={lead('how')} />}
   {shows(page, 'pricing') && <Pricing lang={lang} heading={lead('pricing')} />}
   {shows(page, 'sla') && <Sla lang={lang} />}
   {shows(page, 'initial') && <InitialReport lang={lang} heading={lead('initial')} />}
-  {shows(page, 'report') && <Report lang={lang} heading={lead('report')} />}
+  {shows(page, 'report') && <Report lang={lang} heading={lead('report')} compact={page === 'home'} />}
   {shows(page, 'problems') && <Problems lang={lang} />}
-  {shows(page, 'trust') && <Trust lang={lang} heading={lead('trust')} />}
+  {shows(page, 'trust') && <Trust lang={lang} heading={lead('trust')} compact={page === 'home'} />}
   {shows(page, 'faq') && <Faq lang={lang} heading={lead('faq')} />}
   {shows(page, 'about') && <About lang={lang} />}
   {shows(page, 'contact') && <ContactSection lang={lang} />}
-  {doc && <Legal lang={lang} doc={doc} />}
+  {doc && <Legal lang={lang} doc={copy[lang].legal[doc]} />}
   {shows(page, 'final') && <Final lang={lang} />}
 </Base>

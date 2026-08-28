@@ -1,8 +1,13 @@
 ---
-import { copy, type Lang } from '../content';
+import { copy, href, type Lang } from '../content';
 
-interface Props { lang: Lang; heading?: 'h1' | 'h2' }
-const { lang, heading = 'h2' } = Astro.props;
+interface Props {
+  lang: Lang;
+  heading?: 'h1' | 'h2';
+  /** The homepage shows the summary blocks only, and links to the full page. */
+  compact?: boolean;
+}
+const { lang, heading = 'h2', compact = false } = Astro.props;
 const t = copy[lang];
 const Heading = heading;
 ---
@@ -37,6 +42,8 @@ const Heading = heading;
         ))}
       </div>
 
+      {!compact && (
+      <>
       <div class="rep__incidents">
         <div class="rep__blockHead">{t.report.incidents}</div>
         <div class="rep__incident">
@@ -70,8 +77,11 @@ const Heading = heading;
         </div>
         <p class="rep__updatesMore">{t.report.updatesMore}</p>
       </div>
+      </>
+      )}
     </div>
 
     <p class="rep__foot">{t.report.foot}</p>
+    {compact && <p class="rep__more"><a href={href(lang, 'report')}>{t.report.more} &rarr;</a></p>}
   </div>
 </section>

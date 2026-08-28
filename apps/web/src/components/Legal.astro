@@ -1,14 +1,21 @@
 ---
-import { copy, type Lang, type LegalDoc } from '../content';
+import { copy, type Lang } from '../content';
+
+/** Any long-form document page: the three legal ones and the methodology. */
+interface DocContent {
+  label: string;
+  title: string;
+  intro: string;
+  sections: readonly { h: string; p: readonly string[]; list: readonly string[] }[];
+}
 
 interface Props {
   lang: Lang;
-  doc: LegalDoc;
+  doc: DocContent;
 }
 
-const { lang, doc } = Astro.props;
+const { lang, doc: d } = Astro.props;
 const t = copy[lang];
-const d = t.legal[doc];
 ---
 
 <section class="section section--white">
