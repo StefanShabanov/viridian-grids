@@ -125,6 +125,50 @@ export async function vendorDemo(dir, { pauseMs = 200, log = console.log } = {})
   }
   for (const url of first) await fetchOne(url);
 
+  // Pass 1b: the URLs that are never written down.
+  //
+  // These exports keep a base in one string and the rest of the path in another:
+  //
+  //     const IMG = "https://host/wp-content/uploads/";
+  //     ... IMG + "2015/11/apartament5.jpg"
+  //
+  // No regex over the source will ever see the joined URL, so the first version
+  // of this downloaded only the images that happened to appear in full and left
+  // the rest pointing at a local file that was never written - which is how a
+  // gallery ends up as a wall of 403s. So: take every absolute base ending in a
+  // slash, every quoted relative path that looks like an image, and try the
+  // combinations. A 404 costs one request and tells us it was not a real pair.
+  const bases = new Set();
+  const fragments = new Set();
+  for (const file of files) {
+    const text = fs.readFileSync(file, 'utf8');
+    for (const m of text.matchAll(/["'](https?:\/\/[^"'\s]+\/)["']/g)) bases.add(m[1]);
+    for (const m of text.matchAll(/["']([\w./-]+\.(?:jpe?g|png|gif|webp|avif|svg))["']/gi)) {
+      if (!m[1].startsWith('assets/') && !m[1].startsWith('/')) fragments.add(m[1]);
+    }
+  }
+
+  const assetHosts = new Set([...saved.keys()].map((u) => new URL(u).hostname));
+  const combos = [];
+  for (const base of bases) {
+    if (!assetHosts.has(new URL(base).hostname)) continue;
+    for (const fragment of fragments) {
+      const candidate = base + fragment;
+      if (!saved.has(candidate)) combos.push(candidate);
+    }
+  }
+  if (combos.length) {
+    if (combos.length > 400) {
+      log(`  skipping composed-path discovery: ${combos.length} combinations is too many to probe politely`);
+    } else {
+      let recovered = 0;
+      for (const candidate of combos) {
+        if (await fetchOne(candidate)) recovered += 1;
+      }
+      if (recovered) log(`  recovered ${recovered} images referenced only by a composed path`);
+    }
+  }
+
   // Pass 2: a stylesheet has its own dependencies. Google Fonts CSS is nothing
   // but url() references to woff2 files, so without this the fonts stay remote.
   for (const [url, rel] of [...saved]) {
@@ -164,6 +208,24 @@ export async function vendorDemo(dir, { pauseMs = 200, log = console.log } = {})
       text = text.split(origin.replace(/^https:/, 'http:')).join(`assets/${hostname}/`);
     }
     if (text !== before) fs.writeFileSync(file, text, 'utf8');
+  }
+
+  // Repair pass. Rewriting the origin prefix is blunt: it also catches links
+  // that were never assets, such as an <a href> to the hotel's virtual tour.
+  // Anything now pointing at a local file that does not exist is put back.
+  const localRef = /assets\/([a-z0-9.-]+\.[a-z]{2,})\/([^"'\s)<>]+)/gi;
+  for (const file of files) {
+    const text = fs.readFileSync(file, 'utf8');
+    let repaired = 0;
+    const fixed = text.replace(localRef, (match, host, rest) => {
+      if (fs.existsSync(path.join(dir, 'assets', host, rest))) return match;
+      repaired += 1;
+      return `https://${host}/${rest}`;
+    });
+    if (repaired) {
+      fs.writeFileSync(file, fixed, 'utf8');
+      log(`  put ${repaired} non-asset link(s) back to absolute in ${path.basename(file)}`);
+    }
   }
 
   // Whatever is left cannot be stored next to the page - an embedded map, a
