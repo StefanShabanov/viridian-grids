@@ -62,6 +62,9 @@ function enhance(form: HTMLFormElement): void {
       message.hidden = false;
       button.disabled = false;
       button.textContent = s.label;
+      // The challenge token is single-use; a rejected submit has spent it, so
+      // reset the widget to issue a fresh one for the retry.
+      (window as unknown as { turnstile?: { reset: () => void } }).turnstile?.reset();
       return;
     }
 

@@ -1,5 +1,6 @@
 ---
 import { copy, href, site, type Lang } from '../content';
+import Turnstile from './Turnstile.astro';
 
 interface Props {
   lang: Lang;
@@ -71,6 +72,8 @@ const t = copy[lang];
           <input class="input" id="check-company" name="company" type="text" autocomplete="organization" />
         </div>
       </div>
+
+      <Turnstile />
 
       <div style="margin-top: 26px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
         <button class="btn btn--primary" type="submit" data-label={t.check.cta} data-sending={t.check.sending}>

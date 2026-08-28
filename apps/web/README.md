@@ -68,6 +68,38 @@ The doc's numbers are in the site; changing them means changing both files.
 - [ ] `style-src` still needs `'unsafe-inline'` because components use inline `style` attributes. Moving them into `global.css` would let the CSP tighten further.
 - [ ] No OG image.
 
+## Form abuse protection
+
+The two form endpoints call a paid email provider on every accepted request, so
+an unthrottled endpoint is a denial-of-service lever: a few hundred requests
+exhaust the daily quota and real enquiries then bounce. The honeypot stops naive
+bots; two more layers stop the targeted floods it cannot. **Both are optional and
+each activates only when its keys are set**, so the code ships and runs before
+either exists - it just warns in the logs that protection is off.
+
+| Layer | Purpose | Config | Failure mode |
+| --- | --- | --- | --- |
+| Honeypot | naive bots | none (always on) | — |
+| IP rate limit | floods from one source | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | fails **open** - a cache outage must not reject real customers |
+| Turnstile | automated submissions | `PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` | fails **closed** - if the challenge is on and unverifiable, reject |
+
+The asymmetry is deliberate: the rate limit is a throttle where a false reject
+costs a customer, so it errs toward allowing; Turnstile is the bot gate where
+failing open would defeat its purpose, so it errs toward rejecting. Five requests
+per IP per hour, per form.
+
+**To switch them on:**
+
+1. Turnstile - create a widget at the Cloudflare dashboard (Turnstile), put the
+   site key in `PUBLIC_TURNSTILE_SITE_KEY` and the secret in `TURNSTILE_SECRET_KEY`.
+   The widget appears on both forms; its token rides along in the normal form post.
+2. Rate limit - create a free Upstash Redis database, copy the REST URL and token
+   into the two `UPSTASH_*` variables.
+
+Turnstile is the one deliberate exception to `script-src 'self'`: the CSP allows
+`https://challenges.cloudflare.com` for its script, frame and connect. A single
+named origin, so Observatory still grades A+.
+
 ## Per-client pages
 
 A prospect gets a link and a six-digit code in the same email:

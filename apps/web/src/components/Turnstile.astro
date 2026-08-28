@@ -1,0 +1,23 @@
+---
+/**
+ * Cloudflare Turnstile widget.
+ *
+ * Renders only when PUBLIC_TURNSTILE_SITE_KEY is set, so the forms are unchanged
+ * until the challenge is switched on in config. Implicit rendering injects a
+ * hidden `cf-turnstile-response` input into the surrounding form, which the form
+ * serialiser already picks up - so no change is needed to how a form is sent.
+ *
+ * The script is the one deliberate exception to `script-src 'self'`: it loads
+ * from challenges.cloudflare.com, a single named origin, which the CSP allows.
+ */
+const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+---
+
+{
+  siteKey && (
+    <div class="turnstile" data-turnstile>
+      <div class="cf-turnstile" data-sitekey={siteKey} data-theme="auto" data-size="flexible" />
+      <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
+    </div>
+  )
+}

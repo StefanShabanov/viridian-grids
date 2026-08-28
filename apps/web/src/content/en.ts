@@ -19,7 +19,7 @@ export const en = {
     },
     pricing: {
       title: 'Pricing',
-      description: 'Three plans with published prices: Monitor EUR 29, Care EUR 59, Business EUR 99 per month.',
+      description: 'Three plans with published prices: Monitor EUR 29, Care EUR 59, Business from EUR 99 per month.',
     },
     services: { title: 'Services', description: 'Monitoring, maintenance, security hygiene, troubleshooting and business-critical checks.' },
     how: { title: 'How it works', description: 'Assessment, setup, monitoring, response, reporting.' },
@@ -175,6 +175,7 @@ export const en = {
     annualPerk: 'Setup fee waived',
     sub: 'No sales call required to find out the price. All plans are monthly, cancellable with 30 days notice. Prices exclude VAT.',
     badge: 'Most popular',
+    from: 'From ',
     cta: 'Start with an assessment',
     plans: {
       monitor: {
@@ -200,13 +201,14 @@ export const en = {
           'Platform, dependency & plugin updates',
           'Backup monitoring & restore tests',
           'Basic security hygiene',
+          'Hosting management',
           '30 minutes troubleshooting included',
         ],
       },
       business: {
         name: 'Business',
         promise: 'We watch the things that bring the money in.',
-        blurb: 'For websites that are part of daily operations or revenue.',
+        blurb: 'For websites that are part of daily operations or revenue. For more complex sites the price is set to scope.',
         f: [
           'Everything in Care',
           'Checks every 30 seconds',
@@ -235,6 +237,10 @@ export const en = {
       {
         k: 'PLATFORMS',
         v: 'Monitoring works with any website. Full maintenance covers WordPress, Node.js, PHP/Laravel and static sites - ask about yours.',
+      },
+      {
+        k: 'NEW WEBSITE',
+        v: 'Need a new site? On an annual Care or Business plan we build it for €290 (instead of €690), with EU hosting included in the plan. Details under Services.',
       },
     ],
   },

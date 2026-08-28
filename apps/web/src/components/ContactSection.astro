@@ -1,5 +1,6 @@
 ---
 import { copy, site, type Lang } from '../content';
+import Turnstile from './Turnstile.astro';
 
 interface Props {
   lang: Lang;
@@ -82,6 +83,8 @@ const fields: {
         <label class="field__label" for="contact-message">{t.contact.msg}</label>
         <textarea class="textarea" id="contact-message" name="message" rows="4" placeholder={t.contact.msgPh}></textarea>
       </div>
+
+      <Turnstile />
 
       <div style="margin-top: 26px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
         <button

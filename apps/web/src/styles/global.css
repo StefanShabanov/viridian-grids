@@ -1776,3 +1776,16 @@ input, button, select, textarea { font: inherit; color: inherit; }
   .rp__step { grid-template-columns: 30px 1fr; gap: 10px; }
   .rp__effort { margin-left: 0; display: inline-block; margin-top: 6px; }
 }
+
+/* ------------------------------------------------------------ turnstile */
+
+.turnstile { margin-top: 22px; max-width: 420px; }
+.turnstile .cf-turnstile { min-height: 65px; }
+
+.plan__from {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--muted-3);
+  align-self: flex-end;
+  padding-bottom: 7px;
+}

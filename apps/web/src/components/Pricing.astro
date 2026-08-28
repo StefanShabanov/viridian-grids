@@ -52,10 +52,12 @@ const saving = (monthly: number) => fullYear(monthly) - annual(monthly);
                 <div class="plan__name">{c.name}</div>
 
                 <div class="plan__price price--monthly">
+                  {plan.from && <span class="plan__from">{t.pricing.from}</span>}
                   <b>&euro;{plan.price}</b>
                   <span>{t.pricing.per}</span>
                 </div>
                 <div class="plan__price price--annual">
+                  {plan.from && <span class="plan__from">{t.pricing.from}</span>}
                   <b>&euro;{annual(plan.price)}</b>
                   <span>{t.pricing.perYear}</span>
                 </div>

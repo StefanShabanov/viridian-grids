@@ -19,9 +19,11 @@ export const site = {
 
 /** Plan prices. EUR only - Bulgaria adopted the euro on 2026-01-01. */
 export const plans = [
-  { id: 'monitor', price: 29, featured: false },
-  { id: 'care', price: 59, featured: true },
-  { id: 'business', price: 99, featured: false },
+  { id: 'monitor', price: 29, featured: false, from: false },
+  { id: 'care', price: 59, featured: true, from: false },
+  // Business flexes: a booking engine or shop is genuinely more work, so the
+  // published price is a floor. Monitor and Care stay fixed.
+  { id: 'business', price: 99, featured: false, from: true },
 ] as const;
 
 /** Published rates and terms. Mirrored in docs/offer-and-pricing.md - change both. */
