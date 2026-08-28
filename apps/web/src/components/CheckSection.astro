@@ -53,9 +53,14 @@ const t = copy[lang];
             class="input input--mono"
             id="check-url"
             name="url"
-            type="url"
+            type="text"
             required
             inputmode="url"
+            autocapitalize="off"
+            autocorrect="off"
+            spellcheck="false"
+            pattern="\s*(https?:\/\/)?[^\s.\/]+(\.[^\s.\/]+)+.*"
+            title={t.check.ph.url}
             placeholder={t.check.ph.url}
           />
         </div>

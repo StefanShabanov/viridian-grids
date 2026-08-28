@@ -4,3 +4,7 @@ dist/
 .vercel/
 .env
 .env.local
+
+# Cold-outreach working folders: hold the plaintext 6-digit access codes, so
+# they must never be committed (rule 6). The sealed, committable side is clients/.
+outreach/

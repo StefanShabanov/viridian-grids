@@ -20,19 +20,19 @@ import { webcrypto as crypto } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { vendorDemo } from './vendor.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const WEB = path.resolve(HERE, '..');
-const CLIENTS = path.join(WEB, 'clients');
-const DEMOS = path.join(WEB, 'public', 'demo');
+export const WEB = path.resolve(HERE, '..');
+export const CLIENTS = path.join(WEB, 'clients');
+export const DEMOS = path.join(WEB, 'public', 'demo');
 const ITERATIONS = 600_000;
 
 const b64 = (bytes) => Buffer.from(bytes).toString('base64');
 const rand = (n) => crypto.getRandomValues(new Uint8Array(n));
 
-function slugify(name) {
+export function slugify(name) {
   return name
     .toLowerCase()
     .normalize('NFD')
@@ -42,8 +42,8 @@ function slugify(name) {
 }
 
 /** 128 bits of URL. The code is the second factor, not the only one. */
-const urlToken = () => Buffer.from(rand(16)).toString('hex');
-const sixDigits = () => String(crypto.getRandomValues(new Uint32Array(1))[0] % 1_000_000).padStart(6, '0');
+export const urlToken = () => Buffer.from(rand(16)).toString('hex');
+export const sixDigits = () => String(crypto.getRandomValues(new Uint32Array(1))[0] % 1_000_000).padStart(6, '0');
 
 async function deriveKey(code, slug, salt) {
   const material = await crypto.subtle.importKey(
@@ -62,7 +62,7 @@ async function deriveKey(code, slug, salt) {
   );
 }
 
-async function seal(plaintext, code, slug) {
+export async function seal(plaintext, code, slug) {
   const salt = rand(16);
   const iv = rand(12);
   const key = await deriveKey(code, slug, salt);
@@ -74,9 +74,13 @@ async function seal(plaintext, code, slug) {
   return { salt: b64(salt), iv: b64(iv), data: b64(new Uint8Array(data)) };
 }
 
-const recordPath = (slug) => path.join(CLIENTS, slug, 'client.json');
+export const recordPath = (slug) => path.join(CLIENTS, slug, 'client.json');
 
-function readRecord(slug) {
+export function recordExists(slug) {
+  return fs.existsSync(recordPath(slug));
+}
+
+export function readRecord(slug) {
   const file = recordPath(slug);
   if (!fs.existsSync(file)) {
     console.error(`No client "${slug}". Run: node bin/client.mjs list`);
@@ -85,7 +89,7 @@ function readRecord(slug) {
   return JSON.parse(fs.readFileSync(file, 'utf8'));
 }
 
-function writeRecord(record) {
+export function writeRecord(record) {
   fs.mkdirSync(path.dirname(recordPath(record.slug)), { recursive: true });
   fs.writeFileSync(recordPath(record.slug), JSON.stringify(record, null, 2) + '\n', 'utf8');
 }
@@ -95,7 +99,7 @@ function writeRecord(record) {
  * matters: busybox `tar` is often first on PATH under Git Bash and cannot read
  * zips at all, so `unzip` is tried first and the Windows system tar by full path.
  */
-function unzip(zip, into) {
+export function unzip(zip, into) {
   fs.mkdirSync(into, { recursive: true });
   const source = path.resolve(zip);
   if (!fs.existsSync(source)) throw new Error(`no such archive: ${source}`);
@@ -126,7 +130,7 @@ function unzip(zip, into) {
  * Browsers need an index.html, so the newest export becomes it and the others
  * stay reachable under their own names.
  */
-function normalizeDemo(dir) {
+export function normalizeDemo(dir) {
   const html = fs
     .readdirSync(dir)
     .filter((f) => f.toLowerCase().endsWith('.html'))
@@ -213,10 +217,14 @@ function list() {
   }
 }
 
-const [command, ...args] = process.argv.slice(2);
-const commands = { add, demo, report, list };
-if (!commands[command]) {
-  console.error('commands: add | demo | report | list');
-  process.exit(1);
+// Only dispatch the CLI when run directly (`node bin/client.mjs …`), so this
+// module can also be imported by bin/outreach.mjs to reuse the crypto above.
+if (import.meta.url === pathToFileURL(process.argv[1] || '').href) {
+  const [command, ...args] = process.argv.slice(2);
+  const commands = { add, demo, report, list };
+  if (!commands[command]) {
+    console.error('commands: add | demo | report | list');
+    process.exit(1);
+  }
+  await commands[command](...args);
 }
-await commands[command](...args);

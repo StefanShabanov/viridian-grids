@@ -53,9 +53,6 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     `Email:    ${email}`,
     `Company:  ${text(data, 'company') || '-'}`,
     `Language: ${lang}`,
-    '',
-    'Run it with:',
-    `  ./bin/vg-scan scan ${new URL(url).hostname} --deep --lang ${lang} --html out/${new URL(url).hostname}.html`,
   ].join('\n');
 
   const sent = await deliver(`[check] ${new URL(url).hostname}`, body, {
