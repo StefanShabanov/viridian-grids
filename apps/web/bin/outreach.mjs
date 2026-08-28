@@ -70,7 +70,15 @@ function onboardedDomains() {
 
 const SCANNER = path.resolve(WEB, '..', 'scanner');
 const QUEUE = path.join(SCANNER, 'out', 'queue.csv');
-const SWEEP = path.join(SCANNER, 'out', 'sweep');
+// Two scanner outputs feed a prospect folder:
+//   RAW  - the raw scan (findings, final_url, reachable); used to vet the prospect.
+//   RICH - the curated Bulgarian customer report (vg-scan client-report); this is
+//          what gets sealed and rendered. Produce it before prep:
+//     vg-scan scan --from … --out-dir out/outreach
+//     vg-scan intel out/outreach --top N
+//     vg-scan client-report out/outreach --out-dir out/outreach-reports --contacts out/queue.csv
+const RAW = path.join(SCANNER, 'out', 'outreach');
+const RICH = path.join(SCANNER, 'out', 'outreach-reports');
 const WEBDEMOS = path.resolve(WEB, '..', '..', 'Web-demos');
 const OUTREACH = path.join(WEB, 'outreach');
 const SITE = 'https://viridiangrids.com';
@@ -137,7 +145,7 @@ const base2 = (host) => host.replace(/^www\./i, '').toLowerCase().split('.').sli
 /** Read the scan for the checks that decide whether a prospect is emailable at
  *  all - separate from how bad their score is. */
 function scanFacts(domain) {
-  const j = JSON.parse(fs.readFileSync(path.join(SWEEP, `${domain}.json`), 'utf8'));
+  const j = JSON.parse(fs.readFileSync(path.join(RAW, `${domain}.json`), 'utf8'));
   let finalHost = '';
   let offDomain = false;
   try {
@@ -162,7 +170,7 @@ function rankProspects(rows, top, { strong = false, onboarded = new Set() } = {}
   const ranked = rows
     .filter((r) => r.HookType !== 'site_down')
     .filter((r) => !strong || STRONG_HOOKS.has(r.HookType))
-    .filter((r) => r.Domain && fs.existsSync(path.join(SWEEP, `${r.Domain}.json`)))
+    .filter((r) => r.Domain && fs.existsSync(path.join(RAW, `${r.Domain}.json`)) && fs.existsSync(path.join(RICH, `${r.Domain}.json`)))
     .map((r) => ({ ...r, _score: Number.parseInt(r.Score, 10) }))
     .filter((r) => Number.isFinite(r._score))
     .sort((a, b) => a._score - b._score);
@@ -260,7 +268,13 @@ function prepOne(row) {
   const code = existing?.code ?? sixDigits();
 
   fs.mkdirSync(folderFor(domain), { recursive: true });
-  fs.copyFileSync(path.join(SWEEP, `${domain}.json`), path.join(folderFor(domain), 'report.json'));
+  // report.json is the curated report we seal and render; scan.json is the raw
+  // scan, kept alongside it for verification.
+  fs.copyFileSync(path.join(RICH, `${domain}.json`), path.join(folderFor(domain), 'report.json'));
+  if (fs.existsSync(path.join(RAW, `${domain}.json`))) {
+    fs.copyFileSync(path.join(RAW, `${domain}.json`), path.join(folderFor(domain), 'scan.json'));
+  }
+  const freshScore = JSON.parse(fs.readFileSync(path.join(folderFor(domain), 'report.json'), 'utf8')).score;
 
   const reportUrl = `${SITE}/r/${slug}`;
   const demoUrl = `${SITE}/d/${slug}`;
@@ -274,6 +288,7 @@ function prepOne(row) {
     hook: row.Hook || '',
     hookDetail: row.HookDetail || '',
     score: Number.parseInt(row.Score, 10),
+    freshScore,
     reportUrl,
     demoUrl,
     hasDemo: false,
@@ -282,12 +297,9 @@ function prepOne(row) {
   };
   writeMeta(meta);
 
-  // No demo at prep time; demo lines are added only when publish finds a zip.
-  fs.writeFileSync(
-    path.join(folderFor(domain), 'email.txt'),
-    emailBody({ domain, reportUrl, demoUrl: null, code }),
-    'utf8',
-  );
+  // Deliberately NO email.txt here. The email carries a report link that only
+  // becomes live at `publish`; writing a ready-looking email into an unpublished
+  // folder invites sending a 404 link. `publish` is the only writer of email.txt.
   return meta;
 }
 
@@ -328,13 +340,13 @@ function prep(...args) {
   fs.mkdirSync(OUTREACH, { recursive: true });
   let n = 0;
   for (const row of picks) {
-    if (!fs.existsSync(path.join(SWEEP, `${row.Domain}.json`))) {
-      console.warn(`  no sweep JSON for ${row.Domain}, skipped`);
+    if (!fs.existsSync(path.join(RICH, `${row.Domain}.json`))) {
+      console.warn(`  no curated report for ${row.Domain} (run vg-scan client-report), skipped`);
       continue;
     }
     const meta = prepOne(row);
     n++;
-    console.log(`  ${String(n).padStart(3)}. ${meta.domain.padEnd(34)} score=${String(meta.score).padStart(3)}  ${meta.hookType}`);
+    console.log(`  ${String(n).padStart(3)}. ${meta.domain.padEnd(34)} score=${String(meta.freshScore).padStart(3)}  ${meta.hookType}`);
   }
   console.log(`\n  Prepared ${n} prospect folder(s) under apps/web/outreach/`);
   console.log('  Review each report.json, then: node bin/outreach.mjs publish <domain>\n');

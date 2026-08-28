@@ -38,6 +38,7 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 # Prose and inline CSS; wrapping them hurts more than it helps.
 "src/vg_scanner/catalog.py" = ["E501"]
 "src/vg_scanner/report.py" = ["E501"]
+"src/vg_scanner/client_report.py" = ["E501"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

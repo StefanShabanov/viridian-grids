@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import contextlib
 import csv
+import json
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
@@ -340,6 +341,56 @@ def queue(
     _echo("by opener")
     for name, count in sorted(counts.items(), key=lambda kv: -kv[1]):
         _echo(f"  {count:>5}  {name}")
+
+
+@app.command(name="client-report")
+def client_report(
+    source: Path = typer.Argument(..., help="Scan JSON file, or a directory of them"),
+    out_dir: Path = typer.Option(
+        None, "--out-dir", "-o", help="Write one report JSON per domain here"
+    ),
+    out: Path = typer.Option(None, "--out", help="Write a single report JSON here"),
+    contacts: Path = typer.Option(
+        None, "--contacts", help="CSV with Domain,Company columns, to name each business"
+    ),
+    business: str = typer.Option(None, "--business", help="Business name (single-source only)"),
+    lang: str = typer.Option("bg", "--lang", "-l", help=f"Report language: {'/'.join(LANGUAGES)}"),
+) -> None:
+    """Build the website-facing customer report(s) from saved scan(s).
+
+    The website renders a curated report object, not the raw finding list. This
+    turns one scan - or a whole outreach batch - into that object, in Bulgarian,
+    with real CVEs and end-of-life facts, so every prospect's page reads like the
+    one we hand-wrote for the first client.
+    """
+    from .client_report import build_report
+    from .intel.store import IntelStore
+
+    results = load_results(source)
+    if not results:
+        raise typer.BadParameter(f"no readable scan JSON in {source}")
+
+    names: dict[str, str] = {}
+    if contacts:
+        names = {d: r.get("Company", "") for d, r in _load_contacts(contacts).items()}
+
+    store = IntelStore()
+    single = len(results) == 1
+    written = 0
+    for result in results:
+        biz = (business if single else None) or names.get(result.domain) or None
+        report = build_report(result, lang, business=biz, store=store)
+        text = json.dumps(report, ensure_ascii=False, indent=2)
+        if out and single:
+            _write(out, text)
+        elif out_dir:
+            _write(out_dir / f"{result.domain}.json", text)
+        else:
+            _echo(text)
+            continue
+        written += 1
+    if written:
+        _echo(f"wrote {written} report(s)")
 
 
 def _load_contacts(path: Path) -> dict[str, dict[str, str]]:
